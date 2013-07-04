@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Missale illustrations</title>
+    </head>
+    <body>
+        <h1>Missale illustrations</h1>
+        <table>
+        	<thead>
+        		<tr>
+        			<th>picture</th>
+        			<th>title</th>
+        			<th>artist</th>
+        			<th>year</th>
+        			<th>location</th>
+        			<th>copyright</th>
+        			<th>context</th>
+        		</tr>
+        	</thead>
+        	<tbody>
+        	{% for illustration in illustrations %}
+        		<tr>
+        			<td>
+        				<a href="{{illustration.url}}" target="_blank">
+        					<img width="150px" src="{{illustration.url}}"
+        						title="{{illustration.caption}}"/>
+        				</a>
+        			</td>
+        			{% for item in ['title','artist','year','location','copyright']%}
+        				<td>{{illustration[item]}}</td>
+        			{% endfor %}
+        			<td>
+        			{% if illustration.contexturl %}
+        				<a href="{{illustration.contexturl}}" target="_blank">context</a>
+        			{% endif %}
+        			</td>
+        		</tr>
+        	{% endfor %}
+        	</tbody>
+        </table>
+    </body>
+</html>

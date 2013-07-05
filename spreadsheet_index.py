@@ -82,4 +82,7 @@ class Illustrations(Spreadsheet_index):
     """Read the published google spreadsheet containing illustration metadata
     into a list of dicts"""
     def __init__(self):
-        Spreadsheet_index.__init__(self, google_spreadsheet_missale_illustrations_key)
+        super(Illustrations,self).__init__(self, google_spreadsheet_missale_illustrations_key)
+
+    def update_fields(self, updates):
+        super(Illustrations,self).update_fields(updates,'id')

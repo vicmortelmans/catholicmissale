@@ -17,6 +17,10 @@ class SyncHandler(webapp2.RequestHandler):
         index_illustrations_mgr = spreadsheet_index.Illustrations()
         self.index_illustrations = index_illustrations_mgr.table
 
+        # get the contents of the datastore
+        datastore_illustrations_mgr = datastore_index.Illustrations()
+        self.datastore_illustrations = datastore_illustrations_mgr.table
+
         # compose a caption for each entry in the index spreadsheet based on the fields in the index, unless all
         # fields are empty
         update_captions = {} # dict by id of dicts containing 'caption', 'filename' and 'url'
@@ -52,6 +56,15 @@ class SyncHandler(webapp2.RequestHandler):
         drive_illustration_mgr.rename_files(renamed_images)
 
         # copy the data in the index to the datastore
+        datastore_illustration_mgr.bulkload_table(self.index_illustrations)
+
+        # find obsolete spreadsheet index entries (no id or no drive image with same id)
+        
+        # delete the obsolete spreadsheet index entries
+        
+        # find obsolete datastore entities (no spreadsheet index entry with same id)
+        
+        # delete the obsolete datastore entities
 
         # the app redirects the user to the index
         template = jinja_environment.get_template('list-illustrations.html')

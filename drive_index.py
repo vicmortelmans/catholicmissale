@@ -50,4 +50,4 @@ class Illustrations(Folder):
     """Read the Google Drive folder containing illustrations
     into a list of dicts"""
     def __init__(self):
-        Folder.__init__(self, google_drive_missale_images_folder_id)
+        super(Illustrations,self).__init__(self, google_drive_missale_images_folder_id)

@@ -2,6 +2,7 @@ import webapp2
 from jinja_templates import jinja_environment
 import drive_index
 import spreadsheet_index
+import datastore_index
 import re
 
 GOOGLE_DRIVE_HOST_PREFIX = "https://googledrive.com/host/" + drive_index.google_drive_missale_images_folder_id
@@ -23,7 +24,7 @@ class SyncHandler(webapp2.RequestHandler):
 
         # compose a caption for each entry in the index spreadsheet based on the fields in the index, unless all
         # fields are empty
-        update_captions = {} # dict by id of dicts containing 'caption', 'filename' and 'url'
+        update_captions = {}  # dict by id of dicts containing 'caption', 'filename' and 'url'
         self.compose_captions(update_captions)
 
         # find index spreadsheet entries with new captions and add them to the update list
@@ -38,7 +39,7 @@ class SyncHandler(webapp2.RequestHandler):
 
         # find new images in the drive folder by comparing the id fields
         # the file title is the initial caption
-        new_images = {} # dict by id of dicts containing 'caption', 'filename' and 'url'
+        new_images = {}  # dict by id of dicts containing 'caption', 'filename' and 'url'
         self.find_new_images(new_images)
 
         # compose a filename and url (= lower-case dash-separated caption; important for SEO!) for each entry in the
@@ -56,19 +57,25 @@ class SyncHandler(webapp2.RequestHandler):
         drive_illustration_mgr.rename_files(renamed_images)
 
         # copy the data in the index to the datastore
-        datastore_illustration_mgr.bulkload_table(self.index_illustrations)
+        datastore_illustrations_mgr.bulkload_table(self.index_illustrations)
 
         # find obsolete spreadsheet index entries (no id or no drive image with same id)
-        
+        obsolete_index_rows = {}
+        self.find_obsolete_index_rows(obsolete_index_rows)
+
         # delete the obsolete spreadsheet index entries
-        
+        index_illustrations_mgr.delete_rows(obsolete_index_rows)
+
         # find obsolete datastore entities (no spreadsheet index entry with same id)
-        
+        obsolete_entities = {}
+        self.find_obsolete_entities(obsolete_entities)
+
         # delete the obsolete datastore entities
+        datastore_illustrations_mgr.delete_entities(obsolete_entities)
 
         # the app redirects the user to the index
         template = jinja_environment.get_template('list-illustrations.html')
-        self.response.out.write(template.render(illustrations=self.drive_illustrations))
+        self.response.out.write(template.render(illustrations=self.datastore_illustrations))
 
     def compose_captions(self, d):
         """ compose a (non-empty) caption for each spreadsheet index entry and store it in update_captions """
@@ -98,7 +105,7 @@ class SyncHandler(webapp2.RequestHandler):
         for id in ignore:
             del d[id]
 
-    def compose_filenames(self,d):
+    def compose_filenames(self, d):
         for id in d:
             caption = d[id]['caption']
             fileExtension = d[id]['fileExtension']
@@ -107,22 +114,36 @@ class SyncHandler(webapp2.RequestHandler):
             d[id]['filename'] = filename
             d[id]['url'] = url
 
-    def find_new_images(self,d):
+    def find_new_images(self, d):
         # find images in drive that are not in index (by id)
-        index_ids = [item['id'] for item in self.index_illustrations]
+        index_ids = [i['id'] for i in self.index_illustrations]
         for i in self.drive_illustrations:
             id = i['id']
             if id not in index_ids:
                 d[id] = {'caption': i['title'], 'fileExtension': i['fileExtension']}
 
-    def find_renamed_images(self,d):
+    def find_renamed_images(self, d):
         # find images in drive that have a title not matching the filename in the index
         # store the index-filename in d
-        index_filenames = {item['id']:item['filename'] for item in self.index_illustrations}
+        index_filenames = {i['id']:i['filename'] for i in self.index_illustrations}
         for i in self.drive_illustrations:
             id = i['id']
             if id in index_filenames and index_filenames[id] != i['title']:
                 d[id] = {'filename': index_filenames[id]}
+
+    def find_obsolete_index_rows(self, d):
+        drive_ids = [i['id'] for i in self.drive_illustrations]
+        for i in self.index_illustrations:
+            id = i['id']
+            if id not in drive_ids:
+                d[id] = {}
+
+    def find_obsolete_entities(self, d):
+        index_ids = [i['id'] for i in self.index_illustrations]
+        for i in self.datastore_illustrations:
+            id = i['id']
+            if id not in index_ids:
+                d[id] = {}
 
 
 def compose_caption(title=None, artist=None, year=None, location=None, copyright=None):

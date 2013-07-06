@@ -29,8 +29,8 @@ class Spreadsheet_index():
         """google_spreadsheet_key is the key of the spreadsheet (can be read from the url)."""
         self._google_spreadsheet_key = google_spreadsheet_key
         self.table = []
-        self.client = SpreadsheetsClient()
-        self.client.client_login(
+        self._client = SpreadsheetsClient()
+        self._client.client_login(
             google_credentials.USERNAME,
             google_credentials.PASSWORD,
             'catholicmissale'
@@ -38,25 +38,25 @@ class Spreadsheet_index():
         self.sync_table()
 
     def sync_table(self):
-        self.rows = self.client.get_list_feed(
+        self._rows = self._client.get_list_feed(
             self._google_spreadsheet_key,
             google_spreadsheet_first_worksheet_id
         ).entry
-        for row in self.rows:
+        for row in self._rows:
             self.table.append(row.to_dict())
 
-    def update_fields(self, updates, id_name='id'):
+    def update_fields(self, updates, id_name):
         """
         @param id_name: the name of the field by which the rows can be queried
         @param updates: a dict of dicts. The index is the value of the id_name field. Each dict contains the fields of
         a row that must be updated.
         @return: nothing
         """
-        for entry in self.rows:
+        for entry in self._rows:
             id = entry.get_value(id_name)
             if id in updates:
                 entry.from_dict(updates[id])
-                self.client.update(entry)
+                self._client.update(entry)
                 logging.info('On index updated row with ' + id_name + '=' + id)
         self.sync_table()
 
@@ -69,7 +69,7 @@ class Spreadsheet_index():
             additions[id]['id'] = id  # to make sure this field is also filled in if it wasn't explicitly in the dict!
             entry = ListEntry()
             entry.from_dict(additions[id])
-            self.client.add_list_entry(
+            self._client.add_list_entry(
                 entry,
                 self._google_spreadsheet_key,
                 google_spreadsheet_first_worksheet_id
@@ -77,12 +77,23 @@ class Spreadsheet_index():
             logging.info('On index added row ' + pprint.pprint(additions[id]))
         self.sync_table()
 
+    def delete_rows(self, obsolete_rows, id_name):
+        for entry in self._rows:
+            id = entry.get_value(id_name)
+            if id in obsolete_rows:
+                self._client.delete(entry)
+                logging.info('On index deleted row with ' + id_name + '=' + id)
+        self.sync_table()
+
 
 class Illustrations(Spreadsheet_index):
     """Read the published google spreadsheet containing illustration metadata
     into a list of dicts"""
     def __init__(self):
-        super(Illustrations,self).__init__(self, google_spreadsheet_missale_illustrations_key)
+        Spreadsheet_index.__init__(self, google_spreadsheet_missale_illustrations_key)
 
     def update_fields(self, updates):
-        super(Illustrations,self).update_fields(updates,'id')
+        Spreadsheet_index.update_fields(updates, 'id')
+
+    def delete_rows(self, obsolete_rows):
+        Spreadsheet_index.delete_rows(obsolete_rows, 'id')

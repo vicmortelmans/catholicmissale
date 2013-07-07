@@ -88,7 +88,7 @@ class SyncHandler(webapp2.RequestHandler):
                 location=i['location'],
                 copyright=i['copyright']
             )
-            fileExtension = i['fileextension']
+            fileExtension = i['fileExtension']
             if caption != ' ':  # result of all empty metadata fields
                 d[id] = {'caption': caption, 'fileExtension': fileExtension}
 

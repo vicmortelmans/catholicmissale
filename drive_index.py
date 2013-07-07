@@ -18,11 +18,11 @@ class Folder():
     def __init__(self, google_drive_folder_id):
         """google_drive_folder_id is the id of the folder (can be read from the url)."""
         self._google_drive_folder_id = google_drive_folder_id
-        self.table = []
         self._drive_service = Oauth2_service(API_CLIENT, VERSION, OAUTH_SCOPE).service
         self.sync_table()
 
     def sync_table(self):
+        self.table = []
         files = self._drive_service.children().list(folderId=self._google_drive_folder_id).execute()
         for f in files.get('items', []):
             metadata = self._drive_service.files().get(fileId=f['id']).execute()
@@ -43,7 +43,8 @@ class Folder():
                 logging.info("On drive, renamed " + old_name + ' to ' + new_name)
             except errors.HttpError, error:
                 print 'An error occurred: %s' % error
-        self.sync_table()
+        if new_names:
+            self.sync_table()
 
 
 class Illustrations(Folder):

@@ -19,6 +19,10 @@ renamed_columns = [
     {
         'original_name': 'fileExtension',
         'short_name': 'fileextension'
+    },
+    {
+        'original_name': 'oldUrl',
+        'short_name': 'oldurl'
     }
 ]
 
@@ -29,7 +33,8 @@ def short_names(d):
     @return: same dict, but with the row names as they are in the API (lower case, no spaces, underscores, etc)
     """
     for c in renamed_columns:
-        d[c['short_name']] = d.pop(c['original_name'])
+        if c['original_name'] in d:
+            d[c['short_name']] = d.pop(c['original_name'])
     return d
 
 
@@ -39,7 +44,8 @@ def original_names(d):
     @return: same dict, but with the original row names
     """
     for c in renamed_columns:
-        d[c['original_name']] = d.pop(c['short_name'])
+        if c['short_name'] in d:
+            d[c['original_name']] = d.pop(c['short_name'])
     return d
 
 
@@ -63,10 +69,11 @@ class Spreadsheet_index():
             google_credentials.PASSWORD,
             'catholicmissale'
         )
+        self.table = []
         self.sync_table()
 
     def sync_table(self):
-        self.table = []
+        del self.table[:]  # table = [] would break the references!
         self._rows = self._client.get_list_feed(
             self._google_spreadsheet_key,
             google_spreadsheet_first_worksheet_id

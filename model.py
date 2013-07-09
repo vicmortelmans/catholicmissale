@@ -11,5 +11,6 @@ class Illustration(ndb.Model):
     caption = ndb.TextProperty()
     filename = ndb.TextProperty()
     fileExtension = ndb.TextProperty()
-    url = ndb.StringProperty
+    url = ndb.TextProperty()
+    oldUrl = ndb.TextProperty()
 

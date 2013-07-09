@@ -10,12 +10,14 @@ class Model_index():
        The list is then available as the table attribute."""
     def __init__(self, Datastore_model):
         self._Model = Datastore_model
+        self.table = []
         self.sync_table()
 
     def sync_table(self):
-        self.table = []
+        del self.table[:]  # table = [] would break the references!
         query = self._Model.query()
         for object in query:
+            # convert object to dict
             d = {}
             for a in object._values:
                 d[a] = getattr(object, a)

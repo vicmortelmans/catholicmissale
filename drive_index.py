@@ -1,6 +1,7 @@
 from oauth2_three_legged import Oauth2_service
 from apiclient import errors
 import logging
+import re
 
 logging.basicConfig(level=logging.INFO)
 
@@ -8,7 +9,7 @@ API_CLIENT = 'drive'
 VERSION = 'v2'
 OAUTH_SCOPE = 'https://www.googleapis.com/auth/drive'
 
-google_drive_missale_images_folder_id = '0B-659FdpCliwOUUxQmxONnJkRlE' 
+google_drive_missale_images_folder_id = '0B-659FdpCliwWWJrSVRfSU5oVHc'
 
 
 class Folder():
@@ -19,14 +20,16 @@ class Folder():
         """google_drive_folder_id is the id of the folder (can be read from the url)."""
         self._google_drive_folder_id = google_drive_folder_id
         self._drive_service = Oauth2_service(API_CLIENT, VERSION, OAUTH_SCOPE).service
+        self.table = []
         self.sync_table()
 
     def sync_table(self):
-        self.table = []
+        del self.table[:]  # table = [] would break the references!
         files = self._drive_service.children().list(folderId=self._google_drive_folder_id).execute()
         for f in files.get('items', []):
             metadata = self._drive_service.files().get(fileId=f['id']).execute()
-            self.table.append(dict((key, metadata[key]) for key in ['id', 'title', 'fileExtension']))
+            if 'fileExtension' in metadata and re.match('jpg|JPG|jpeg|JPEG|png|PNG', metadata['fileExtension']):
+                self.table.append(dict((key, metadata[key]) for key in ['id', 'title', 'fileExtension']))
 
     def rename_files(self, new_names):
         """

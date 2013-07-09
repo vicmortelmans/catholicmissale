@@ -6,7 +6,6 @@ import google_credentials
 # USERNAME = ''
 # PASSWORD = ''
 import logging
-import pprint
 
 logging.basicConfig(level=logging.INFO)
 
@@ -111,7 +110,7 @@ class Spreadsheet_index():
                 self._google_spreadsheet_key,
                 google_spreadsheet_first_worksheet_id
             )
-            logging.info('On index added row ' + pprint.pprint(additions[id]))
+            logging.info('On index added row with id = ' + id)
         if additions:
             self.sync_table()
 

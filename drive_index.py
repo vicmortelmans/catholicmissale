@@ -2,6 +2,7 @@ from oauth2_three_legged import Oauth2_service
 from apiclient import errors
 import logging
 import re
+from google.appengine.api.urlfetch_errors import DownloadError
 
 logging.basicConfig(level=logging.INFO)
 
@@ -25,11 +26,30 @@ class Folder():
 
     def sync_table(self):
         del self.table[:]  # table = [] would break the references!
-        files = self._drive_service.children().list(folderId=self._google_drive_folder_id).execute()
-        for f in files.get('items', []):
-            metadata = self._drive_service.files().get(fileId=f['id']).execute()
-            if 'fileExtension' in metadata and re.match('jpg|JPG|jpeg|JPEG|png|PNG', metadata['fileExtension']):
-                self.table.append(dict((key, metadata[key]) for key in ['id', 'title', 'fileExtension']))
+        # the default maxResults is 100, so a loop is required
+        page_token = None
+        while True:
+            param = {}
+            if page_token:
+                param['pageToken'] = page_token
+            files = self._drive_service.children().list(
+                folderId=self._google_drive_folder_id,
+                q='trashed = false',
+                **param
+            ).execute()
+            for f in files.get('items', []):
+                id = f['id']
+                try:
+                    metadata = self._drive_service.files().get(fileId=id).execute()
+                    if 'fileExtension' in metadata and re.match('jpg|JPG|jpeg|JPEG|png|PNG', metadata['fileExtension']):
+                        self.table.append(dict((key, metadata[key]) for key in ['id', 'title', 'fileExtension']))
+                except errors.HttpError, error:
+                    logging.warning('On drive, an http error occurred: %s' % error)
+                except DownloadError:
+                    logging.warning('On drive, failed to get metadata for file with id = ' + id)
+            page_token = files.get('nextPageToken')
+            if not page_token:
+                break
 
     def rename_files(self, new_names):
         """
@@ -37,15 +57,17 @@ class Folder():
         @return:
         """
         for id in new_names:
-            metadata = self._drive_service.files().get(fileId=id).execute()
-            old_name = metadata['title']
-            new_name = new_names[id]['filename']
-            metadata['title'] = new_name
             try:
+                metadata = self._drive_service.files().get(fileId=id).execute()
+                old_name = metadata['title']
+                new_name = new_names[id]['filename']
+                metadata['title'] = new_name
                 self._drive_service.files().update(fileId=id, body=metadata).execute()
                 logging.info("On drive, renamed " + old_name + ' to ' + new_name)
             except errors.HttpError, error:
-                print 'An error occurred: %s' % error
+                logging.warning('On drive, an http error occurred: %s' % error)
+            except DownloadError:
+                logging.warning('On drive, failed to update metadata for file with id = ' + id)
         if new_names:
             self.sync_table()
 

@@ -14,7 +14,7 @@
         			<th>year</th>
         			<th>location</th>
         			<th>copyright</th>
-        			<th>context</th>
+                    <th>id</th>
         		</tr>
         	</thead>
         	<tbody>
@@ -26,14 +26,9 @@
         						title="{{illustration.caption}}"/>
         				</a>
         			</td>
-        			{% for item in ['title','artist','year','location','copyright']%}
+        			{% for item in ['title','artist','year','location','copyright','id']%}
         				<td>{{illustration[item]}}</td>
         			{% endfor %}
-        			<td>
-        			{% if illustration.contexturl %}
-        				<a href="{{illustration.contexturl}}" target="_blank">context</a>
-        			{% endif %}
-        			</td>
         		</tr>
         	{% endfor %}
         	</tbody>

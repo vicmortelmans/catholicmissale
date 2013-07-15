@@ -148,11 +148,11 @@ class SyncHandler(webapp2.RequestHandler):
 
 def compose_caption(title=None, artist=None, year=None, location=None, copyright=None):
     c = "%s (%s, %s, %s, %s)" % (title or '', artist or '', year or '', location or '', copyright or '')
+    c = re.sub(r', , ', ', ', c)
+    c = re.sub(r', , ', ', ', c)
+    c = re.sub(r', , ', ', ', c)
     c = re.sub(r', \(, \)+', ', ', c)
     c = re.sub(r'\(, ', '(', c)
-    c = re.sub(r', \)', ')', c)
-    c = re.sub(r', \)', ')', c)
-    c = re.sub(r', \)', ')', c)
     c = re.sub(r', \)', ')', c)
     c = re.sub(r'\(, \)', '', c)
     c = re.sub(r'\(\)', '', c)

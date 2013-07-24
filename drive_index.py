@@ -43,7 +43,7 @@ class Folder():
                     metadata = self._drive_service.files().get(fileId=id).execute()
                     if 'fileExtension' in metadata and re.match('jpg|JPG|jpeg|JPEG|png|PNG', metadata['fileExtension']):
                         self.table.append(dict((key, metadata[key]) for key in ['id', 'title', 'fileExtension']))
-                except errors.HttpError, error:
+                except errors.HttpException, error:
                     logging.warning('On drive, an http error occurred: %s' % error)
                 except DownloadError:
                     logging.warning('On drive, failed to get metadata for file with id = ' + id)
@@ -64,7 +64,7 @@ class Folder():
                 metadata['title'] = new_name
                 self._drive_service.files().update(fileId=id, body=metadata).execute()
                 logging.info("On drive, renamed " + old_name + ' to ' + new_name)
-            except errors.HttpError, error:
+            except errors.HttpException, error:
                 logging.warning('On drive, an http error occurred: %s' % error)
             except DownloadError:
                 logging.warning('On drive, failed to update metadata for file with id = ' + id)

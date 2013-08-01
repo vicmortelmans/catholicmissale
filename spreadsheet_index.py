@@ -16,7 +16,7 @@ google_spreadsheet_missale_masses_worksheet_id = 'od4'
 
 reading_references_separator = '|'
 
-# list of row names that will be renamed by the API
+# list of column names that will be renamed by the API
 renamed_columns = [
     {
         'original_name': 'fileExtension',
@@ -27,12 +27,12 @@ renamed_columns = [
         'short_name': 'oldurl'
     },
     {
-        'original_name': 'passageReferences',
-        'short_name': 'passagereferences'
+        'original_name': 'passageReference',
+        'short_name': 'passagereference'
     }
 ]
 
-# list of row names that contain repeated properties represented as joined strings
+# list of column names that contain repeated properties represented as joined strings
 repeated_properties = [
     {
         'name': 'cycle',
@@ -52,18 +52,40 @@ repeated_properties = [
     }
 ]
 
+# list of columnnames that contain integer ata
+integer_properties = [
+    {
+        'name': 'order'
+    }
+]
+
+
 def export_for_spreadsheet(d):
     """
     @param d: dict containing fields of a row in the spreadsheet
     @return: same dict, but with the row names as they are in the API (lower case, no spaces, underscores, etc)
     and the lists of the repeating properties joined into a string
+    and the integer values casted to integer variables
+    all of this to align the dict better to the corresponding entity in model.py
+    and to be able to call setattr() without getting type errors
+    but beware that this conversion will cause trouble if different spreadsheets use the same column names
+    for different type of fields!!
     """
     for c in renamed_columns:
         if c['original_name'] in d:
             d[c['short_name']] = d.pop(c['original_name'])
     for c in repeated_properties:
-        if c['name'] in d and d[c['name']]:
-            d[c['name']] = d[c['name']].join(c['separator'])
+        if c['name'] in d:
+            if d[c['name']]:
+                d[c['name']] = c['separator'].join(d[c['name']])
+            else:
+                d[c['name']] = ''
+    for c in integer_properties:
+        if c['name'] in d:
+            if d[c['name']]:
+                d[c['name']] = str(d[c['name']])
+            else:
+                d[c['name']] = ''
     return d
 
 
@@ -77,11 +99,18 @@ def import_from_spreadsheet(d):
         if c['short_name'] in d:
             d[c['original_name']] = d.pop(c['short_name'])
     for c in repeated_properties:
-        if c['name'] in d and d[c['name']]:
-            if c['separator']:
-                d[c['name']] = d[c['name']].split(c['separator'])
+        if c['name'] in d:
+            if d[c['name']]:
+                if c['separator']:
+                    d[c['name']] = d[c['name']].split(c['separator'])
+                else:
+                    d[c['name']] = list(d[c['name']])  # split into characters
             else:
-                d[c['name']] = list(d[c['name']])  # split into characters
+                d[c['name']] = []
+    for c in integer_properties:
+        if c['name'] in d:
+            if d[c['name']]:
+                d[c['name']] = int(d[c['name']])
     return d
 
 
@@ -175,6 +204,9 @@ class Illustrations(Spreadsheet_index):
 
     def update_fields(self, updates):
         Spreadsheet_index.update_fields(self, updates, 'id')
+
+    def update_fields_by_url(self, updates):
+        Spreadsheet_index.update_fields(self, updates, 'url')
 
     def delete_rows(self, obsolete_rows):
         Spreadsheet_index.delete_rows(self, obsolete_rows, 'id')

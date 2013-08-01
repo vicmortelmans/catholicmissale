@@ -4,11 +4,12 @@ import drive_index
 import spreadsheet_index
 import datastore_index
 import re
+from lib import slugify
 
 GOOGLE_DRIVE_HOST_PREFIX = "https://googledrive.com/host/" + drive_index.google_drive_missale_images_folder_id
 
 
-class SyncHandler(webapp2.RequestHandler):
+class SyncIllustrationHandler(webapp2.RequestHandler):
     def get(self):
         # get the contents of the drive folder
         drive_illustration_mgr = drive_index.Illustrations()
@@ -21,6 +22,17 @@ class SyncHandler(webapp2.RequestHandler):
         # get the contents of the datastore
         datastore_illustrations_mgr = datastore_index.Illustrations()
         self.datastore_illustrations = datastore_illustrations_mgr.table
+
+        # see if there have been image URLs submitted to the spreadsheet index for downloading
+        # (they can be recognized because they don't have a drive ID yet)
+        images_for_download = {}  # dict by url (!) of dicts containing 'url'
+        self.find_images_for_download(images_for_download)
+
+        # download the images and collect the id's in a dict of id of dicts containing 'url'
+        downloaded_images = drive_illustration_mgr.download_images(images_for_download)
+
+        # update the spreadsheet index entries with the new id's
+        index_illustrations_mgr.update_fields_by_url(downloaded_images)
 
         # compose a caption for each entry in the index spreadsheet based on the fields in the index, unless all
         # fields are empty
@@ -57,7 +69,11 @@ class SyncHandler(webapp2.RequestHandler):
         drive_illustration_mgr.rename_files(renamed_images)
 
         # copy the data in the index to the datastore
-        datastore_illustrations_mgr.bulkload_table(self.index_illustrations)
+        # get the rows that are updated (i.e. biblereferences are updated)
+        updated_index_rows = datastore_illustrations_mgr.bulkload_table(self.index_illustrations)
+
+        # update the spreadsheet index entries
+        index_illustrations_mgr.update_fields(updated_index_rows)
 
         # find obsolete spreadsheet index entries (no id or no drive image with same id)
         obsolete_index_rows = {}
@@ -76,6 +92,16 @@ class SyncHandler(webapp2.RequestHandler):
         # the app redirects the user to the index
         template = jinja_environment.get_template('list-illustrations.html')
         self.response.out.write(template.render(illustrations=self.datastore_illustrations))
+
+    def find_images_for_download(self, d):
+        """
+        @param d: an emtpy dict
+        @return: the dict filled with rows from the spreadsheet index
+        that had an url but no id
+        """
+        for i in self.index_illustrations:
+            if not i['id'] and i['url']:
+                d[i['url']] = {'url': i['url']}
 
     def compose_captions(self, d):
         """ compose a (non-empty) caption for each spreadsheet index entry and store it in update_captions """
@@ -125,7 +151,7 @@ class SyncHandler(webapp2.RequestHandler):
     def find_renamed_images(self, d):
         # find images in drive that have a title not matching the filename in the index
         # store the index-filename in d
-        index_filenames = {i['id']:i['filename'] for i in self.index_illustrations}
+        index_filenames = {i['id']: i['filename'] for i in self.index_illustrations}
         for i in self.drive_illustrations:
             id = i['id']
             if id in index_filenames and index_filenames[id] != i['title']:
@@ -157,19 +183,6 @@ def compose_caption(title=None, artist=None, year=None, location=None, copyright
     c = re.sub(r'\(, \)', '', c)
     c = re.sub(r'\(\)', '', c)
     return c
-
-
-def slugify(value):
-    """
-    Normalizes string, converts to lowercase, removes non-alpha characters,
-    and converts spaces to hyphens.
-    """
-    import unicodedata
-    value = unicode(value)
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
-    value = unicode(re.sub('[-\s]+', '-', value))
-    return value
 
 
 def random_id():

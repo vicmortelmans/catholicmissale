@@ -14,29 +14,29 @@ class Illustration(ndb.Model):
     fileExtension = ndb.TextProperty()
     url = ndb.TextProperty()
     oldUrl = ndb.TextProperty()
-    passageReferences = ndb.TextProperty()
+    passageReference = ndb.TextProperty()
 
 
 class Mass(ndb.Model):
     """ each day that has a mass sheet; no key is assigned """
     key = ndb.StringProperty(required=True)
-    name = ndb.TextProperty()
-    coordinates = ndb.StringProperty()
     form = ndb.StringProperty()
+    coordinates = ndb.StringProperty()
     cycle = ndb.StringProperty(repeated=True)
-    season = ndb.TextProperty()
+    name = ndb.TextProperty()
+    category = ndb.TextProperty()
     color = ndb.TextProperty()
+    season = ndb.TextProperty()
     order = ndb.IntegerProperty()
     gospel = ndb.StringProperty(repeated=True)
     lecture = ndb.StringProperty(repeated=True)
     epistle = ndb.StringProperty(repeated=True)
-    coincidesWith = ndb.TextProperty()
 
 
 class BibleRef(ndb.Model):
     """ the key is the reference """
     reference = ndb.StringProperty(required=True)
-    book = ndb.StringProperty()
+    book = ndb.StringProperty()  # please only 'osisbook' values as returned by bibleref yql open table
     begin = ndb.IntegerProperty()
     end = ndb.IntegerProperty()
     containedReferences = ndb.StringProperty(repeated=True)
@@ -44,3 +44,7 @@ class BibleRef(ndb.Model):
     @classmethod
     def query_book(cls, book):
         return cls.query(cls.book == book)
+
+    @classmethod
+    def query_containing(cls, reference):
+        return cls.query(cls.containedReferences == reference)

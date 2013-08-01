@@ -1,8 +1,12 @@
 from oauth2_three_legged import Oauth2_service
-from apiclient import errors
 import logging
 import re
 from google.appengine.api.urlfetch_errors import DownloadError
+import urllib
+import io
+from apiclient.http import MediaIoBaseUpload
+from lib import slugify
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -22,7 +26,7 @@ class Folder():
         self._google_drive_folder_id = google_drive_folder_id
         self._drive_service = Oauth2_service(API_CLIENT, VERSION, OAUTH_SCOPE).service
         self.table = []
-        self.sync_table()
+        # DEBUG self.sync_table()
 
     def sync_table(self):
         del self.table[:]  # table = [] would break the references!
@@ -43,10 +47,10 @@ class Folder():
                     metadata = self._drive_service.files().get(fileId=id).execute()
                     if 'fileExtension' in metadata and re.match('jpg|JPG|jpeg|JPEG|png|PNG', metadata['fileExtension']):
                         self.table.append(dict((key, metadata[key]) for key in ['id', 'title', 'fileExtension']))
-                except errors.HttpException, error:
-                    logging.warning('On drive, an http error occurred: %s' % error)
                 except DownloadError:
                     logging.warning('On drive, failed to get metadata for file with id = ' + id)
+                except Exception, error:
+                    logging.warning('On drive, an http error occurred: %s' % error)
             page_token = files.get('nextPageToken')
             if not page_token:
                 break
@@ -64,10 +68,10 @@ class Folder():
                 metadata['title'] = new_name
                 self._drive_service.files().update(fileId=id, body=metadata).execute()
                 logging.info("On drive, renamed " + old_name + ' to ' + new_name)
-            except errors.HttpException, error:
-                logging.warning('On drive, an http error occurred: %s' % error)
             except DownloadError:
                 logging.warning('On drive, failed to update metadata for file with id = ' + id)
+            except Exception, error:
+                logging.warning('On drive, an http error occurred: %s' % error)
         if new_names:
             self.sync_table()
 
@@ -77,3 +81,26 @@ class Illustrations(Folder):
     into a list of dicts"""
     def __init__(self):
         Folder.__init__(self, google_drive_missale_images_folder_id)
+
+    def download_images(self, images_for_download):
+        """
+        @param images_for_download: dict by url of {'url':...}
+        @return: dict by id of {'id':..., 'url':...}
+        The filename is arbitrarily based on the url
+        """
+        d = {}
+        for url in images_for_download:
+            filename = slugify(url)
+            file = urllib.urlopen(url)
+            fd = io.BytesIO(file.read())
+            media = MediaIoBaseUpload(fd, mimetype='image/png', chunksize=1024*1024, resumable=True)
+            request = self._drive_service.files().insert(media_body=media, body={'name': filename})
+            response = None
+            while response is None:
+              status, response = request.next_chunk()
+              if status:
+                logging.info("Uploaded %d%%." % int(status.progress() * 100))
+            logging.info("Upload Complete!")
+            id = request['id']
+            d[id] = {'id': id, 'url':url}
+        return d

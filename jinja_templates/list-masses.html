@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Missale masses</title>
+    </head>
+    <body>
+        <h1>Missale masses</h1>
+        <table>
+        	<thead>
+        		<tr>
+        			<th>form</th>
+        			<th>coordinates</th>
+        			<th>cycle</th>
+        			<th>name</th>
+        			<th>color</th>
+        			<th>gospel</th>
+                    <th>lecture</th>
+                    <th>epistle</th>
+        		</tr>
+        	</thead>
+        	<tbody>
+        	{% for illustration in illustrations %}
+        		<tr>
+        			{% for item in ['form','coordinates','cycle','name','color','gospel','lecture','epistle']%}
+        				<td>{{illustration[item]}}</td>
+        			{% endfor %}
+        		</tr>
+        	{% endfor %}
+        	</tbody>
+        </table>
+    </body>
+</html>

@@ -14,7 +14,9 @@ API_CLIENT = 'drive'
 VERSION = 'v2'
 OAUTH_SCOPE = 'https://www.googleapis.com/auth/drive'
 
-google_drive_missale_images_folder_id = '0B-659FdpCliwWWJrSVRfSU5oVHc'
+#google_drive_missale_images_folder_id = '0B-659FdpCliwWWJrSVRfSU5oVHc'
+# TEST:
+google_drive_missale_images_folder_id = '0B-659FdpCliwQ1RldHZ6XzlJUEk'
 
 
 class Folder():
@@ -26,7 +28,7 @@ class Folder():
         self._google_drive_folder_id = google_drive_folder_id
         self._drive_service = Oauth2_service(API_CLIENT, VERSION, OAUTH_SCOPE).service
         self.table = []
-        # DEBUG self.sync_table()
+        #self.sync_table()
 
     def sync_table(self):
         del self.table[:]  # table = [] would break the references!
@@ -54,6 +56,7 @@ class Folder():
             page_token = files.get('nextPageToken')
             if not page_token:
                 break
+        return self.table
 
     def rename_files(self, new_names):
         """
@@ -85,7 +88,7 @@ class Illustrations(Folder):
     def download_images(self, images_for_download):
         """
         @param images_for_download: dict by url of {'url':...}
-        @return: dict by id of {'id':..., 'url':...}
+        @return: dict by url of {'id':..., 'url':...}
         The filename is arbitrarily based on the url
         """
         d = {}
@@ -94,13 +97,22 @@ class Illustrations(Folder):
             file = urllib.urlopen(url)
             fd = io.BytesIO(file.read())
             media = MediaIoBaseUpload(fd, mimetype='image/png', chunksize=1024*1024, resumable=True)
-            request = self._drive_service.files().insert(media_body=media, body={'name': filename})
+            metadata = {
+                'title': filename,
+                'parents': [
+                    {
+                        'id': google_drive_missale_images_folder_id
+                    }
+                ]
+            }
+            request = self._drive_service.files().insert(media_body=media, body=metadata)
             response = None
             while response is None:
               status, response = request.next_chunk()
               if status:
                 logging.info("Uploaded %d%%." % int(status.progress() * 100))
             logging.info("Upload Complete!")
-            id = request['id']
-            d[id] = {'id': id, 'url':url}
+            id = response['id']
+            fileExtension = response['fileExtension']
+            d[url] = {'id': id, 'url':url, 'fileExtension':fileExtension}
         return d

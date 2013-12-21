@@ -3,14 +3,16 @@ from jinja_templates import jinja_environment
 from gdata.spreadsheets.client import SpreadsheetsClient
 from gdata.spreadsheets.data import ListEntry
 import google_credentials
-# USERNAME = ''
-# PASSWORD = ''
 import logging
 
 logging.basicConfig(level=logging.INFO)
 
-google_spreadsheet_missale_illustrations_key = "0Au659FdpCliwdEtYWm81eEMwUGQ1RlMybUx2UU5BLXc"
+#google_spreadsheet_missale_illustrations_key = "0Au659FdpCliwdEtYWm81eEMwUGQ1RlMybUx2UU5BLXc"
+#google_spreadsheet_first_worksheet_id = 'od6'
+# TEST:
+google_spreadsheet_missale_illustrations_key = "0Au659FdpCliwdEJ3OTRadllNd2dONmp6QTFvZXFvSXc"
 google_spreadsheet_first_worksheet_id = 'od6'
+
 google_spreadsheet_missale_masses_key = "0Au659FdpCliwdEdOUElBaUVXSFRoY0dCbHowWGM4VEE"
 google_spreadsheet_missale_masses_worksheet_id = 'od4'
 
@@ -137,7 +139,7 @@ class Spreadsheet_index():
             'catholicmissale'
         )
         self.table = []
-        self.sync_table()
+        #self.sync_table()
 
     def sync_table(self):
         del self.table[:]  # table = [] would break the references!
@@ -147,6 +149,7 @@ class Spreadsheet_index():
         ).entry
         for row in self._rows:
             self.table.append(import_from_spreadsheet(row.to_dict()))
+        return self.table
 
     def update_fields(self, updates, id_name):
         """
@@ -155,6 +158,13 @@ class Spreadsheet_index():
         a row that must be updated.
         @return: nothing
         """
+        # update the in-memory table
+        for entry in self.table:
+            id = entry[id_name]
+            if id in updates:
+                for label in updates[id]:
+                    entry[label] = updates[id][label]
+        # update the spreadsheet
         for entry in self._rows:
             id = entry.get_value(id_name)
             if id in updates:
@@ -164,13 +174,17 @@ class Spreadsheet_index():
         if updates:
             self.sync_table()
 
-    def add_rows(self, additions):
+    def add_rows(self, additions, id_name):
         """
         @param additions: a dict of dicts. Each dict contains the fields of a row that must be added.
         @return:
         """
+        # update the in-memory table
         for id in additions:
-            additions[id]['id'] = id  # to make sure this field is also filled in if it wasn't explicitly in the dict!
+            self.table.append(additions[id])
+        # update the spreadsheet
+        for id in additions:
+            additions[id][id_name] = id  # to make sure this field is also filled in if it wasn't explicitly in the dict!
             entry = ListEntry()
             entry.from_dict(export_for_spreadsheet(additions[id]))
             self._client.add_list_entry(
@@ -182,14 +196,14 @@ class Spreadsheet_index():
         if additions:
             self.sync_table()
 
-    def delete_rows(self, obsolete_rows, id_name):
-        for entry in self._rows:
-            id = entry.get_value(id_name)
-            if id in obsolete_rows:
-                self._client.delete(entry)
-                logging.info('On index deleted row with ' + id_name + '=' + id)
-        if obsolete_rows:
-            self.sync_table()
+#    def delete_rows(self, obsolete_rows, id_name):
+#        for entry in self._rows:
+#            id = entry.get_value(id_name)
+#            if id in obsolete_rows:
+#                self._client.delete(entry)
+#                logging.info('On index deleted row with ' + id_name + '=' + id)
+#        if obsolete_rows:
+#            self.sync_table()
 
 
 class Illustrations(Spreadsheet_index):
@@ -205,11 +219,14 @@ class Illustrations(Spreadsheet_index):
     def update_fields(self, updates):
         Spreadsheet_index.update_fields(self, updates, 'id')
 
+    def add_rows(self, additions):
+        Spreadsheet_index.add_rows(self, additions, 'id')
+
     def update_fields_by_url(self, updates):
         Spreadsheet_index.update_fields(self, updates, 'url')
 
-    def delete_rows(self, obsolete_rows):
-        Spreadsheet_index.delete_rows(self, obsolete_rows, 'id')
+#    def delete_rows(self, obsolete_rows):
+#        Spreadsheet_index.delete_rows(self, obsolete_rows, 'id')
 
 
 class Masses(Spreadsheet_index):

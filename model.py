@@ -15,6 +15,7 @@ class Illustration(ndb.Model):
     url = ndb.TextProperty()
     oldUrl = ndb.TextProperty()
     passageReference = ndb.TextProperty()
+    wasted = ndb.TextProperty()
 
 
 class Mass(ndb.Model):

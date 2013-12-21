@@ -12,7 +12,7 @@ class Model_index():
     def __init__(self, Datastore_model):
         self._Model = Datastore_model
         self.table = []
-        self.sync_table()
+        #self.sync_table()
 
     def sync_table(self):
         del self.table[:]  # table = [] would break the references!
@@ -23,6 +23,7 @@ class Model_index():
             for a in entity._values:
                 d[a] = getattr(entity, a)  # repeated properties are represented as a list
             self.table.append(d)
+        return self.table
 
     def bulkload_table(self, table, key_name):
         """
@@ -82,6 +83,10 @@ class Masses(Model_index):
         Model_index.__init__(self, model.Mass)
 
     def bulkload_table(self, table):
+        """
+        @param table: input data as a list of dicts
+        @return: dict of updated rows ad dicts
+        """
         d = {}
         for row in table:
             key = row['key']

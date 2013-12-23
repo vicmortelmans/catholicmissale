@@ -68,8 +68,11 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
         datastore_illustrations_mgr = datastore_index.Illustrations()
 
         # copy the data in the index to the datastore
-        # get the rows that are updated (i.e. biblereferences are updated)
+        # get the rows for which biblerefs are updated during registration
         updated_index_rows = datastore_illustrations_mgr.bulkload_table(self.index_illustrations)
+
+        # update the rows for the update list entries
+        index_illustrations_mgr.update_fields(updated_index_rows)
 
         # load the datastore
         self.datastore_illustrations = datastore_illustrations_mgr.sync_table()

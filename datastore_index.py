@@ -1,8 +1,30 @@
+import webapp2
 import model
 import logging
 import bibleref
 
 logging.basicConfig(level=logging.INFO)
+
+class FlushIllustrationHandler(webapp2.RequestHandler):
+    def get(self):
+        for key in list(model.Illustration.query().iter(keys_only = True)):
+            key.delete()
+        self.response.out.write("Flushed all illustrations in datastore!")
+
+
+class FlushMassHandler(webapp2.RequestHandler):
+    def get(self):
+        for key in list(model.Mass.query().iter(keys_only = True)):
+            key.delete()
+        self.response.out.write("Flushed all masses in datastore!")
+
+
+class FlushI18nHandler(webapp2.RequestHandler):
+    def get(self):
+        for key in list(model.I18n.query().iter(keys_only = True)):
+            key.delete()
+        self.response.out.write("Flushed all strings in i18n datastore!")
+
 
 class Model_index():
     """Read a published google spreadsheet into a list of dicts.
@@ -89,7 +111,7 @@ class Masses(Model_index):
         """
         d = {}
         for row in table:
-            key = row['key']
+            id = row['id']
             for reading_type in ['gospel', 'lecture', 'epistle']:
                 references = row[reading_type]  # this is a repeated property !
                 if references:
@@ -99,10 +121,15 @@ class Masses(Model_index):
                             # update the table before bulkloading
                             row[reading_type] = [new_reference if r == reference else r for r in row[reading_type]]
                             # store the updated rows in a dict, for being returned
-                            d[key] = row
-        Model_index.bulkload_table(self, table, 'key')
+                            d[id] = row
+        Model_index.bulkload_table(self, table, 'id')
         return d
 
     def delete_entities(self, obsolete_entities):
-        Model_index.delete_entities(self, obsolete_entities, 'key')
+        Model_index.delete_entities(self, obsolete_entities, 'id')
+
+
+class I18n(Model_index):
+    def __init__(self):
+        Model_index.__init__(self, model.I18n)
 

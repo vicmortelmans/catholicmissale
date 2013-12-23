@@ -8,14 +8,14 @@ class SyncMassesHandler(webapp2.RequestHandler):
     def get(self):
         # get the contents of the index spreadsheet
         index_masses_mgr = spreadsheet_index.Masses()
-        self.index_masses = index_masses_mgr.table
+        self.index_masses = index_masses_mgr.sync_table()
 
         # get the contents of the datastore
         datastore_masses_mgr = datastore_index.Masses()
-        self.datastore_masses = datastore_masses_mgr.table
+        self.datastore_masses = datastore_masses_mgr.sync_table()
 
         # copy the data in the index to the datastore
-        # get the rows that are updated (i.e. biblereferences are updated)
+        # get the rows for which biblerefs are updated during registration
         updated_index_rows = datastore_masses_mgr.bulkload_table(self.index_masses)
 
         # update the spreadsheet index entries
@@ -33,9 +33,9 @@ class SyncMassesHandler(webapp2.RequestHandler):
         self.response.out.write(template.render(masses=self.datastore_masses))
 
     def find_obsolete_entities(self, d):
-        index_ids = [i['key'] for i in self.index_masses]
+        index_ids = [i['id'] for i in self.index_masses]
         for i in self.datastore_masses:
-            key = i['key']
-            if key not in index_ids:
-                d[key] = {}
+            id = i['id']
+            if id not in index_ids:
+                d[id] = {}
 

@@ -6,6 +6,7 @@ import urllib
 import io
 from apiclient.http import MediaIoBaseUpload
 from lib import slugify
+import google_credentials
 
 
 logging.basicConfig(level=logging.INFO)
@@ -14,9 +15,10 @@ API_CLIENT = 'drive'
 VERSION = 'v2'
 OAUTH_SCOPE = 'https://www.googleapis.com/auth/drive'
 
-#google_drive_missale_images_folder_id = '0B-659FdpCliwWWJrSVRfSU5oVHc'
-# TEST:
-google_drive_missale_images_folder_id = '0B-659FdpCliwQ1RldHZ6XzlJUEk'
+if google_credentials.DEV:
+    google_drive_missale_images_folder_id = '0B-659FdpCliwQ1RldHZ6XzlJUEk'
+else:
+    google_drive_missale_images_folder_id = '0B-659FdpCliwWWJrSVRfSU5oVHc'
 
 
 class Folder():

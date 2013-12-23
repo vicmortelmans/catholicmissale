@@ -19,8 +19,8 @@ class Illustration(ndb.Model):
 
 
 class Mass(ndb.Model):
-    """ each day that has a mass sheet; no key is assigned """
-    key = ndb.StringProperty(required=True)
+    """ each day that has a mass sheet; no key is assigned [20131223 it is, isn't it?] """
+    id = ndb.StringProperty(required=True)
     form = ndb.StringProperty()
     coordinates = ndb.StringProperty()
     cycle = ndb.StringProperty(repeated=True)
@@ -49,3 +49,9 @@ class BibleRef(ndb.Model):
     @classmethod
     def query_containing(cls, reference):
         return cls.query(cls.containedReferences == reference)
+
+
+class I18n(ndb.Model):
+    id = ndb.StringProperty(required=True)
+    lang = ndb.StringProperty()
+    string = ndb.StringProperty()

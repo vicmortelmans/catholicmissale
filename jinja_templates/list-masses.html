@@ -19,10 +19,10 @@
         		</tr>
         	</thead>
         	<tbody>
-        	{% for illustration in illustrations %}
+        	{% for mass in masses %}
         		<tr>
         			{% for item in ['form','coordinates','cycle','name','color','gospel','lecture','epistle']%}
-        				<td>{{illustration[item]}}</td>
+        				<td>{{mass[item]}}</td>
         			{% endfor %}
         		</tr>
         	{% endfor %}

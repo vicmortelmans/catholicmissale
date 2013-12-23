@@ -7,14 +7,28 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-#google_spreadsheet_missale_illustrations_key = "0Au659FdpCliwdEtYWm81eEMwUGQ1RlMybUx2UU5BLXc"
-#google_spreadsheet_first_worksheet_id = 'od6'
-# TEST:
-google_spreadsheet_missale_illustrations_key = "0Au659FdpCliwdEJ3OTRadllNd2dONmp6QTFvZXFvSXc"
-google_spreadsheet_first_worksheet_id = 'od6'
-
-google_spreadsheet_missale_masses_key = "0Au659FdpCliwdEdOUElBaUVXSFRoY0dCbHowWGM4VEE"
-google_spreadsheet_missale_masses_worksheet_id = 'od4'
+if google_credentials.DEV:
+    google_spreadsheet_missale_illustrations_key = "0Au659FdpCliwdEJ3OTRadllNd2dONmp6QTFvZXFvSXc"
+    google_spreadsheet_first_worksheet_id = 'od6'
+    google_spreadsheet_missale_masses_key = "0Au659FdpCliwdFJ4Q29FWHNMa2YyRWdOREVYRFR5bGc"
+    google_spreadsheet_missale_masses_worksheet_id = 'od4'
+    google_spreadsheet_missale_i18n_teminology_key = "0Au659FdpCliwdGw4S2otOTVyRk90WlY1R3hXTmVQclE"
+    google_spreadsheet_missale_i18n_teminology_worksheet_id = 'od6'
+    google_spreadsheet_missale_i18n_of_key = "0Au659FdpCliwdDNMTmRCWHB2alJMRmR1dzFxbGNqckE"
+    google_spreadsheet_missale_i18n_of_worksheet_id = 'oda'
+    google_spreadsheet_missale_i18n_eo_key = "0Au659FdpCliwdFIzOFhXaUZ1enJjOXBhWHlWYUVzcFE"
+    google_spreadsheet_missale_i18n_eo_worksheet_id = 'od7'
+else:
+    google_spreadsheet_missale_illustrations_key = "0Au659FdpCliwdEtYWm81eEMwUGQ1RlMybUx2UU5BLXc"
+    google_spreadsheet_first_worksheet_id = 'od6'
+    google_spreadsheet_missale_masses_key = "0Au659FdpCliwdEdOUElBaUVXSFRoY0dCbHowWGM4VEE"
+    google_spreadsheet_missale_masses_worksheet_id = 'od4'
+    google_spreadsheet_missale_i18n_teminology_key = "0Au659FdpCliwdDZCMUk1czY3Y2U5TjRDOWtkY1daTmc"
+    google_spreadsheet_missale_i18n_teminology_worksheet_id = 'od6'
+    google_spreadsheet_missale_i18n_of_key = "0Au659FdpCliwdG1NcjdvR0pTQ3VUREdTd3RaUUhBTUE"
+    google_spreadsheet_missale_i18n_of_worksheet_id = 'oda'
+    google_spreadsheet_missale_i18n_eo_key = "0Au659FdpCliwdHRfNms0MTZWcVFlWnNjenJraUtvSXc"
+    google_spreadsheet_missale_i18n_eo_worksheet_id = 'od7'
 
 reading_references_separator = '|'
 
@@ -238,4 +252,40 @@ class Masses(Spreadsheet_index):
         )
 
     def update_fields(self, updates):
-        Spreadsheet_index.update_fields(self, updates, 'key')
+        Spreadsheet_index.update_fields(self, updates, 'id')
+
+
+class Masses(Spreadsheet_index):
+    def __init__(self):
+        Spreadsheet_index.__init__(
+            self,
+            google_spreadsheet_missale_masses_key,
+            google_spreadsheet_missale_masses_worksheet_id
+        )
+
+
+class I18nTerminology(Spreadsheet_index):
+    def __init__(self):
+        Spreadsheet_index.__init__(
+            self,
+            google_spreadsheet_missale_i18n_teminology_key,
+            google_spreadsheet_missale_i18n_teminology_worksheet_id
+        )
+
+
+class I18nOf(Spreadsheet_index):
+    def __init__(self):
+        Spreadsheet_index.__init__(
+            self,
+            google_spreadsheet_missale_i18n_of_key,
+            google_spreadsheet_missale_i18n_of_worksheet_id
+        )
+
+class I18nEo(Spreadsheet_index):
+    def __init__(self):
+        Spreadsheet_index.__init__(
+            self,
+            google_spreadsheet_missale_i18n_eo_key,
+            google_spreadsheet_missale_i18n_eo_worksheet_id
+        )
+

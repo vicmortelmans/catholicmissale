@@ -13,7 +13,7 @@ class SyncI18nHandler(webapp2.RequestHandler):
         index_i18nEo_mgr = spreadsheet_index.I18nEo()
         self.index_i18nEo = index_i18nEo_mgr.sync_table()
 
-        # decompose the rows (a list of dicts)
+        # decompose each row into a set of rows, per language
         index_i18n = []
         for table in [self.index_i18nTerminology, self.index_i18nOf, self.index_i18nEo]:
             for row in table:

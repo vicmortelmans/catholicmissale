@@ -60,19 +60,21 @@ class Model_index():
             # if you can't find one, create a new entity with ndb key = id
             # and set the value of the attribute named {key_name} to id as well
             # note that this attribute should be the only required attribute in the ndb model!
-            entity = self._Model.get_or_insert(id, **{key_name: id})
+            # also note that a key should always be a string!
+            entity = self._Model.get_or_insert(str(id), **{key_name: id})
             # overwrite the values of all entities by the values in the table
             for column_name in entity.to_dict():
-                setattr(entity, column_name, row[column_name])  # repeated properties are represented as a list
+                if column_name in row:  # dict may be incomplete
+                    setattr(entity, column_name, row[column_name])  # repeated properties are represented as a list
             entity.put()
-            logging.info('In datastore added/updated row with key= ' + id)
+            logging.info('In datastore added/updated row with key= ' + str(id))
         self.sync_table()
 
     def delete_entities(self, obsolete_entities, key_name):
         for id in obsolete_entities:
-            entity = self._Model.get_or_insert(id, **{key_name: id})
+            entity = self._Model.get_or_insert(str(id), **{key_name: id})
             entity.key.delete()
-            logging.info('In datastore deleted row with key= ' + id)
+            logging.info('In datastore deleted row with key= ' + str(id))
         if obsolete_entities:
             self.sync_table()
 
@@ -132,4 +134,9 @@ class Masses(Model_index):
 class I18n(Model_index):
     def __init__(self):
         Model_index.__init__(self, model.I18n)
+
+
+class Dates(Model_index):
+    def __init__(self):
+        Model_index.__init__(self, model.Date)
 

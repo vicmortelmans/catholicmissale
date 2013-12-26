@@ -16,6 +16,7 @@ routes = [
     webapp2.Route(r'/sync-illustrations', handler='sync_illustration_index.SyncIllustrationHandler'),
     webapp2.Route(r'/sync-masses', handler='sync_masses_index.SyncMassesHandler'),
     webapp2.Route(r'/sync-i18n', handler='sync_i18n_index.SyncI18nHandler'),
+    webapp2.Route(r'/sync-dates', handler='sync_dates.SyncDatesHandler'),
     webapp2.Route(r'/flush-i18n', handler='datastore_index.FlushI18nHandler'),
     webapp2.Route(r'/flush-datastore-masses', handler='datastore_index.FlushMassHandler'),
     webapp2.Route(r'/flush-biblerefs', handler='bibleref.FlushBiblerefsHandler'),

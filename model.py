@@ -53,5 +53,17 @@ class BibleRef(ndb.Model):
 
 class I18n(ndb.Model):
     id = ndb.StringProperty(required=True)
+    ref = ndb.StringProperty()
     lang = ndb.StringProperty()
     string = ndb.StringProperty()
+
+    @classmethod
+    def translate(cls, ref, lang):
+        return cls.get_by_id(lang + '.' + ref)
+
+
+class Date(ndb.Model):
+    idx = ndb.IntegerProperty()  # sequential number
+    mass = ndb.StringProperty()
+    coinciding = ndb.StringProperty()
+    date = ndb.DateProperty()

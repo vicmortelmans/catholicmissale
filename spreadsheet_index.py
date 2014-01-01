@@ -255,15 +255,6 @@ class Masses(Spreadsheet_index):
         Spreadsheet_index.update_fields(self, updates, 'id')
 
 
-class Masses(Spreadsheet_index):
-    def __init__(self):
-        Spreadsheet_index.__init__(
-            self,
-            google_spreadsheet_missale_masses_key,
-            google_spreadsheet_missale_masses_worksheet_id
-        )
-
-
 class I18nTerminology(Spreadsheet_index):
     def __init__(self):
         Spreadsheet_index.__init__(
@@ -280,6 +271,7 @@ class I18nOf(Spreadsheet_index):
             google_spreadsheet_missale_i18n_of_key,
             google_spreadsheet_missale_i18n_of_worksheet_id
         )
+
 
 class I18nEo(Spreadsheet_index):
     def __init__(self):

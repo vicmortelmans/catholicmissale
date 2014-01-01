@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="rulesets">
+ <property name="saxon-pe.location.ant" value="C:\Program Files\Saxon\saxon9pe.jar"/>
+ <target name="all" depends="build"/>
+ <target name="build">
+  <xslt style="liturgy.calendar.build-ruleset.xslt" basedir="master-rulesets" destdir="expanded-rulesets">
+   <mapper type="glob" from="custom-ruleset-*.parametrized.xml" to="custom-ruleset-*.xml"/>
+   <param name="folder" expression="master-rulesets"/>
+   <classpath location="${saxon-pe.location.ant}"/>
+  </xslt>
+ </target> 
+ <target name="clean">
+  <delete>
+   <fileset dir="." includes="expanded-rulesets/custom-ruleset-??.xml"/>
+  </delete>
+ </target>
+</project>

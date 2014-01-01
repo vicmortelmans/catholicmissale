@@ -1,5 +1,4 @@
 from model import BibleRef
-from google.appengine.ext import ndb
 import urllib
 import urllib2
 import json
@@ -10,9 +9,10 @@ import webapp2
 logging.basicConfig(level=logging.INFO)
 
 
-def submit(reference):
+def submit(reference, verses=False):
     """
     @param reference: a free text bible reference
+    verses: TO DO
     @return: None if the reference is already stored; the standard format of the reference
     if it is already stored in that format or if a new storage entity has been created
     """
@@ -63,11 +63,8 @@ def submit(reference):
     e.put()
     return reference
 
-def _flush():
-    keys = BibleRef.query().fetch(keys_only=True)
-    ndb.delete_multi(keys)
 
 class FlushBiblerefsHandler(webapp2.RequestHandler):
     def get(self):
-        _flush()
+        BibleRef.flush()
         self.response.out.write("Flushed Bible references")

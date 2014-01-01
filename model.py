@@ -17,10 +17,15 @@ class Illustration(ndb.Model):
     passageReference = ndb.TextProperty()
     wasted = ndb.TextProperty()
 
+    @classmethod
+    def flush(cls):
+        keys = cls.query().fetch(keys_only=True)
+        ndb.delete_multi(keys)
+
 
 class Mass(ndb.Model):
     """ each day that has a mass sheet; no key is assigned [20131223 it is, isn't it?] """
-    id = ndb.StringProperty(required=True)
+    id = ndb.StringProperty(required=True)  # form.coordinates
     form = ndb.StringProperty()
     coordinates = ndb.StringProperty()
     cycle = ndb.StringProperty(repeated=True)
@@ -33,10 +38,15 @@ class Mass(ndb.Model):
     lecture = ndb.StringProperty(repeated=True)
     epistle = ndb.StringProperty(repeated=True)
 
+    @classmethod
+    def flush(cls):
+        keys = cls.query().fetch(keys_only=True)
+        ndb.delete_multi(keys)
+
 
 class BibleRef(ndb.Model):
     """ the key is the reference """
-    reference = ndb.StringProperty(required=True)
+    reference = ndb.StringProperty(required=True)  # standardized bible reference
     book = ndb.StringProperty()  # please only 'osisbook' values as returned by bibleref yql open table
     begin = ndb.IntegerProperty()
     end = ndb.IntegerProperty()
@@ -50,9 +60,13 @@ class BibleRef(ndb.Model):
     def query_containing(cls, reference):
         return cls.query(cls.containedReferences == reference)
 
+    @classmethod
+    def flush(cls):
+        keys = cls.query().fetch(keys_only=True)
+        ndb.delete_multi(keys)
 
 class I18n(ndb.Model):
-    id = ndb.StringProperty(required=True)
+    id = ndb.StringProperty(required=True)  # lang.ref
     ref = ndb.StringProperty()
     lang = ndb.StringProperty()
     string = ndb.StringProperty()
@@ -62,8 +76,31 @@ class I18n(ndb.Model):
         return cls.get_by_id(lang + '.' + ref)
 
 
+class Verse(ndb.Model):
+    id = ndb.StringProperty(required=True)  # lang.ref
+    ref = ndb.StringProperty()  # standardized bible reference
+    lang = ndb.StringProperty()
+    string = ndb.TextProperty()
+
+    @classmethod
+    def translate(cls, ref, lang):
+        return cls.get_by_id(lang + '.' + ref)
+
+    @classmethod
+    def flush(cls):
+        keys = cls.query().fetch(keys_only=True)
+        ndb.delete_multi(keys)
+
+
 class Date(ndb.Model):
+    id = ndb.StringProperty(required=True)  # form.idx
+    form = ndb.StringProperty()  # 'of' or 'eo'
     idx = ndb.IntegerProperty()  # sequential number
     mass = ndb.StringProperty()
     coinciding = ndb.StringProperty()
     date = ndb.DateProperty()
+
+    @classmethod
+    def flush(cls):
+        keys = cls.query().fetch(keys_only=True)
+        ndb.delete_multi(keys)

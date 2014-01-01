@@ -2,28 +2,37 @@ import webapp2
 import model
 import logging
 import bibleref
+from google.appengine.ext import ndb
+
+
+LANGUAGES = ['en', 'fr', 'nl']   # configured here for time being
+YEARS = [2014]  # configured here for time being
 
 logging.basicConfig(level=logging.INFO)
 
+
 class FlushIllustrationHandler(webapp2.RequestHandler):
     def get(self):
-        for key in list(model.Illustration.query().iter(keys_only = True)):
-            key.delete()
+        model.Illustration.flush()
         self.response.out.write("Flushed all illustrations in datastore!")
 
 
 class FlushMassHandler(webapp2.RequestHandler):
     def get(self):
-        for key in list(model.Mass.query().iter(keys_only = True)):
-            key.delete()
+        model.Mass.flush()
         self.response.out.write("Flushed all masses in datastore!")
 
 
 class FlushI18nHandler(webapp2.RequestHandler):
     def get(self):
-        for key in list(model.I18n.query().iter(keys_only = True)):
-            key.delete()
+        model.I18n.flush()
         self.response.out.write("Flushed all strings in i18n datastore!")
+
+
+class FlushVerseHandler(webapp2.RequestHandler):
+    def get(self):
+        model.Verse.flush()
+        self.response.out.write("Flushed all verses in datastore!")
 
 
 class Model_index():
@@ -54,6 +63,7 @@ class Model_index():
         @return:
         Bulkloading will add new entities, update existing entities, but NOT delete obsolete entities!
         """
+        entities = []
         for row in table:
             id = row[key_name]
             # find an entity with ndb key = id
@@ -66,15 +76,18 @@ class Model_index():
             for column_name in entity.to_dict():
                 if column_name in row:  # dict may be incomplete
                     setattr(entity, column_name, row[column_name])  # repeated properties are represented as a list
-            entity.put()
-            logging.info('In datastore added/updated row with key= ' + str(id))
+            entities.append(entity)
+            logging.info('In datastore going to be added/updated row with key= ' + str(id))
+        ndb.put_multi(entities)
         self.sync_table()
 
     def delete_entities(self, obsolete_entities, key_name):
+        entity_keys = []
         for id in obsolete_entities:
             entity = self._Model.get_or_insert(str(id), **{key_name: id})
-            entity.key.delete()
-            logging.info('In datastore deleted row with key= ' + str(id))
+            entity_keys.append(entity.key)
+            logging.info('In datastore going to be deleted row with key= ' + str(id))
+        ndb.delete_multi(entity_keys)
         if obsolete_entities:
             self.sync_table()
 
@@ -91,7 +104,7 @@ class Illustrations(Model_index):
             id = row['id']
             reference = row['passageReference']
             if reference:
-                new_reference = bibleref.submit(reference)
+                new_reference = bibleref.submit(reference, verses=True)
                 if new_reference:
                     # update the table before bulkloading
                     row['passageReference'] = new_reference
@@ -101,6 +114,12 @@ class Illustrations(Model_index):
 
     def delete_entities(self, obsolete_entities):
         Model_index.delete_entities(self, obsolete_entities, 'id')
+
+
+class Biblerefs(Model_index):
+    def __init__(self):
+        Model_index.__init__(self, model.BibleRef)
+
 
 class Masses(Model_index):
     def __init__(self):
@@ -136,7 +155,21 @@ class I18n(Model_index):
         Model_index.__init__(self, model.I18n)
 
 
+class Verses(Model_index):
+    def __init__(self):
+        Model_index.__init__(self, model.Verse)
+
+    def bulkload_table(self, table):
+        Model_index.bulkload_table(self, table, 'id')
+
+    def delete_entities(self, obsolete_entities):
+        Model_index.delete_entities(self, obsolete_entities, 'id')
+
+
 class Dates(Model_index):
     def __init__(self):
         Model_index.__init__(self, model.Date)
+
+    def bulkload_table(self, table):
+        Model_index.bulkload_table(self, table, 'id')
 

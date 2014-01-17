@@ -1,0 +1,218 @@
+a:link{
+    text-decoration:none;
+    color:#333333;
+}
+a:visited{
+    text-decoration:none;
+    color:#333333;
+}
+a:hover{
+    color:#333333;
+}
+a:active{
+    text-decoration:none;
+    color:#333333;
+}
+
+body{
+    font-family:Arial, Verdana, Helvetica, sans-serif;
+    font-size:20px;
+    text-align:center;
+}
+
+/*
+div{
+    border:1pt solid green;
+}
+*/
+
+#container{
+    max-width:1000px; /* 2 * .item width + 4 * .item margin + 4 * div border + gitterWidth */
+    min-width:490px; /* 1 * .item width + 2 * .item margin + 2 * div border */
+    /* also linked to <meta name="viewport"> in HTML */
+    /* also linked to Masonry column with setting in JAVASCRIPT */
+    text-align:left;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.item{
+    width:480px;
+    margin:5px;
+    float:left;
+}
+
+#back{
+    display:inline;
+    float:left;
+    margin-right:5px;
+}
+#forw{
+    display:inline;
+    float:right;
+}
+#other > div{
+    margin-right:5px;
+}
+
+.thumbnail{
+    float:left;
+    position:relative;
+}
+.thumbnailbox{ /* responsible for the cropping */
+    width:80px;
+    height:80px;
+    overflow:hidden;
+    /*    border:solid 5px white; */
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -khtml-border-radius:5px;
+    -webkit-border-radius:5px;
+}
+.thumbnailcontainer{ /* responsible for centering the image */
+    width:1080px; /* = 1000 + thumbnailsize (random 'very wide') */
+    margin-left:-500px; /* = (containerwidth - thumbnailsize) / 2 */
+    text-align:center;
+}
+.thumbnailportrait{
+    width:80px;
+}
+.thumbnaillandscape{
+    height:80px;
+}
+.thumbnailoverlay{
+    position:absolute;
+    top:0px;
+    left:0px;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -khtml-border-radius:5px;
+    -webkit-border-radius:5px;
+}
+
+#day-image{
+    font-size:14px;
+}
+.cycle,
+.season,
+.date{
+    display:inline;
+}
+.cycle{
+    float:left;
+    margin-right:15px;
+}
+.season{
+    float:left;
+    margin-right:15px;
+}
+.date{
+    float:right;
+}
+.title{
+    font-family:Arial Black, Gadget, sans-serif;
+    font-size:28px;
+    line-height:90%;
+    margin-top:20px;
+    margin-bottom:10px;
+    clear:left;
+}
+.thisform{
+    float:left;
+}
+.otherform{
+    font-size:10px;
+    float:right;
+    padding:5px;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -khtml-border-radius:5px;
+    -webkit-border-radius:5px;
+}
+
+.image{
+    clear:both;
+    width:470px;
+    margin-top:10px;
+    text-align:center;
+}
+
+.picture img{
+    max-width:470px; /* 470 - #image padding - .image img border */
+    max-height:750px;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -khtml-border-radius:5px;
+    -webkit-border-radius:5px;
+}
+
+.caption{
+    width:90%;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:5px;
+    color:gray;
+    font-size:12px;
+}
+
+#passage{
+    font-family:Palatino Linotype, Book Antiqua, Palatino, serif;
+}
+.passagereference{
+    font-style:italic;
+    margin-bottom:10px;
+}
+
+#links{
+    margin-top:20px;
+}
+.social{
+    float:left;
+    display:inline;
+    margin-right:10px;
+}
+.link{
+    font-size:14px;
+    color:#333333;
+    float:left;
+    display:inline;
+    height:20px;
+    padding:5px;
+    margin-right:10px;
+    margin-bottom: 10px;
+    text-align:center;
+    border:solid 1pt #333333;
+    border-radius:5px;
+    -moz-border-radius:5px;
+    -khtml-border-radius:5px;
+    -webkit-border-radius:5px;
+}
+
+.email{
+    clear:both;
+    text-align: center;
+    font-style: italic;
+    font-size: 10pt;
+}
+
+a.tooltip span.tooltip
+{
+    display:none;
+    padding:5px 5px;
+    margin-top:30px;
+    margin-left:-20px;
+    width:200px;
+}
+a.tooltip:hover span.tooltip
+{
+    display:inline;
+    position:absolute;
+    background:#ffffff;
+    border:1px solid #ddd;
+    border-radius:10px;
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    font-family:Tahoma;
+    font-size:8pt;
+    color:#777;
+}

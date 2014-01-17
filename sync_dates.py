@@ -168,12 +168,18 @@ class Liturgical_day:
     def is_solemnity(self):
         return self.attributes['precedence'] <= 3
 
+
 class Day:
     
     def __init__(self, date, year):
         self.calendar = None
         self.date = date
         self.year = year
+        self.cycle = {
+            1: 'A',
+            2: 'B',
+            3: 'C'
+        }[self.year % 3]
         self.liturgical_days = {}  # references to liturgical days by subset
         self.preceding_liturgical_day = None
         self.transferable_liturgical_day = None
@@ -181,6 +187,7 @@ class Day:
     
     def set_calendar(self, calendar):
         self.calendar = calendar
+
 
 class Library:
     
@@ -437,7 +444,7 @@ class SyncDatesHandler(webapp2.RequestHandler):
             idx = 0
             ruleset = Ruleset(form)
             for year in datastore_index.YEARS:
-                calendar = Calendar(ruleset,year,'en')
+                calendar = Calendar(ruleset, year, 'en')
                 calendar.populate()
                 calendar.consolidate()
                 for d in sorted(calendar.days):
@@ -447,6 +454,8 @@ class SyncDatesHandler(webapp2.RequestHandler):
                     date['id'] = form + '.' + str(idx)
                     idx += 1
                     date['date'] = d
+                    if form == 'of':
+                        date['cycle'] = calendar.days[d].cycle
                     preceding = calendar.days[d].preceding_liturgical_day
                     if preceding:
                         date['mass'] = preceding.coordinates

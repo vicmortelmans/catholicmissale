@@ -2,10 +2,12 @@ import webapp2
 import model
 import logging
 import bibleref
+import copy
 from google.appengine.ext import ndb
 
 
-LANGUAGES = ['en', 'fr', 'nl']   # configured here for time being
+LANGUAGES = {'of': ['en', 'fr', 'nl'], 'eo': ['en', 'fr', 'nl']}   # configured here for time being
+ALL_LANGUAGES = list(set(LANGUAGES['of'] + LANGUAGES['eo']))   # configured here for time being
 YEARS = [2014]  # configured here for time being
 
 logging.basicConfig(level=logging.INFO)
@@ -143,6 +145,18 @@ class Masses(Model_index):
                             row[reading_type] = [new_reference if r == reference else r for r in row[reading_type]]
                             # store the updated rows in a dict, for being returned
                             d[id] = row
+        # split rows with combined cycle values
+        for row in table:
+            cycle = row['cycle']
+            if cycle == 'ABC':
+                row_copy = {}
+                for c in ['B', 'C']:
+                    row_copy[c] = copy.deepcopy(row)
+                    row_copy[c]['cycle'] = c
+                    row_copy[c]['id'] = row_copy[c]['id'].replace('ABC', c)
+                    table.append(row_copy[c])
+                row['cycle'] = 'A'
+                row['id'] = row['id'].replace('ABC', 'A')
         Model_index.bulkload_table(self, table, 'id')
         return d
 

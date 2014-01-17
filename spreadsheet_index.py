@@ -3,6 +3,8 @@ from jinja_templates import jinja_environment
 from gdata.spreadsheets.client import SpreadsheetsClient
 from gdata.spreadsheets.data import ListEntry
 import google_credentials
+import httplib
+import time
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -50,10 +52,10 @@ renamed_columns = [
 
 # list of column names that contain repeated properties represented as joined strings
 repeated_properties = [
-    {
-        'name': 'cycle',
-        'separator': ''
-    },
+#    {
+#        'name': 'cycle',
+#        'separator': ''
+#    },
     {
         'name': 'gospel',
         'separator': reading_references_separator
@@ -153,14 +155,26 @@ class Spreadsheet_index():
             'catholicmissale'
         )
         self.table = []
-        #self.sync_table()
+        # self.sync_table() must be done explicitly!
 
     def sync_table(self):
         del self.table[:]  # table = [] would break the references!
-        self._rows = self._client.get_list_feed(
-            self._google_spreadsheet_key,
-            self._google_worksheet_id
-        ).entry
+        for attempt in range(5):
+            try:
+                self._rows = self._client.get_list_feed(
+                    self._google_spreadsheet_key,
+                    self._google_worksheet_id
+                ).entry
+            except httplib.HTTPException as e:
+                logging.info(e.message)
+                time.sleep(0.5)
+                continue
+            else:
+                break
+        else:
+            # we failed all the attempts - deal with the consequences.
+            logging.info("Retried downloading the spreadsheet data three times in vain.")
+            return self.table
         for row in self._rows:
             self.table.append(import_from_spreadsheet(row.to_dict()))
         return self.table

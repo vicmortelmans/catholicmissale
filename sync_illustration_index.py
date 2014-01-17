@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import webapp2
 from jinja_templates import jinja_environment
 import drive_index
 import spreadsheet_index
 import datastore_index
 import re
+import time
 from lib import slugify
 
 GOOGLE_DRIVE_HOST_PREFIX = "https://googledrive.com/host/" + drive_index.google_drive_missale_images_folder_id
@@ -27,28 +29,32 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
         # update the spreadsheet index entries with the new id's
         index_illustrations_mgr.update_fields_by_url(downloaded_images)
 
-        # get the contents of the drive folder
-        self.drive_illustrations = drive_illustration_mgr.sync_table()
+        # get the contents of the drive folder (no metadata yet)
+        self.drive_illustrations_ids = drive_illustration_mgr.sync_table_only_ids()
 
         # find new images in the drive folder by comparing the id fields
         # the file title is the initial caption
-        new_images = {}  # dict by id of dicts containing 'caption', 'filename' and 'url'
-        self.find_new_images(new_images)
+        new_images_ids = {}  # dict by id
+        self.find_new_images(new_images_ids)
+        new_images_metadata = drive_illustration_mgr.fetch_metadata(new_images_ids)
+        # dict by id of dicts containing 'caption', 'filename' and 'url'
 
         # add the rows for the update list entries
-        index_illustrations_mgr.add_rows(new_images)
+        index_illustrations_mgr.add_rows(new_images_metadata)
 
         # find obsolete spreadsheet index entries (no id or no drive image with same id)
         obsolete_index_rows = {}  # dict by id of dicts containing 'wasted'
         self.find_obsolete_index_rows(obsolete_index_rows)
 
-        # mark the obsolete spreadsheet index enries as wasted
+        # mark the obsolete spreadsheet index entries as wasted
         index_illustrations_mgr.update_fields(obsolete_index_rows)
 
         # compose a caption for each entry in the index spreadsheet based on the fields in the index, unless all
         # fields are empty, then check if the URL is empty, and if so, just copy the original caption
-        update_captions = {}  # dict by id of dicts containing 'caption', 'filename' and 'url'
+        # ... limited to entries with empty sync field, but filling in timestamp in sync field
+        update_captions = {}  # dict by id of dicts containing 'caption', 'filename', 'url' and 'sync'
         self.compose_captions(update_captions)
+        update_captions_metadata = drive_illustration_mgr.fetch_metadata(update_captions)
 
         # compose a filename and url (= lower-case dash-separated caption; important for SEO!) for each entry in the
         # update list
@@ -59,7 +65,7 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
 
         # find images in the drive folder with non-matching filename
         renamed_images = {}
-        self.find_renamed_images(renamed_images)
+        self.find_renamed_images(update_captions, update_captions_metadata, renamed_images)
 
         # rename the files on Drive
         drive_illustration_mgr.rename_files(renamed_images)
@@ -99,35 +105,32 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
                 d[i['url']] = {'url': i['url']}
 
     def compose_captions(self, d):
-        """ compose a (non-empty) caption for each spreadsheet index entry and store it in update_captions """
+        """ compose a (non-empty) caption for each spreadsheet index entry and store it in update_captions
+            ... limit to entries with empty sync field and fill in timestamp in sync field """
+        sync = time.strftime('%Y-%m-%d %H:%M:%S')
         for i in self.index_illustrations:
-            id = i['id'] or random_id()  # rows that are entered by the syncer should always have an id !
-            caption = compose_caption(
-                title=i['title'],
-                artist=i['artist'],
-                year=i['year'],
-                location=i['location'],
-                copyright=i['copyright']
-            )
-            fileExtension = i['fileExtension']
-            if caption != ' ':  # result of all empty metadata fields
-                d[id] = {'caption': caption, 'fileExtension': fileExtension}
-            elif not i['url']:
-                d[id] = {'caption': i['caption'], 'fileExtension': fileExtension}
-
-    def ignore_unchanged_or_unknown_captions(self, d):
-        """ only keep  the entries that have a matching drive entry (by id) and that have a
-            generated caption not matching the stored caption (e.g. the user has updated the
-            title in the spreadsheet) """
-        keep = []
-        for i in self.index_illustrations:
-            id = i['id']
-            if id in d and d[id]['caption'] != i['caption']:
-                keep.append(id)
-        # an easier construct is imaginable, but I cannot reassign 'd = ...'
-        ignore = [id for id in d if id not in keep]
-        for id in ignore:
-            del d[id]
+            if not i['sync']:
+                id = i['id'] or random_id()  # rows that are entered by the syncer should always have an id !
+                caption = compose_caption(
+                    title=i['title'],
+                    artist=i['artist'],
+                    year=i['year'],
+                    location=i['location'],
+                    copyright=i['copyright']
+                )
+                fileExtension = i['fileExtension']
+                if caption != ' ':  # result of all empty metadata fields
+                    d[id] = {
+                        'caption': caption,
+                        'fileExtension': fileExtension,
+                        'sync': sync
+                    }
+                elif not i['url']:
+                    d[id] = {
+                        'caption': i['caption'],
+                        'fileExtension': fileExtension,
+                        'sync': sync
+                    }
 
     def compose_filenames(self, d):
         for id in d:
@@ -142,29 +145,28 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
     def find_new_images(self, d):
         # find images in drive that are not in index (by id)
         index_ids = [i['id'] for i in self.index_illustrations]
-        for i in self.drive_illustrations:
+        for i in self.drive_illustrations_ids:
             id = i['id']
             if id not in index_ids:
-                d[id] = {'caption': i['title'], 'fileExtension': i['fileExtension']}
+                d[id] = {}
 
-    def find_renamed_images(self, d):
+    def find_renamed_images(self, update_captions, update_captions_metadata, d):
         # find images in drive that have a title not matching the filename in the index
         # store the index-filename in d
-        index_filenames = {i['id']: i['filename'] for i in self.index_illustrations}
-        for i in self.drive_illustrations:
-            id = i['id']
-            if id in index_filenames and index_filenames[id] != i['title']:
+        index_filenames = {id: update_captions[id]['filename'] for id in update_captions}
+        for id in update_captions_metadata:
+            if id in index_filenames and index_filenames[id] != update_captions_metadata[id]['title']:
                 d[id] = {'filename': index_filenames[id]}
 
     def find_obsolete_index_rows(self, d):
-        drive_ids = [i['id'] for i in self.drive_illustrations]
+        drive_ids = [i['id'] for i in self.drive_illustrations_ids]
         for i in self.index_illustrations:
             id = i['id']
             if id not in drive_ids:
                 d[id] = {'wasted': "True"}
 
     def find_obsolete_entities(self, d):
-        drive_ids = [i['id'] for i in self.drive_illustrations]
+        drive_ids = [i['id'] for i in self.drive_illustrations_ids]
         for i in self.datastore_illustrations:
             id = i['id']
             if id not in drive_ids or i['wasted']:
@@ -172,6 +174,8 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
 
 
 def compose_caption(title=None, artist=None, year=None, location=None, copyright=None):
+    if copyright:
+        copyright = u"© " + copyright
     c = "%s (%s, %s, %s, %s)" % (title or '', artist or '', year or '', location or '', copyright or '')
     c = re.sub(r', , ', ', ', c)
     c = re.sub(r', , ', ', ', c)

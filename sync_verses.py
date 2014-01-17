@@ -5,6 +5,7 @@ import httplib
 import urllib
 import json
 import logging
+import lib
 
 logging.basicConfig(level=logging.INFO)
 httplib2.Http(timeout=60)
@@ -37,39 +38,57 @@ class SyncVersesHandler(webapp2.RequestHandler):
         self.find_missing_verses(missing_verses)
 
         # fetch missing verses from online sources
-        for verse in missing_verses[:]:  # taking copy of list, as items may be deleted while iterating
-            yql = 'use "https://raw.github.com/vicmortelmans/yql-tables/master/bible/bible.bible.xml" as bible.bible; '\
-                'select * from bible.bible where language="{lang}" and bibleref="{bibleref}";'\
-                .format(lang=verse['lang'], bibleref=verse['ref'])
-            url = 'http://query.yahooapis.com/v1/public/yql?q={yql}&format=json&callback='\
-                .format(yql=urllib.quote(yql))
-            logging.info("REST call to " + url + " (" + yql + ")")
-            try:
-                resp, content = httplib2.Http().request(url)
-                if resp.status != 200:
-                    raise YQLException("Http response " + str(resp.status))
-                content = json.loads(content)
-                if 'error' in content:
-                    raise YQLException("YQL error " + content['error']['description'])
-                if not 'query' in content:
-                    raise YQLException("YQL unknown error, no query.")
-                if not 'results' in content['query']:
-                    raise YQLException("YQL unknown error, no results.")
-                if not 'passage' in content['query']['results']:
-                    raise YQLException("YQL unknown error, no passage.")
-                passage = content['query']['results']['passage']
-                if len(passage) == 0:
-                    raise YQLException("YQL unknown error, empty passage.")
-                verse['string'] = passage
-            except YQLException as e:
-                missing_verses.remove(verse)  # will be picked up again in the next run
-                logging.info(e.value)
-            except httplib.HTTPException as e:
-                missing_verses.remove(verse)  # will be picked up again in the next run
-                logging.info(e.message)
+        missing_verses_chunks = lib.chunks(missing_verses, 25)
+        for missing_verses_chunk in missing_verses_chunks:
+            for verse in missing_verses_chunk[:]:  # taking copy of list, as items may be deleted while iterating
+                yql = 'use "https://raw.github.com/vicmortelmans/yql-tables/master/bible/bible.bible.xml" as bible.bible; '\
+                    'select * from bible.bible where language="{lang}" and bibleref="{bibleref}";'\
+                    .format(lang=verse['lang'], bibleref=verse['ref'])
+                url = 'http://query.yahooapis.com/v1/public/yql?q={yql}&format=json&callback='\
+                    .format(yql=urllib.quote(yql))
+                logging.info("REST call to " + url + " (" + yql + ")")
+                try:
+                    resp, content = httplib2.Http().request(url)
+                    if resp.status != 200:
+                        raise YQLException("Http response " + str(resp.status))
+                    content = json.loads(content)
+                    if 'error' in content:
+                        raise YQLException("YQL error " + content['error']['description'])
+                    try:
+                        content['query']
+                    except TypeError:
+                        raise YQLException("YQL unknown error, no query.")
+                    try:
+                        content['query']['results']
+                    except TypeError:
+                        raise YQLException("YQL unknown error, no results.")
+                    try:
+                        content['query']['results']['passage']
+                    except TypeError:
+                        raise YQLException("YQL unknown error, no passage.")
+                    try:
+                        content['query']['results']['passage']['content']
+                    except TypeError:
+                        raise YQLException("YQL unknown error, no passage content.")
+                    passage = content['query']['results']['passage']['content']
+                    if len(passage) == 0 or passage == '.':
+                        raise YQLException("YQL unknown error, empty passage.")
+                    verse['string'] = passage
+                    if not 'bibleref' in content['query']['results']['passage']:
+                        raise YQLException("YQL unknown error, no local bibleref.")
+                    if len(passage) == 0 or passage == '.':
+                        verse['local_ref'] = verse['ref']
+                    else:
+                        verse['local_ref'] = content['query']['results']['passage']['bibleref']
+                except YQLException as e:
+                    missing_verses_chunk.remove(verse)  # will be picked up again in the next run
+                    logging.log(logging.ERROR, "Dropping verse with ref=" + verse['ref'] + " because " + e.value)
+                except httplib.HTTPException as e:
+                    missing_verses_chunk.remove(verse)  # will be picked up again in the next run
+                    logging.log(logging.ERROR, "Dropping verse with ref=" + verse['ref'] + " because " + e.message)
 
-        # copy the missing verses into the datastore
-        datastore_verses_mgr.bulkload_table(missing_verses)
+            # copy the missing verses into the datastore
+            datastore_verses_mgr.bulkload_table(missing_verses_chunk)
 
         # find obsolete datastore entities (not in biblerefs)
         obsolete_entities = {}
@@ -92,7 +111,7 @@ class SyncVersesHandler(webapp2.RequestHandler):
         for i in self.datastore_biblerefs:
             bibleref = i['reference']
             if bibleref in illustration_biblerefs:
-                for lang in datastore_index.LANGUAGES:
+                for lang in datastore_index.ALL_LANGUAGES:
                     id = lang + '.' + bibleref
                     if id not in verses_ids:
                         verse = {
@@ -109,4 +128,5 @@ class SyncVersesHandler(webapp2.RequestHandler):
             if bibleref not in biblerefs:
                 id = i['id']
                 d[id] = {}
+
 

@@ -1,0 +1,32 @@
+@Page {
+  size: landscape;
+}
+
+body{
+    text-align:left;
+}
+
+.item{
+    float:none; 
+}
+
+#back{
+    display: none;
+}
+#forw{
+    display: none;
+}
+#other{
+    display:none;
+}
+#links{
+    display:none;
+}
+.otherform{
+    display:none;
+}
+.picture img{
+    max-width:470px; /* 470 - #image padding - .image img border */
+    max-height:480px;
+}
+

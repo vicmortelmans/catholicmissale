@@ -53,8 +53,8 @@ def submit(reference, verses=False):
     e.begin = 1000000 + 1000 * int(begin['chapter']) + int(begin['verse'])
     e.end = 1000000 + 1000 * int(end['chapter']) + int(end['verse'])
     # and analyze it's relationship to the other references
-    others = BibleRef.query_book(book)
-    for r in others:
+    others = BibleRef.query_by_book(book)
+    for r in others:  # there's a problem here with split references...
         if e.begin <= r.begin and r.end <= e.end:
             e.containedReferences.append(r.reference)
         if r.begin <= e.begin and e.end <= r.end:

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{the_mass['i18n'].string}} | {{data['date'].date.strftime('%Y')}} | {{translate('catholic-mass-readings', lang).string}}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=500"/>
+        <meta name="description" content="{{translate('readings-from-the-gospel-for-the-catholic-mass-according-to-the-liturgy-calendar-', lang).string}} {{the_mass['i18n'].string}}, {{data['date'].date.strftime('%Y')}} {{translate('with-picture', lang)}} {{the_illustration['illustration'].caption}}."/>
+        {% if canonical %}
+        <link rel="canonical" href="{{canonical}}"/>
+        {% endif %}
+        <link rel="stylesheet" type="text/css" href="/stylesheets/prentenmissaal-5.css" />
+        <link rel="stylesheet" type="text/css" href="/stylesheets/prentenmissaal-5-print.css" media="print"/>
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss/feed?lang={$lang}&amp;form={$form}" />
+        <script type='text/javascript' src='/scripts/jquery-1.8.2.js'></script>
+        <script type='text/javascript' src="/scripts/jquery.masonry.min.js"></script>
+        <script type='text/javascript' src="/scripts/prentenmissaal-5.js"></script>
+        <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+        <script type="text/javascript">stLight.options({publisher: "ur-9a808960-707b-dd9f-d100-aecae8f75b07", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
+        <meta name="google-site-verification" content="LPLr98PKcDGB4mcbWAAtCdSnrGUX1MmdLraUFss3hk4" />
+    </head>
+    <body>
+        <div id="container">
+            <div class="item">
+                <div id="back">
+                    <div class="back thumbnail">
+                        {% if data['previous'] %}
+                        <a href="{{url(date=data['previous'], form=the_mass['form'], lang=lang)}}">
+                            <img src="/img/back.png" class="thumbnailbox" alt="{{translate('previous-mass-day', lang).string}}"/>
+                        </a>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="other">
+                    {% if the_other_illustrations %}
+                    {% for illustration in the_other_illustrations %}
+                    <div class="other thumbnail">
+                        <div class="thumbnailbox">
+                            <div class="thumbnailcontainer">
+                                <a href="{{url(date=data['date'], form=the_mass['form'], illustration=illustration, lang=lang)}}">
+                                    <img src="{{illustration['illustration'].url}}" alt="{{illustration['illustration'].caption}}" class="thumbnailportrait"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="other thumbnail">
+                        <img src="/img/missale.png" alt="Missale.net"/>
+                    </div>
+                    {% endif %}
+                </div>
+                <div id="forw">
+                    <div class="forw thumbnail">
+                        {% if data['next'] %}
+                        <a href="{{url(date=data['next'], form=the_mass['form'], lang=lang)}}">
+                            <img src="/img/forw.png" class="thumbnailbox" alt="{{translate('next-mass-day', lang).string}}"/>
+                        </a>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div id="day" class="item">
+                <div itemscope="" itemtype="http://schema.org/Event">
+                    {% if the_mass['form'] == 'of' %}
+                    <div class="cycle">{{translate({'ABC':'year-abc','A':'year-a','B':'year-b','C':'year-c'}[the_mass['mass'].cycle], lang).string}}</div>
+                    {% endif %}
+                    <div class="season">{{translate(slugify(the_mass['mass'].season), lang).string}}</div>
+                    <div class="date" itemprop="startDate">{{readable_date(data['date'].date, lang)}}</div>
+                    <h1 class="title" itemprop="name">{{the_mass['i18n'].string}}</h1>
+                    <div class="form">
+                        {% if the_mass['form'] == 'of' %}
+                        <span class="thisform">{{translate("ordinary-form-of-the-roman-rite", lang).string}}</span>
+                        {% else %}
+                        <span class="thisform">{{translate("extraordinary-form-of-the-roman-rite", lang).string}}</span>
+                        {% endif %}
+                    </div>
+                    <meta itemprop="location" content="{{translate('your-parish-church', lang).string}}"/>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+            <div id="image" class="item">
+                <div class="image" itemscope="" itemtype="http://schema.org/ImageObject">
+                    <div class="picture">
+                        <img src="{{the_illustration['illustration'].url}}" alt="{{the_illustration['illustration'].caption}}"  itemprop="contentURL"/>
+                        <meta itemprop="name" content="{{the_illustration['illustration'].title}}"/>
+                        <meta itemprop="author" content="{{the_illustration['illustration'].artist}}"/>
+                        <meta itemprop="datePublished" content="{{the_illustration['illustration'].year}}"/>
+                        <meta itemprop="contentLocation" content="{{the_illustration['illustration'].location}}"/>
+                    </div>
+                    <div class="caption">
+                        <span class="metadata"  itemprop="caption">{{the_illustration['illustration'].caption}}</span>
+                        <span class="google"><a href="http://images.google.com/searchbyimage?gbv=2&site=search&image_url={{quote(the_illustration['illustration'].url)}}&sa=X&ei=H6RaTtb5JcTeiALlmPi2CQ&ved=0CDsQ9Q8" target="_blank" title="Google Images">google</a></span>
+                    </div>
+                </div>
+            </div>
+            <div id="passage" class="item">
+                <div class="passagereference">{{the_illustration['verse'].local_ref}}</div>
+                <div class="passage">{{the_illustration['verse'].string}}</div>
+            </div>
+            <div id="links" class="item">
+                <div class="social">
+                    <span class='st_pinterest_large' displayText='Pinterest'></span>
+                    <span class='st_facebook_large' displayText='Facebook'></span>
+                    <span class='st_twitter_large' displayText='Tweet'></span>
+                    <span class='st_googleplus_large' displayText='Google +'></span>
+                </div>
+                {% if lang == 'nl' %}
+                <a href="http://www.bijbel.net/wb/?{{quote(the_illustration['verse'].local_ref)}}" target="_blank">
+                    <span class="link">Bijbel</span>
+                </a>
+                {% endif %}
+                <a href="{{url(lang=lang, form=the_mass['form'])}}">
+                    <span class="link">{{translate('today', lang).string}}</span>
+                </a>
+                <a href="" target="_blank" rel="nofollow">
+                    <span class="link">{{translate('subscribe', lang).string}}</span>
+                </a>
+                <div class="link">
+                    <a href="javascript:window.print()" class="tooltip" rel="nofollow">
+                        {{translate("print", lang).string}}
+                        <span class="tooltip">{{translate("hint-use-page-orientation-landscape", lang).string}}</span>
+                    </a>
+                </div>
+                {% for other_lang in languages %}
+                {% if other_lang != lang %}
+                <a href="{{url(date=data['date'], form=the_mass['form'], illustration=the_illustration, lang=other_lang)}}">
+                    <span class="link">{{translate(other_lang, lang).string}}</span>
+                </a>
+                {% endif %}
+                {% endfor %}
+                {% if the_mass['form'] == 'of' %}
+                <a href="{{url(date=data['date'], form='eo', lang=lang)}}">
+                    <span class="link">{{translate("extraordinary-form", lang).string}}</span>
+                </a>
+                {% else %}
+                <a href="{{url(date=data['date'], form='of', lang=lang)}}">
+                    <span class="link">{{translate("ordinary-form", lang).string}}</span>
+                </a>
+                {% endif %}
+                <div class="email">info@missale.net</div>
+            </div>
+        </div>
+    </body>
+</html>

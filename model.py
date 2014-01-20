@@ -207,3 +207,7 @@ class Date(ndb.Model):
             logging.log(logging.ERROR, "No matching date for form.idx = " + id)
         return r
 
+
+class RSS_cache(ndb.Model):  # the key is lang.form
+    date = ndb.DateProperty()
+    content = ndb.TextProperty()

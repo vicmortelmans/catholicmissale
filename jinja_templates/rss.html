@@ -1,0 +1,57 @@
+<rss version="2.0"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:sy="http://purl.org/rss/1.0/modules/syndication/">
+    <channel>
+        {% if data[0]['form'] == 'of' %}
+        <title>Missale.net - {{translate('ordinary-form', lang).string}}</title>
+        {% else %}
+        <title>Missale.net - {{translate('extraordinary-form', lang).string}}</title>
+        {% endif %}
+        <atom:link href="http://www.missale.net/rss/feed?lang={{lang}}&form={{data[0]['form']}}" rel="self" type="application/rss+xml" />
+        <link>http://www.missale.net</link>
+        {% if  data[0]['form'] == 'of' %}
+        <description>{{translate('lectio-1969',lang).string}}</description>
+        {% else %}
+        <description>{{translate('lectio-1962',lang).string}}</description>
+        {% endif %}
+        <lastBuildDate>{{time.strftime("%a, %d %b %Y %H:%M:%S +0000")}}</lastBuildDate>
+        <language>{{lang}}</language>
+        <sy:updatePeriod>hourly</sy:updatePeriod>
+        <sy:updateFrequency>1</sy:updateFrequency>
+        {% for item in data %}
+            <item>
+                <title>{{item['the_mass']['i18n'].string}}</title>
+                <link>http://www.missale.net{{url(date=item['date'],lang=lang,form=item['form'])}}</link>
+                {% if 'pubDate' in item %}
+                <pubDate>{{item['pubDate'].strftime("%a, %d %b %Y %H:%M:%S +0000")}}</pubDate>
+                {% endif %}
+                <guid isPermaLink="true">http://www.missale.net{{url(date=item['date'],lang=lang,form=item['form'])}}</guid>
+                <description>({{item['the_illustration']['verse'].local_ref}}) {{item['the_illustration']['verse'].string}}</description>
+                <content:encoded><![CDATA[
+                    <div>
+                        <div id="day" class="item" style="font-family:Arial, Verdana, Helvetica, sans-serif;font-size:14px;">
+                            <div>
+                                <div class="cycle">
+                                    {% if data['form'] == 'of' %}
+                                    <div class="cycle">{{translate({'ABC':'year-abc','A':'year-a','B':'year-b','C':'year-c'}[item['the_mass']['mass'].cycle], lang).string}}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="season">{{translate(slugify(item['the_mass']['mass'].season), lang).string}}</div>
+                                <div class="date">{{readable_date(item['date'].date, lang)}}</div>
+                            </div>
+                            <div class="title" style="font-family:Arial Black, Gadget, sans-serif;font-size:28px;line-height:90%;margin-top:10px;margin-bottom:10px;">
+                                {{item['the_mass']['i18n'].string}}
+                            </div>
+                        </div>
+                        <img src="{{item['the_illustration']['illustration'].url}}" alt="{{item['the_illustration']['illustration'].caption}}" style="max-width:456px;max-height:480px;"/>
+                        <div id="passage" class="item" style="font-family:Palatino Linotype, Book Antiqua, Palatino, serif;font-size:20px;">
+                            <div class="passagereference" style="font-style:italic">{{item['the_illustration']['verse'].local_ref}}</div>
+                            <div class="passage">{{item['the_illustration']['verse'].string}}</div>
+                        </div>
+                    </div>
+                ]]></content:encoded>
+            </item>
+        {% endfor %}
+    </channel>
+</rss>

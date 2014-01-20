@@ -10,6 +10,7 @@ routes = [
     webapp2.Route(r'/<date_string:\d{4}-\d{2}-\d{2}>', handler='day.DayHandler'),
     webapp2.Route(r'/<lang:en|nl|fr>', handler='day.DayHandler'),
     webapp2.Route(r'/', handler='day.DayHandler'),
+    webapp2.Route(r'/rss/feed', handler='rss.RSSHandler'),
     webapp2.Route(r'/list-spreadsheet-illustrations', handler='spreadsheet_index.ListSpreadsheetHandler'),
     webapp2.Route(r'/sync-illustrations', handler='sync_illustration_index.SyncIllustrationHandler'),
     webapp2.Route(r'/sync-masses', handler='sync_masses_index.SyncMassesHandler'),

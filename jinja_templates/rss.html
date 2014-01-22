@@ -8,7 +8,7 @@
         {% else %}
         <title>Missale.net - {{translate('extraordinary-form', lang).string}}</title>
         {% endif %}
-        <atom:link href="http://www.missale.net/rss/feed?lang={{lang}}&form={{data[0]['form']}}" rel="self" type="application/rss+xml" />
+        <atom:link href="http://www.missale.net/rss/feed?lang={{lang}}&amp;form={{data[0]['form']}}" rel="self" type="application/rss+xml" />
         <link>http://www.missale.net</link>
         {% if  data[0]['form'] == 'of' %}
         <description>{{translate('lectio-1969',lang).string}}</description>
@@ -41,7 +41,9 @@
                                 <div class="date">{{readable_date(item['date'].date, lang)}}</div>
                             </div>
                             <div class="title" style="font-family:Arial Black, Gadget, sans-serif;font-size:28px;line-height:90%;margin-top:10px;margin-bottom:10px;">
-                                {{item['the_mass']['i18n'].string}}
+                                <a href="http://www.missale.net{{url(date=item['date'],lang=lang,form=item['form'])}}">
+                                    {{item['the_mass']['i18n'].string}}
+                                </a>
                             </div>
                         </div>
                         <img src="{{item['the_illustration']['illustration'].url}}" alt="{{item['the_illustration']['illustration'].caption}}" style="max-width:456px;max-height:480px;"/>

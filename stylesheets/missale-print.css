@@ -1,0 +1,14 @@
+@Page {
+    size: landscape;
+}
+.header-image, .google, .thumbnail-container, footer {
+    display: none;
+}
+.main-image {
+    max-height: 480px;
+    width: auto;
+}
+p {
+    font-size: 18px;
+    line-height: 24px;
+}

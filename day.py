@@ -23,7 +23,7 @@ class DayHandler(webapp2.RequestHandler):
             # query for previous and next dates
             next_date = model.Date.query_by_form_and_earliest_date(form, matching_date.date + datetime.timedelta(1))
             previous_date = model.Date.query_by_form_and_later_date(form, matching_date.date)
-            template = jinja_environment.get_template('day.html')
+            template = jinja_environment.get_template('day2.html')
             self.response.out.write(template.render(
                 lang=lang,
                 data=data,

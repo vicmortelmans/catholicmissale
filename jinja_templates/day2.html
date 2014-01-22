@@ -90,11 +90,9 @@
     {% endif %}
     {% if the_other_illustrations %}
     {% for illustration in the_other_illustrations %}
-    <div class="thumbnail-box">
-        <a href="{{url(date=data['date'], form=data['form'], illustration=illustration, lang=lang)}}">
-            <img src="{{illustration['illustration'].url}}" width="68" alt="{{illustration['illustration'].caption}}">
-        </a>
-    </div>
+    <a href="{{url(date=data['date'], form=data['form'], illustration=illustration, lang=lang)}}" title="{{illustration['illustration'].caption}}">
+        <div class="thumbnail-box" style="background-image: url('{{illustration['illustration'].url}}'); background-size: cover; background-repeat: no-repeat;"></div>
+    </a>
     {% endfor %}
     {% endif %}
 </div>

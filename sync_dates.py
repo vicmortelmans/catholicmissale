@@ -454,6 +454,7 @@ class SyncDatesHandler(webapp2.RequestHandler):
                     date['id'] = form + '.' + str(idx)
                     idx += 1
                     date['date'] = d
+                    date['year'] = year
                     if form == 'of':
                         date['cycle'] = calendar.days[d].cycle
                     preceding = calendar.days[d].preceding_liturgical_day

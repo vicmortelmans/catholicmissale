@@ -3,8 +3,10 @@
 <head>
     <meta charset="utf-8">
     <title>{{the_mass['i18n'].string}} | {{data['date'].date.strftime('%Y')}} | {{translate('catholic-mass-readings', lang).string}}</title>
-    <meta name="description" content="{{translate('readings-from-the-gospel-for-the-catholic-mass-according-to-the-liturgy-calendar-', lang).string}} {{the_mass['i18n'].string}}, {{data['date'].date.strftime('%Y')}} {{translate('with-picture', lang)}} {{the_illustration['illustration'].caption}}.">
+    <meta name="description" content="{{translate('readings-from-the-gospel-for-the-catholic-mass-according-to-the-liturgy-calendar-', lang).string}} {{the_mass['i18n'].string}}, {{data['date'].date.strftime('%Y')}} {{translate('with-picture', lang).string}} {{the_illustration['illustration'].caption}}.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.missale.net/rss/feed?lang={{lang}}&form={{data['form']}}" />
+    <link rel="canonical" href="http://www.missale.net{{url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang)}}">
     <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/webflow.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/missale.webflow.css">
@@ -115,7 +117,7 @@
                 <a href="{{url(lang=lang, form=data['form'])}}">
                     <input class="w-button button" type="button" value="{{translate('today', lang).string}}" data-wait="Please wait..."></input>
                 </a>
-                <a href="" target="_blank" rel="nofollow">
+                <a href="{{subscription_form}}" target="_blank" rel="nofollow">
                     <input class="w-button button" type="button" value="{{translate('subscribe', lang).string}}" data-wait="Please wait..."></input>
                 </a>
                 <div class="link">

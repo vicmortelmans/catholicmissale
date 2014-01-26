@@ -41,7 +41,7 @@ class Mass(ndb.Model):
     """ each day that has a mass sheet; no key is assigned [20131223 it is, isn't it?] """
     id = ndb.TextProperty(required=True)  # form.coordinates(.cycle)
     form = ndb.StringProperty()
-    coordinates = ndb.StringProperty()
+    coordinates = ndb.StringProperty()  # Z1225 and SOS carry iterator '+1' through '+3'
     cycle = ndb.TextProperty()  # not repeated anymore
     name = ndb.TextProperty()
     category = ndb.TextProperty()
@@ -66,6 +66,8 @@ class Mass(ndb.Model):
         if not r:
             logging.log(logging.ERROR, "No matching mass for form.coordinates(.cycle) = " + id)
         return r
+
+    # beware! Date is implementing it's own proprietory Mass queries !!
 
 
 class BibleRef(ndb.Model):
@@ -112,6 +114,7 @@ class I18n(ndb.Model):
 
     @classmethod
     def translate_liturgical_day(cls, form, coordinates, lang):
+        # Z1225 and SOS carry iterator '+1' through '+3'
         id = lang + '.' + form + '.' + coordinates
         r = cls.get_by_id(id)
         if not r:
@@ -152,6 +155,7 @@ class Date(ndb.Model):
     mass = ndb.TextProperty()  # 'A011'
     coinciding = ndb.TextProperty()
     date = ndb.DateProperty()
+    year = ndb.IntegerProperty()  # liturgical year !!
     cycle = ndb.TextProperty()
 
     @classmethod
@@ -166,10 +170,16 @@ class Date(ndb.Model):
         # make 14 corresponding Mass keys
         list_of_mass_keys = []
         for d in list_of_dates:
-            if d.cycle:
-                key = ndb.Key(Mass, form + '.' + d.mass + '.' + d.cycle)
+            # I know, it's messy to solve data inconsistencies here
+            # There's more in day.py ...
+            if d.mass == 'Z1225' or d.mass == 'SOS':
+                mass = d.mass + '+1'
             else:
-                key = ndb.Key(Mass, form + '.' + d.mass)
+                mass = d.mass
+            if d.cycle:
+                key = ndb.Key(Mass, form + '.' + mass + '.' + d.cycle)
+            else:
+                key = ndb.Key(Mass, form + '.' + mass)
             list_of_mass_keys.append(key)
         # try fetching Mass entities
         list_of_masses = ndb.get_multi(list_of_mass_keys)
@@ -199,15 +209,12 @@ class Date(ndb.Model):
             lambda form, date: "No matching date < " + date.strftime('%Y-%m-%d') + " for form = " + form
         )
 
-    @classmethod
-    def query_by_form_and_idx(cls, form, idx):
-        id = form + '.' + str(idx)
-        r = cls.get_by_id(id)
-        if not r:
-            logging.log(logging.ERROR, "No matching date for form.idx = " + id)
-        return r
-
 
 class RSS_cache(ndb.Model):  # the key is lang.form
+    date = ndb.DateProperty()
+    content = ndb.TextProperty()
+
+
+class Calendar_cache(ndb.Model):  # the key is form
     date = ndb.DateProperty()
     content = ndb.TextProperty()

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<calendar xmlns:xs="http://www.w3.org/2001/XMLSchema">{% for year in years %}
+    <year value="{{year}}">{% for date in dates %}{% if date['form'] == form and date['year'] == year %}
+        <day>
+            <coordinates>{{date['mass']}}</coordinates>
+            <date>{{date['date'].strftime('%Y-%m-%d')}}</date>
+            <form>{{form}}</form>
+            <cycle>{{date['cycle']}}</cycle>
+            <i18n>{% for lang in languages[form] %}
+                <date lang="{{lang}}">{{readable_date(date['date'], lang)}}</date>{% endfor %}
+            </i18n>
+            <rss>{{date['date'].strftime("%a, %d %b %Y %H:%M:%S +0000")}}</rss>
+        </day>{% endif %}{% endfor %}
+    </year>{% endfor %}
+</calendar>

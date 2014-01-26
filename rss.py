@@ -19,6 +19,7 @@ class RSSHandler(webapp2.RequestHandler):
         if not self.request.get('date'):
             date = datetime.date.today()
         else:
+            # this is only meant for debugging!
             date = datetime.datetime.strptime(self.request.get('date'), '%Y-%m-%d').date()
         item_data = []
         # query the cache
@@ -42,7 +43,7 @@ class RSSHandler(webapp2.RequestHandler):
                             item_data.append(data)
                     else:
                         break
-            template = jinja_environment.get_template('rss.html')
+            template = jinja_environment.get_template('rss.xml')
             content = template.render(
                 lang=lang,
                 data=item_data,

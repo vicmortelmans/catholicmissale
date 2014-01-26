@@ -8,7 +8,7 @@ from google.appengine.ext import ndb
 
 LANGUAGES = {'of': ['en', 'fr', 'nl'], 'eo': ['en', 'fr', 'nl']}   # configured here for time being
 ALL_LANGUAGES = list(set(LANGUAGES['of'] + LANGUAGES['eo']))   # configured here for time being
-YEARS = [2014]  # configured here for time being
+YEARS = [2014, 2015]  # configured here for time being
 
 logging.basicConfig(level=logging.INFO)
 

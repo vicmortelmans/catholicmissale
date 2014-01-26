@@ -1,7 +1,7 @@
 @Page {
     size: landscape;
 }
-.header-image, .google, .thumbnail-container, footer {
+.header-image, .google, .thumbnail-container, footer, .social {
     display: none;
 }
 .main-image {
@@ -11,4 +11,7 @@
 p {
     font-size: 18px;
     line-height: 24px;
+}
+h1, .title .metadata-text {
+    color: black;
 }

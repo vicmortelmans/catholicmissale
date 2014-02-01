@@ -5,7 +5,7 @@ routes = [
     webapp2.Route(r'/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl|fr>', handler='day.DayHandler'),
     webapp2.Route(r'/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>', handler='day.DayHandler'),
     webapp2.Route(r'/<form:of|eo>/<lang:en|nl|fr>', handler='day.DayHandler'),
-    webapp2.Route(r'/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl>', handler='day.DayHandler'),
+    webapp2.Route(r'/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl|fr>', handler='day.DayHandler'),
     webapp2.Route(r'/<form:of|eo>', handler='day.DayHandler'),
     webapp2.Route(r'/<date_string:\d{4}-\d{2}-\d{2}>', handler='day.DayHandler'),
     webapp2.Route(r'/<lang:en|nl|fr>', handler='day.DayHandler'),
@@ -13,6 +13,7 @@ routes = [
     webapp2.Route(r'/day/with', handler='day.LegacyHandler'),
     webapp2.Route(r'/rss/feed', handler='rss.RSSHandler'),
     webapp2.Route(r'/calendar/<form:of|eo>', handler='liturgy_calendar.CalendarHandler'),
+    webapp2.Route(r'/missal/<lang:en|nl|fr>', handler='missal.MissalHandler'),
     webapp2.Route(r'/list-spreadsheet-illustrations', handler='spreadsheet_index.ListSpreadsheetHandler'),
     webapp2.Route(r'/sync-illustrations', handler='sync_illustration_index.SyncIllustrationHandler'),
     webapp2.Route(r'/sync-masses', handler='sync_masses_index.SyncMassesHandler'),
@@ -26,6 +27,7 @@ routes = [
     webapp2.Route(r'/flush-i18n', handler='datastore_index.FlushI18nHandler'),
     webapp2.Route(r'/flush-datastore-verses', handler='datastore_index.FlushVerseHandler'),
     webapp2.Route(r'/flush-biblerefs', handler='bibleref.FlushBiblerefsHandler'),
+    webapp2.Route(r'/flush-dates', handler='datastore_index.FlushDatesHandler'),
     webapp2.Route(r'/oauth2callback', handler='oauth2_three_legged.OauthHandler')
 ]
 

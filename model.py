@@ -39,15 +39,15 @@ class Illustration(ndb.Model):
 
 class Mass(ndb.Model):
     """ each day that has a mass sheet; no key is assigned [20131223 it is, isn't it?] """
-    id = ndb.TextProperty(required=True)  # form.coordinates(.cycle)
-    form = ndb.StringProperty()
-    coordinates = ndb.StringProperty()  # Z1225 and SOS carry iterator '+1' through '+3'
-    cycle = ndb.TextProperty()  # not repeated anymore
+    id = ndb.TextProperty(required=True)  # form.coordinates[+{1,2,3}][.cycle]
+    form = ndb.TextProperty()
+    coordinates = ndb.TextProperty()  # Z1225 and SOS carry iterator '+1' through '+3'
+    cycle = ndb.TextProperty()  # not repeated anymore, so empty, 'A', 'B' or 'C'
     name = ndb.TextProperty()
     category = ndb.TextProperty()
     color = ndb.TextProperty()
     season = ndb.TextProperty()
-    order = ndb.IntegerProperty()
+    order = ndb.IntegerProperty(indexed=False)
     gospel = ndb.TextProperty(repeated=True)
     lecture = ndb.TextProperty(repeated=True)
     epistle = ndb.TextProperty(repeated=True)
@@ -99,7 +99,8 @@ class BibleRef(ndb.Model):
         ndb.delete_multi(keys)
 
 class I18n(ndb.Model):
-    id = ndb.TextProperty(required=True)  # lang.ref
+    # check the spreadsheet for what value is used as ref
+    id = ndb.TextProperty(required=True)  # lang.ref (lang.form.coordinates[+{1,2,3}] for liturgical days)
     ref = ndb.TextProperty()
     lang = ndb.TextProperty()
     string = ndb.TextProperty()
@@ -149,13 +150,12 @@ class Verse(ndb.Model):
 
 
 class Date(ndb.Model):
-    id = ndb.TextProperty(required=True)  # form.idx
-    form = ndb.StringProperty()  # 'of' or 'eo'
-    idx = ndb.IntegerProperty()  # sequential number
+    id = ndb.StringProperty(required=True)  # form.date
+    form = ndb.TextProperty()  # 'of' or 'eo'
     mass = ndb.TextProperty()  # 'A011'
     coinciding = ndb.TextProperty()
-    date = ndb.DateProperty()
-    year = ndb.IntegerProperty()  # liturgical year !!
+    date = ndb.DateProperty(indexed=False)
+    year = ndb.IntegerProperty(indexed=False)  # liturgical year !!
     cycle = ndb.TextProperty()
 
     @classmethod
@@ -193,21 +193,27 @@ class Date(ndb.Model):
 
     @classmethod
     def query_by_form_and_earliest_date(cls, form, date):
-        return cls._query_by_form_and_date(
-            form,
-            date,
-            lambda form, date: cls.query(cls.form == form, cls.date >= date).order(cls.date).fetch(14),
-            lambda form, date: "No matching date >= " + date.strftime('%Y-%m-%d') + " for form = " + form
-        )
+        def q(form, date):
+            id = form + '.' + date.strftime('%Y-%m-%d')
+            if form == 'eo':
+                return cls.query(cls.id >= id).filter(cls.id < 'of').order(cls.id).fetch(14)
+            else:
+                return cls.query(cls.id >= id).order(cls.id).fetch(14)
+        def l(form, date):
+            return "No matching date >= " + date.strftime('%Y-%m-%d') + " for form = " + form
+        return cls._query_by_form_and_date(form, date, q, l)
 
     @classmethod
     def query_by_form_and_later_date(cls, form, date):
-        return cls._query_by_form_and_date(
-            form,
-            date,
-            lambda form, date: cls.query(cls.form == form, cls.date < date).order(-cls.date).fetch(14),
-            lambda form, date: "No matching date < " + date.strftime('%Y-%m-%d') + " for form = " + form
-        )
+        def q(form, date):
+            id = form + '.' + date.strftime('%Y-%m-%d')
+            if form == 'of':
+                return cls.query(cls.id < id).filter(cls.id > 'eo').order(-cls.id).fetch(14)
+            else:
+                return cls.query(cls.id < id).order(-cls.id).fetch(14)
+        def l(form, date):
+            return "No matching date < " + date.strftime('%Y-%m-%d') + " for form = " + form
+        return cls._query_by_form_and_date(form, date, q, l)
 
 
 class RSS_cache(ndb.Model):  # the key is lang.form
@@ -216,5 +222,10 @@ class RSS_cache(ndb.Model):  # the key is lang.form
 
 
 class Calendar_cache(ndb.Model):  # the key is form
+    date = ndb.DateProperty()
+    content = ndb.TextProperty()
+
+
+class Missal_cache(ndb.Model):  # the key is lang
     date = ndb.DateProperty()
     content = ndb.TextProperty()

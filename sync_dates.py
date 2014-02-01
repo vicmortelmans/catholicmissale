@@ -434,14 +434,8 @@ class Easter_dates:
 
 class SyncDatesHandler(webapp2.RequestHandler):
     def get(self):
-        """
-        The datastore is flushed by default, so the system of incremental numbering in
-        the idx property isn't disturbed
-        """
-        model.Date.flush()
         dates = []  # a list of dicts
         for form in ['of', 'eo']:
-            idx = 0
             ruleset = Ruleset(form)
             for year in datastore_index.YEARS:
                 calendar = Calendar(ruleset, year, 'en')
@@ -450,9 +444,7 @@ class SyncDatesHandler(webapp2.RequestHandler):
                 for d in sorted(calendar.days):
                     date = {}
                     date['form'] = form
-                    date['idx'] = idx
-                    date['id'] = form + '.' + str(idx)
-                    idx += 1
+                    date['id'] = form + '.' + d.strftime('%Y-%m-%d')
                     date['date'] = d
                     date['year'] = year
                     if form == 'of':

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>{% for mass in masses.itervalues() %}
+    <mass>
+        <name>{{xstr(i18n[lang + '.' + mass['form'] + '.' + mass['coordinates']]['string'])}}</name>{% if mass['form'] == 'of' %}
+        <day>
+            <coordinates>{{xstr(mass['coordinates'])}}</coordinates>
+            <name>{{xstr(i18n[lang + '.' + mass['form'] + '.' + mass['coordinates']]['string'])}}</name>
+            <name2/>
+            <cycle>{{xstr(mass['cycle'])}}</cycle>
+            <category>{{xstr(mass['category'])}}</category>
+        </day>
+        <time>{{xstr(mass['season'])}}</time>{% else %}
+        <day-eo>
+            <coordinates>{{xstr(mass['coordinates'])}}</coordinates>
+            <name>{{xstr(i18n[lang + '.' + mass['form'] + '.' + mass['coordinates']]['string'])}}</name>
+            <name2/>
+            <cycle>{{xstr(mass['cycle'])}}</cycle>
+            <category>{{xstr(mass['category'])}}</category>
+        </day-eo>
+        <time-eo>{{xstr(mass['season'])}}</time-eo>{% endif %}
+        <form>{{xstr(mass['form'])}}</form>{% for reading_type in ['gospel', 'epistle', 'lecture'] %}{% if reading_type in mass %}{% for bibleref in mass[reading_type] %}
+        <reading>
+            <readingtype>{{xstr(reading_type)}}</readingtype>
+            <readingreference>{{xstr(bibleref)}}</readingreference>{% for contained_bibleref in (biblerefs[bibleref]['containedReferences'] if 'containedReferences' in biblerefs[bibleref] else []) + [bibleref] %}{% for illustration in lookup_illustrations[contained_bibleref] %}
+            <illustration>
+                <passage>{{xstr(verses[lang + '.' + contained_bibleref]['string'])}}</passage>
+                <passagereference>{{xstr(verses[lang + '.' + contained_bibleref]['local_ref'])}}</passagereference>
+                <url>{{xstr(illustration['filename'])}}</url>
+                <title>{{xstr(illustration['title'])}}</title>
+                <artist>{{xstr(illustration['artist'])}}</artist>
+                <year>{{xstr(illustration['year'])}}</year>
+                <location>{{xstr(illustration['location'])}}</location>
+                <copyright>{{xstr(illustration['copyright'])}}</copyright>
+            </illustration>{% endfor %}{% endfor %}
+        </reading>{% endfor %}{% endif %}{% endfor %}
+    </mass>{% endfor %}
+</data>

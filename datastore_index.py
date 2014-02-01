@@ -37,6 +37,12 @@ class FlushVerseHandler(webapp2.RequestHandler):
         self.response.out.write("Flushed all verses in datastore!")
 
 
+class FlushDatesHandler(webapp2.RequestHandler):
+    def get(self):
+        model.Date.flush()
+        self.response.out.write("Flushed all dates in datastore!")
+
+
 class Model_index():
     """Read a published google spreadsheet into a list of dicts.
        Each dict is an entity in the datastore.
@@ -44,8 +50,8 @@ class Model_index():
        The list is then available as the table attribute."""
     def __init__(self, Datastore_model):
         self._Model = Datastore_model
-        self.table = []
-        #self.sync_table()
+        self.table = []  # list of dicts
+        self.lookup_table = {}  # dict by id of dicts
 
     def sync_table(self):
         del self.table[:]  # table = [] would break the references!
@@ -57,6 +63,17 @@ class Model_index():
                 d[a] = getattr(entity, a)  # repeated properties are represented as a list
             self.table.append(d)
         return self.table
+
+    def sync_lookup_table(self, key_name):
+        self.lookup_table.clear()  # lookup_table = {} would break the references!
+        query = self._Model.query()
+        for entity in query:
+            # convert object to dict
+            d = {}
+            for a in entity._values:
+                d[a] = getattr(entity, a)  # repeated properties are represented as a list
+            self.lookup_table[getattr(entity, key_name)] = d
+        return self.lookup_table
 
     def bulkload_table(self, table, key_name):
         """
@@ -75,11 +92,15 @@ class Model_index():
             # also note that a key should always be a string!
             entity = self._Model.get_or_insert(str(id), **{key_name: id})
             # overwrite the values of all entities by the values in the table
+            entity_changed = False
             for column_name in entity.to_dict():
                 if column_name in row:  # dict may be incomplete
-                    setattr(entity, column_name, row[column_name])  # repeated properties are represented as a list
-            entities.append(entity)
-            logging.info('In datastore going to be added/updated row with key= ' + str(id))
+                    if getattr(entity, column_name) != row[column_name]:
+                        setattr(entity, column_name, row[column_name])  # repeated properties are represented as a list
+                        entity_changed = True
+            if entity_changed:
+                entities.append(entity)
+                logging.info('In datastore going to be added/updated row with key= ' + str(id))
         ndb.put_multi(entities)
         self.sync_table()
 
@@ -100,6 +121,9 @@ class Illustrations(Model_index):
     def __init__(self):
         Model_index.__init__(self, model.Illustration)
 
+    def sync_lookup_table(self):
+        return Model_index.sync_lookup_table(self, 'id')
+
     def bulkload_table(self, table):
         d = {}
         for row in table:
@@ -118,14 +142,12 @@ class Illustrations(Model_index):
         Model_index.delete_entities(self, obsolete_entities, 'id')
 
 
-class Biblerefs(Model_index):
-    def __init__(self):
-        Model_index.__init__(self, model.BibleRef)
-
-
 class Masses(Model_index):
     def __init__(self):
         Model_index.__init__(self, model.Mass)
+
+    def sync_lookup_table(self):
+        return Model_index.sync_lookup_table(self, 'id')
 
     def bulkload_table(self, table):
         """
@@ -164,14 +186,28 @@ class Masses(Model_index):
         Model_index.delete_entities(self, obsolete_entities, 'id')
 
 
+class Biblerefs(Model_index):
+    def __init__(self):
+        Model_index.__init__(self, model.BibleRef)
+
+    def sync_lookup_table(self):
+        return Model_index.sync_lookup_table(self, 'reference')
+
+
 class I18n(Model_index):
     def __init__(self):
         Model_index.__init__(self, model.I18n)
+
+    def sync_lookup_table(self):
+        return Model_index.sync_lookup_table(self, 'id')
 
 
 class Verses(Model_index):
     def __init__(self):
         Model_index.__init__(self, model.Verse)
+
+    def sync_lookup_table(self):
+        return Model_index.sync_lookup_table(self, 'id')
 
     def bulkload_table(self, table):
         Model_index.bulkload_table(self, table, 'id')

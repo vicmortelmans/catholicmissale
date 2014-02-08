@@ -173,9 +173,9 @@ class Date(ndb.Model):
             # I know, it's messy to solve data inconsistencies here
             # There's more in day.py ...
             if d.mass == 'Z1225' or d.mass == 'SOS':
-                mass = d.mass + '+1'
+                mass = str(d.mass) + '+1'
             else:
-                mass = d.mass
+                mass = str(d.mass)
             if d.cycle:
                 key = ndb.Key(Mass, form + '.' + mass + '.' + d.cycle)
             else:

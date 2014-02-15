@@ -8,7 +8,6 @@ import logging
 import lib
 
 logging.basicConfig(level=logging.INFO)
-httplib2.Http(timeout=60)
 
 
 class YQLException(Exception):
@@ -48,7 +47,7 @@ class SyncVersesHandler(webapp2.RequestHandler):
                     .format(yql=urllib.quote(yql))
                 logging.info("REST call to " + url + " (" + yql + ")")
                 try:
-                    resp, content = httplib2.Http().request(url)
+                    resp, content = httplib2.Http(timeout=120).request(url)
                     if resp.status != 200:
                         raise YQLException("Http response " + str(resp.status))
                     content = json.loads(content)

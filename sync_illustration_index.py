@@ -169,7 +169,7 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
         drive_ids = [i['id'] for i in self.drive_illustrations_ids]
         for i in self.datastore_illustrations:
             id = i['id']
-            if id not in drive_ids or i['wasted']:
+            if id not in drive_ids or ('wasted' in i and i['wasted']):
                 d[id] = {}
 
 

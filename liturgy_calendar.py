@@ -4,6 +4,7 @@ import datastore_index
 import lib
 import model
 import datetime
+import zlib
 from jinja_templates import jinja_environment
 
 logging.basicConfig(level=logging.INFO)
@@ -14,7 +15,7 @@ class CalendarHandler(webapp2.RequestHandler):
         # query the cache
         cache = model.Calendar_cache.get_or_insert(form)
         if cache.date == datetime.date.today():
-            content = cache.content
+            content = zlib.decompress(cache.content).decode('unicode_escape')
         else:
             # get the datastore
             datastore_dates_mgr = datastore_index.Dates()
@@ -28,7 +29,7 @@ class CalendarHandler(webapp2.RequestHandler):
                 readable_date=lib.readable_date
             )
             # update cache
-            cache.content = content
+            cache.content = zlib.compress(content.encode('unicode_escape'))
             cache.date = datetime.date.today()
             cache.put()
         self.response.headers['Content-Type'] = "application/xml"

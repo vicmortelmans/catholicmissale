@@ -223,9 +223,9 @@ class RSS_cache(ndb.Model):  # the key is lang.form
 
 class Calendar_cache(ndb.Model):  # the key is form
     date = ndb.DateProperty()
-    content = ndb.TextProperty()
+    content = ndb.BlobProperty()
 
 
 class Missal_cache(ndb.Model):  # the key is lang
     date = ndb.DateProperty()
-    content = ndb.TextProperty()
+    content = ndb.BlobProperty()

@@ -11,6 +11,7 @@
         			<th>form</th>
         			<th>coordinates</th>
         			<th>cycle</th>
+        			<th>duplicate</th>
         			<th>name</th>
         			<th>color</th>
         			<th>gospel</th>
@@ -21,7 +22,7 @@
         	<tbody>
         	{% for mass in masses %}
         		<tr>
-        			{% for item in ['form','coordinates','cycle','name','color','gospel','lecture','epistle']%}
+        			{% for item in ['form','coordinates','cycle','duplicate','name','color','gospel','lecture','epistle']%}
         				<td>{{mass[item]}}</td>
         			{% endfor %}
         		</tr>

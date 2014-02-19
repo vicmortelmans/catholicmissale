@@ -176,6 +176,7 @@ class Masses(Model_index):
                     row_copy[c] = copy.deepcopy(row)
                     row_copy[c]['cycle'] = c
                     row_copy[c]['id'] = row_copy[c]['id'].replace('ABC', c)
+                    row_copy[c]['duplicate'] = True
                     table.append(row_copy[c])
                 row['cycle'] = 'A'
                 row['id'] = row['id'].replace('ABC', 'A')

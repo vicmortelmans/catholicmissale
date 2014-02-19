@@ -14,6 +14,7 @@ routes = [
     webapp2.Route(r'/rss/feed', handler='rss.RSSHandler'),
     webapp2.Route(r'/calendar/<form:of|eo>', handler='liturgy_calendar.CalendarHandler'),
     webapp2.Route(r'/missal/<lang:en|nl|fr>', handler='missal.MissalHandler'),
+    webapp2.Route(r'/missal/<lang:en|nl|fr>/<references:.*>', handler='missal.QueryIllustrationsHandler'),
     webapp2.Route(r'/list-spreadsheet-illustrations', handler='spreadsheet_index.ListSpreadsheetHandler'),
     webapp2.Route(r'/sync-illustrations', handler='sync_illustration_index.SyncIllustrationHandler'),
     webapp2.Route(r'/sync-masses', handler='sync_masses_index.SyncMassesHandler'),

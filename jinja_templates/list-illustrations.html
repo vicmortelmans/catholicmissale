@@ -5,6 +5,7 @@
     </head>
     <body>
         <h1>Missale illustrations</h1>
+        <p>/!\ DON'T FORGET TO SYNC VERSES /!\</p>
         <table>
         	<thead>
         		<tr>
@@ -14,6 +15,7 @@
         			<th>year</th>
         			<th>location</th>
         			<th>copyright</th>
+                    <th>passageReference</th>
                     <th>id</th>
         		</tr>
         	</thead>
@@ -26,7 +28,7 @@
         						title="{{illustration.caption}}"/>
         				</a>
         			</td>
-        			{% for item in ['title','artist','year','location','copyright','id']%}
+        			{% for item in ['title','artist','year','location','copyright','passageReference','id']%}
         				<td>{{illustration[item]}}</td>
         			{% endfor %}
         		</tr>

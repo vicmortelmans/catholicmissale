@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 from datetime import date 
 from datetime import timedelta
 import logging
+import re
 
 logging.basicConfig(level=logging.INFO)
 
@@ -451,10 +452,10 @@ class SyncDatesHandler(webapp2.RequestHandler):
                         date['cycle'] = calendar.days[d].cycle
                     preceding = calendar.days[d].preceding_liturgical_day
                     if preceding:
-                        date['mass'] = preceding.coordinates
+                        date['mass'] = remove_dash_suffix(preceding.coordinates)
                     coincide = calendar.days[d].coinciding_liturgical_day
                     if coincide:
-                        date['coinciding'] = coincide.coordinates
+                        date['coinciding'] = remove_dash_suffix(coincide.coordinates)
                     dates.append(date)
 
         # get the datastore
@@ -465,3 +466,8 @@ class SyncDatesHandler(webapp2.RequestHandler):
 
         # feedback to the user
         self.response.out.write("Dates datastore updated")
+
+
+def remove_dash_suffix(string):
+    dash = re.compile('-$')
+    return dash.sub('',string)

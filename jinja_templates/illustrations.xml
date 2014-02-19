@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>{% for bibleref in references %}{% for illustration in lookup_illustrations[bibleref] %}
+    <illustration>
+        <passage>{{xstr(verses[lang + '.' + bibleref]['string'])}}</passage>
+        <passagereference>{{xstr(verses[lang + '.' + bibleref]['local_ref'])}}</passagereference>
+        <url>{{xstr(illustration['filename'])}}</url>
+        <title>{{xstr(illustration['title'])}}</title>
+        <artist>{{xstr(illustration['artist'])}}</artist>
+        <year>{{xstr(illustration['year'])}}</year>
+        <location>{{xstr(illustration['location'])}}</location>
+        <copyright>{{xstr(illustration['copyright'])}}</copyright>
+    </illustration>{% endfor %}{% if not lookup_illustrations[bibleref] %}
+    <error>{{bibleref}}</error>{% endif %}{% endfor %}
+</data>

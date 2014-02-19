@@ -43,6 +43,7 @@ class Mass(ndb.Model):
     form = ndb.TextProperty()
     coordinates = ndb.TextProperty()  # Z1225 and SOS carry iterator '+1' through '+3'
     cycle = ndb.TextProperty()  # not repeated anymore, so empty, 'A', 'B' or 'C'
+    duplicate = ndb.BooleanProperty()  # true if cycle = 'B' or 'C' of repeated mass
     name = ndb.TextProperty()
     category = ndb.TextProperty()
     color = ndb.TextProperty()

@@ -197,7 +197,19 @@ class Spreadsheet_index():
             id = entry.get_value(id_name)
             if id in updates:
                 entry.from_dict(export_for_spreadsheet(updates[id]))
-                self._client.update(entry)
+                for attempt in range(5):
+                    try:
+                        self._client.update(entry)
+                    except httplib.HTTPException as e:
+                        logging.info(e.message)
+                        time.sleep(0.5)
+                        continue
+                    else:
+                        break
+                else:
+                    # we failed all the attempts - deal with the consequences.
+                    logging.info("Retried updating the spreadsheet data three times in vain.")
+                    return
                 logging.info('On index updated row with ' + id_name + '=' + id)
         if updates:
             self.sync_table()
@@ -215,11 +227,23 @@ class Spreadsheet_index():
             additions[id][id_name] = id  # to make sure this field is also filled in if it wasn't explicitly in the dict!
             entry = ListEntry()
             entry.from_dict(export_for_spreadsheet(additions[id]))
-            self._client.add_list_entry(
-                entry,
-                self._google_spreadsheet_key,
-                google_spreadsheet_first_worksheet_id
-            )
+            for attempt in range(5):
+                try:
+                    self._client.add_list_entry(
+                        entry,
+                        self._google_spreadsheet_key,
+                        google_spreadsheet_first_worksheet_id
+                    )
+                except httplib.HTTPException as e:
+                    logging.info(e.message)
+                    time.sleep(0.5)
+                    continue
+                else:
+                    break
+            else:
+                # we failed all the attempts - deal with the consequences.
+                logging.info("Retried adding rows to the spreadsheet data three times in vain.")
+                return
             logging.info('On index added row with id = ' + id)
         if additions:
             self.sync_table()

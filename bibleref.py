@@ -4,6 +4,7 @@ import urllib2
 import json
 import logging
 import webapp2
+import time
 
 
 logging.basicConfig(level=logging.INFO)
@@ -29,12 +30,20 @@ def submit(reference, verses=False):
         .format(
             query=urllib.quote(query.encode('utf8'))
         )
-    try:
-        result = json.loads(urllib2.urlopen(url).read())['query']['results']  # TODO handle wrong results
-        if not ('biblerefs' in result and 'bibleref' in result['biblerefs']):
-            raise Exception('Empty results from YQL Bibleref open table')
-    except Exception as error:  # catch any error
-        logging.warning('On YQL, an http error occurred: %s' % error)
+    for attempt in range(5):
+        try:
+            result = json.loads(urllib2.urlopen(url).read())['query']['results']  # TODO handle wrong results
+            if not ('biblerefs' in result and 'bibleref' in result['biblerefs']):
+                raise Exception('Empty results from YQL Bibleref open table for %s [%s]' % (reference, url))
+        except Exception as error:  # catch any error
+            logging.warning('On YQL Bibleref open table for %s, an http error occurred: %s [%s]' % (reference, error, url))
+            time.sleep(0.5)
+            continue
+        else:
+            break
+    else:
+        # we failed all the attempts - deal with the consequences.
+        logging.info('On YQL Bibleref open table for %s, too many errors occurred [%s]' % (reference, url))
         return None  # better luck next time
     biblerefs = result['biblerefs']['bibleref']
     if type(biblerefs) is not list:  # happens if there's only one element

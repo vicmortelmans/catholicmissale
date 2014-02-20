@@ -9,7 +9,7 @@
             <cycle>{{xstr(mass['cycle'])}}</cycle>
             <category>{{xstr(mass['category'])}}</category>
         </day>
-        <time>{{xstr(mass['season'])}}</time>{% else %}
+        <time order="{{xstr(mass['order'])}}">{{xstr(mass['season'])}}</time>{% else %}
         <day-eo>
             <coordinates>{{xstr(mass['coordinates'])}}</coordinates>
             <name>{{xstr(i18n[lang + '.' + mass['form'] + '.' + mass['coordinates']]['string'])}}</name>
@@ -17,7 +17,7 @@
             <cycle>{{xstr(mass['cycle'])}}</cycle>
             <category>{{xstr(mass['category'])}}</category>
         </day-eo>
-        <time-eo>{{xstr(mass['season'])}}</time-eo>{% endif %}
+        <time-eo order="{{xstr(mass['order'])}}">{{xstr(mass['season'])}}</time-eo>{% endif %}
         <form>{{xstr(mass['form'])}}</form>{% for reading_type in ['gospel', 'epistle', 'lecture'] %}{% if reading_type in mass %}{% for bibleref in mass[reading_type] %}
         <reading>
             <readingtype>{{xstr(reading_type)}}</readingtype>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>{% for bibleref in references %}{% for illustration in lookup_illustrations[bibleref] %}
-    <illustration>
+    <illustration bibleref="{{bibleref}}">
         <passage>{{xstr(verses[lang + '.' + bibleref]['string'])}}</passage>
         <passagereference>{{xstr(verses[lang + '.' + bibleref]['local_ref'])}}</passagereference>
         <url>{{xstr(illustration['filename'])}}</url>

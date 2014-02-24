@@ -9,6 +9,8 @@ import re
 
 logging.basicConfig(level=logging.INFO)
 
+# YEARS hardcoded in datastore_index.py
+
 
 class Ruleset:
 
@@ -126,9 +128,11 @@ class Calendar:
         if not day.preceding_liturgical_day:
             # initialize
             day.preceding_liturgical_day = liturgical_day
+            logging.info("Preceding day on " + day.date.strftime('%x') + " is " + liturgical_day.coordinates)
         else:
             # compare precedence
             if liturgical_day.precedes(day.preceding_liturgical_day):
+                logging.info("Preceding day on " + day.date.strftime('%x') + " is " + liturgical_day.coordinates + " replacing " + day.preceding_liturgical_day.coordinates)
                 # first check if the old preceding liturgical day
                 # is coinciding
                 if liturgical_day.coincides_with(day.preceding_liturgical_day):
@@ -140,7 +144,7 @@ class Calendar:
                         day.transferable_liturgical_day = day.preceding_liturgical_day
                 # then set the new preceding liturgical day
                 day.preceding_liturgical_day = liturgical_day
-                
+
 
 class Liturgical_day:
     
@@ -159,6 +163,7 @@ class Liturgical_day:
     def precedes(self, other):
         self_precedence = self.attributes['precedence']
         other_precedence = other.attributes['precedence']
+        logging.info(str(self_precedence) + " < " + str(other_precedence) + " ?")
         return self_precedence < other_precedence
     
     def coincides_with(self, other):
@@ -179,7 +184,7 @@ class Day:
         self.cycle = {
             1: 'A',
             2: 'B',
-            3: 'C'
+            0: 'C'
         }[self.year % 3]
         self.liturgical_days = {}  # references to liturgical days by subset
         self.preceding_liturgical_day = None

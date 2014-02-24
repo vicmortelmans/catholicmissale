@@ -43,7 +43,7 @@ def submit(reference, verses=False):
             break
     else:
         # we failed all the attempts - deal with the consequences.
-        logging.info('On YQL Bibleref open table for %s, too many errors occurred [%s]' % (reference, url))
+        logging.error('On YQL Bibleref open table for %s, too many errors occurred [%s]' % (reference, url))
         return None  # better luck next time
     biblerefs = result['biblerefs']['bibleref']
     if type(biblerefs) is not list:  # happens if there's only one element

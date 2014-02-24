@@ -18,7 +18,11 @@
             <category>{{xstr(mass['category'])}}</category>
         </day-eo>
         <time-eo order="{{xstr(mass['order'])}}">{{xstr(mass['season'])}}</time-eo>{% endif %}
+        {% if fixed_date(mass['coordinates']) %}
+        <date>{{fixed_date(mass['coordinates'])}}</date>
+        {% endif %}
         <form>{{xstr(mass['form'])}}</form>{% for reading_type in ['gospel', 'epistle', 'lecture'] %}{% if reading_type in mass %}{% for bibleref in mass[reading_type] %}
+        <color>{{xstr(mass['color'])}}</color>
         <reading>
             <readingtype>{{xstr(reading_type)}}</readingtype>
             <readingreference>{{xstr(bibleref)}}</readingreference>{% for contained_bibleref in (biblerefs[bibleref]['containedReferences'] if 'containedReferences' in biblerefs[bibleref] else []) + [bibleref] %}{% for illustration in lookup_illustrations[contained_bibleref] %}

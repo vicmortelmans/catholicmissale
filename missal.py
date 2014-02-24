@@ -5,6 +5,7 @@ import lib
 import model
 import datetime
 import zlib
+import re
 from jinja_templates import jinja_environment
 
 logging.basicConfig(level=logging.INFO)
@@ -48,6 +49,7 @@ class MissalHandler(webapp2.RequestHandler):
                 lookup_illustrations=lookup_illustrations,  # dict by passageReference of lists of dicts
                 verses=verses,  # list of dicts
                 readable_date=lib.readable_date,
+                fixed_date=fixed_date,
                 xstr=lambda s: s or ""
             )
             # update cache
@@ -88,3 +90,10 @@ class QueryIllustrationsHandler(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = "application/xml"
         self.response.out.write(content)
         return
+
+
+def fixed_date(coordinates):
+    if re.match('Z', coordinates):
+        return "2000-%s-%s" % (coordinates[1:3], coordinates[3:5])
+    else:
+        return None

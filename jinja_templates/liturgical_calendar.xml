@@ -4,6 +4,8 @@
         <day>
             <coordinates>{{date['mass']}}</coordinates>
             <date>{{date['date'].strftime('%Y-%m-%d')}}</date>
+            <cyear>{{date['date'].strftime('%Y')}}</cyear>
+            <month>{{date['date'].strftime('%m')}}</month>
             <form>{{form}}</form>
             <cycle>{{date['cycle']}}</cycle>
             <i18n>{% for lang in languages[form] %}

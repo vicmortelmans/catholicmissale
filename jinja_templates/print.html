@@ -1,0 +1,145 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <title>{{translate("print-your-own-missal", lang).string}}</title>
+      <meta name="description" content="{{translate('readings-from-the-gospel-for-the-catholic-mass-according-to-the-liturgy-calendar-', lang).string}}">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css">
+      <link rel="stylesheet" type="text/css" href="/stylesheets/webflow.css">
+      <link rel="stylesheet" type="text/css" href="/stylesheets/missale.webflow.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+      <script>
+        WebFont.load({
+          google: {
+            families: ["Lato:100,300,400,700,900","Open Sans:300,400,600,700,800"]
+          }
+        });
+      </script>
+      <script>
+        if (/mobile/i.test(navigator.userAgent)) document.documentElement.className += ' w-mobile';
+      </script>
+      <link rel="shortcut icon" type="image/x-icon" href="https://y7v4p6k4.ssl.hwcdn.net/52d934e8cf2c57b94e0010e6/52ded4900184670214000004_favicon.png">
+      <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+      <link rel="apple-touch-icon" href="https://y7v4p6k4.ssl.hwcdn.net/52d934e8cf2c57b94e0010e6/52ded4b499bd27b767000001_webclip.png">
+    </head>
+    <body>
+      <header class="header-section">
+        <div class="w-container">
+          <div class="w-row">
+            <div class="w-col w-col-6 w-hidden-small w-hidden-tiny header-image">
+              <div class="logo">MISSALE.NET</div>
+              <div class="subtitle">{{translate("readings-from-the-bible-for-the-roman-catholic-liturgy", lang).string}}</div>
+            </div>
+            <div class="w-col w-col-6 title">
+              <h1>{{translate("print-your-own-missal", lang).string}}</h1>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="footer-section">
+        <div class="w-container filterset">
+          <div class="w-form">
+            <form name="email-form" data-name="Email Form">
+              <div class="filtertextcontainer">
+                <p class="filtertext">{{translate("web-man-participating", lang).string}}</p>
+              </div>
+              <div class="w-row">
+                <div class="w-col w-col-3">
+                  <select class="w-select filter" name="dropdown">
+                    <option value="lectionary">{{translate("readings-from-the-bible", lang).string}}</option>
+                    <option value="ordomissae">{{translate("fixed-prayers-of-the-mass", lang).string}}</option>
+                    <option value="both">{{translate("both", lang).string}}</option>
+                  </select>
+                  <p class="filtertext">{{translate("web-man-order-vs-reading", lang).string}}</p>
+                </div>
+                <div class="w-col w-col-3">
+                  <select class="w-select filter" name="dropdown">
+                    <option value="of">{{translate("ordinary-form", lang).string}}</option>
+                    <option value="eo">{{translate("extraordinary-form", lang).string}}</option>
+                    <option value="both">{{translate("both", lang).string}}</option>
+                  </select>
+                  <p class="filtertext">{{translate("web-man-forms", lang).string}}</p>
+                </div>
+                <div class="w-col w-col-3">
+                  <select class="w-select filter" name="dropdown">
+                    <option value="all">{{translate("whole-year", lang).string}}</option>
+                    <option value="nativ">{{translate("christmas-season", lang).string}}</option>
+                    <option value="pascha">{{translate("easter-season", lang).string}}</option>
+                    <option value="annum">{{translate("ordinary-time", lang).string}}</option>
+                    <option value="feast">{{translate("feasts", lang).string}}</option>
+                  </select>
+                  <p class="filtertext">{{translate("web-man-calendar", lang).string}}</p>
+                </div>
+                <div class="w-col w-col-3">
+                  <select class="w-select filter" name="dropdown">
+                    <option value="abc">{{translate("year-abc", lang).string}}</option>
+                    <option value="a">{{translate("year-a", lang).string}}</option>
+                    <option value="b">{{translate("year-b", lang).string}}</option>
+                    <option value="c">{{translate("year-c", lang).string}}</option>
+                  </select>
+                  <p class="filtertext">{{translate("web-man-cycles", lang).string}}</p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="w-container book-overview">
+        <div class="book-block">
+          <img class="book-cover" src="images/page_1_thumb_large%5B1%5D.jpg" alt="52e23e33ad44c94e31000b24_page_1_thumb_large%5B1%5D.jpg">
+          <div class="book-description-and-buttons">
+            <p class="book-description">Can vertical-align: top help me out?</p>
+            <div class="w-form">
+              <form class="w-clearfix" name="email-form" data-name="Email Form">
+                <input class="w-button button" type="submit" value="View"></input>
+                <input class="w-button button" type="submit" value="Print"></input>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer-section">
+        <div class="w-container button-container">
+          <div class="w-form">
+            <form class="w-clearfix" name="email-form" data-name="Email Form">
+                {% for other_lang in languages %}
+                {% if other_lang != lang %}
+                <a href="http://www.missale.net/print/{{other_lang}}">
+                    <input class="w-button button language" type="button" value="{{translate(other_lang, lang).string}}" data-wait="Please wait..."></input>
+                </a>
+                {% endif %}
+                {% endfor %}
+                <a href="http://www.missale.net/{{lang}}">
+                    <input class="w-button button" type="button" value="Missale" data-wait="Please wait..."></input>
+                </a>
+            </form>
+          </div>
+          <p class="filtertext">{{translate("intro-project", lang).string}}</p>
+          <p class="filtertext">info@missale.net</p>
+        </div>
+      </footer>
+      <div class="w-container">
+        <div class="w-row social">
+          <div class="w-col w-col-3">
+            <div class="w-widget w-widget-gplus">
+              <div class="g-plusone" data-href="http://www.missale.net/print/{{lang}}" data-size="standard" data-annotation="bubble" data-width="120" data-recommendations="false" id="___plusone_0" style="width: 106px; height: 24px; text-indent: 0px; margin: 0px; padding: 0px; background-color: transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; background-position: initial initial; background-repeat: initial initial;"></div>
+            </div>
+          </div>
+          <div class="w-col w-col-3">
+            <div class="w-widget w-widget-twitter">
+              <iframe src="https://platform.twitter.com/widgets/tweet_button.html#url={{quote('http://www.missale.net/print/' + lang, safe='')}}&amp;text=&amp;count=horizontal&amp;size=m&amp;dnt=true" scrolling="no" frameborder="0" allowtransparency="true"
+              style="border: none; overflow: hidden; width: 110px; height: 20px;"></iframe>
+            </div>
+          </div>
+          <div class="w-col w-col-3">
+            <div class="w-widget w-widget-facebook">
+              <iframe src="https://www.facebook.com/plugins/like.php?href={{quote('http://www.missale.net/print/' + lang, safe='')}}&amp;layout=standard&amp;action=like&amp;show_faces=false&amp;share=false" scrolling="no" frameborder="0" allowtransparency="true" style="border: none; overflow: hidden; width: 225px; height: 35px;"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <script type="text/javascript" src="/scripts/webflow.js"></script>
+    </body>
+    </html>

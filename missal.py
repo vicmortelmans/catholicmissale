@@ -6,6 +6,7 @@ import model
 import datetime
 import zlib
 import re
+import urllib
 from jinja_templates import jinja_environment
 
 logging.basicConfig(level=logging.INFO)
@@ -21,10 +22,10 @@ class MissalHandler(webapp2.RequestHandler):
             # get the datastore
             datastore_masses_mgr = datastore_index.Masses()
             masses = datastore_masses_mgr.sync_lookup_table()
-            # remove feasts that are the same in cycle B and C
-            for id in masses.keys():
-                if 'duplicate' in masses[id] and masses[id]['duplicate']:
-                    del masses[id]
+#            # remove feasts that are the same in cycle B and C
+#            for id in masses.keys():
+#                if 'duplicate' in masses[id] and masses[id]['duplicate']:
+#                    del masses[id]
             datastore_i18n_mgr = datastore_index.I18n()
             i18n = datastore_i18n_mgr.sync_lookup_table()
             datastore_biblerefs_mgr = datastore_index.Biblerefs()
@@ -88,6 +89,19 @@ class QueryIllustrationsHandler(webapp2.RequestHandler):
             xstr=lambda s: s or ""
         )
         self.response.headers['Content-Type'] = "application/xml"
+        self.response.out.write(content)
+        return
+
+
+class PrintHandler(webapp2.RequestHandler):
+    def get(self, lang='en'):
+        template = jinja_environment.get_template('print.html')
+        content = template.render(
+            lang=lang,
+            languages=datastore_index.LANGUAGES['of'],  # TODO language lists for of and eo *may* deviate
+            translate=model.I18n.translate,
+            quote=urllib.quote
+        )
         self.response.out.write(content)
         return
 

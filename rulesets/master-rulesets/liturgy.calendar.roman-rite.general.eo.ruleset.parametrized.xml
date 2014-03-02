@@ -1200,9 +1200,9 @@
 
     <liturgicalday>
         <parameters>
-            <parametergroup><day_s>Wednesday</day_s><nr_i>53</nr_i><day_c>4</day_c></parametergroup>
-            <parametergroup><day_s>Friday</day_s><nr_i>55</nr_i><day_c>6</day_c></parametergroup>
-            <parametergroup><day_s>Saturday</day_s><nr_i>56</nr_i><day_c>7</day_c></parametergroup>
+            <parametergroup><day_s>Wednesday</day_s><nr_i>52</nr_i><day_c>4</day_c></parametergroup>
+            <parametergroup><day_s>Friday</day_s><nr_i>54</nr_i><day_c>6</day_c></parametergroup>
+            <parametergroup><day_s>Saturday</day_s><nr_i>55</nr_i><day_c>7</day_c></parametergroup>
         </parameters>
         <template>
             <name>Ember $day_s after Pentecost</name>

@@ -31,6 +31,8 @@ else:
     google_spreadsheet_missale_i18n_of_worksheet_id = 'oda'
     google_spreadsheet_missale_i18n_eo_key = "0Au659FdpCliwdHRfNms0MTZWcVFlWnNjenJraUtvSXc"
     google_spreadsheet_missale_i18n_eo_worksheet_id = 'od7'
+google_spreadsheet_pagecount_key = "0Au659FdpCliwdEhUVDRHNEtiVi1KWnZTQkxpYlo3UkE"
+google_spreadsheet_pagecount_worksheet_id = 'oda'
 
 reading_references_separator = '|'
 
@@ -317,5 +319,14 @@ class I18nEo(Spreadsheet_index):
             self,
             google_spreadsheet_missale_i18n_eo_key,
             google_spreadsheet_missale_i18n_eo_worksheet_id
+        )
+
+
+class Pagecount(Spreadsheet_index):
+    def __init__(self):
+        Spreadsheet_index.__init__(
+            self,
+            google_spreadsheet_pagecount_key,
+            google_spreadsheet_pagecount_worksheet_id
         )
 

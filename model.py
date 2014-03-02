@@ -99,6 +99,7 @@ class BibleRef(ndb.Model):
         keys = cls.query().fetch(keys_only=True)
         ndb.delete_multi(keys)
 
+
 class I18n(ndb.Model):
     # check the spreadsheet for what value is used as ref
     id = ndb.TextProperty(required=True)  # lang.ref (lang.form.coordinates[+{1,2,3}] for liturgical days)
@@ -230,3 +231,15 @@ class Calendar_cache(ndb.Model):  # the key is form
 class Missal_cache(ndb.Model):  # the key is lang
     date = ndb.DateProperty()
     content = ndb.BlobProperty()
+
+
+class Pagecount(ndb.Model):
+    edition = ndb.TextProperty(required=True)  # edition-lang
+    pagecount = ndb.TextProperty()
+
+    @classmethod
+    def flush(cls):
+        keys = cls.query().fetch(keys_only=True)
+        ndb.delete_multi(keys)
+
+

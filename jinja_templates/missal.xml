@@ -7,6 +7,7 @@
             <name>{{xstr(i18n[lang + '.' + mass['form'] + '.' + mass['coordinates']]['string'])}}</name>
             <name2/>
             <cycle>{{xstr(mass['cycle'])}}</cycle>
+            <duplicate>{{xstr(mass['duplicate'])}}</duplicate>
             <category>{{xstr(mass['category'])}}</category>
         </day>
         <time order="{{xstr(mass['order'])}}">{{xstr(mass['season'])}}</time>{% else %}
@@ -21,8 +22,8 @@
         {% if fixed_date(mass['coordinates']) %}
         <date>{{fixed_date(mass['coordinates'])}}</date>
         {% endif %}
-        <form>{{xstr(mass['form'])}}</form>{% for reading_type in ['gospel', 'epistle', 'lecture'] %}{% if reading_type in mass %}{% for bibleref in mass[reading_type] %}
-        <color>{{xstr(mass['color'])}}</color>
+        <form>{{xstr(mass['form'])}}</form>
+        <color>{{xstr(mass['color'])}}</color>{% for reading_type in ['gospel', 'epistle', 'lecture'] %}{% if reading_type in mass %}{% for bibleref in mass[reading_type] %}
         <reading>
             <readingtype>{{xstr(reading_type)}}</readingtype>
             <readingreference>{{xstr(bibleref)}}</readingreference>{% for contained_bibleref in (biblerefs[bibleref]['containedReferences'] if 'containedReferences' in biblerefs[bibleref] else []) + [bibleref] %}{% for illustration in lookup_illustrations[contained_bibleref] %}

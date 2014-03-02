@@ -47,6 +47,12 @@ class FlushDatesHandler(webapp2.RequestHandler):
         self.response.out.write("Flushed all dates in datastore!")
 
 
+class FlushPagecountHandler(webapp2.RequestHandler):
+    def get(self):
+        model.Pagecount.flush()
+        self.response.out.write("Flushed all pagecounts!")
+
+
 class Model_index():
     """Read a published google spreadsheet into a list of dicts.
        Each dict is an entity in the datastore.
@@ -227,4 +233,13 @@ class Dates(Model_index):
 
     def bulkload_table(self, table):
         Model_index.bulkload_table(self, table, 'id')
+
+
+class Pagecount(Model_index):
+    def __init__(self):
+        Model_index.__init__(self, model.Pagecount)
+
+    def sync_lookup_table(self):
+        return Model_index.sync_lookup_table(self, 'edition')
+
 

@@ -52,7 +52,8 @@
                             {% if data['form'] == 'of' %}
                             {{translate({'ABC':'year-abc','A':'year-a','B':'year-b','C':'year-c'}[the_mass['mass'].cycle], lang).string}} &nbsp;
                             {% endif %}
-                            {{translate(slugify(the_mass['mass'].season), lang).string}}</div>
+                            {{translate(slugify(the_mass['mass'].season), lang).string}}
+                        </div>
                     </div>
                 </div>
                 <meta itemprop="location" content="{{translate('your-parish-church', lang).string}}"/>
@@ -138,30 +139,30 @@
         </div>
     </div>
 </footer>
-  <div class="w-container">
-    <div class="w-row social">
-      <div class="w-col w-col-3">
-        <div class="w-widget w-widget-gplus">
-          <div class="g-plusone" data-href="{{url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang)}}" data-size="standard" data-annotation="bubble" data-width="120" data-recommendations="false" id="___plusone_0" style="width: 106px; height: 24px; text-indent: 0px; margin: 0px; padding: 0px; background-color: transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; background-position: initial initial; background-repeat: initial initial;"></div>
-        </div>
-      </div>
-      <div class="w-col w-col-3">
-        <div class="w-widget w-widget-twitter">
-          <iframe src="https://platform.twitter.com/widgets/tweet_button.html#url={{quote('http://www.missale.net' + url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang), safe='')}}&amp;text=&amp;count=horizontal&amp;size=m&amp;dnt=true" scrolling="no" frameborder="0" allowtransparency="true"
-          style="border: none; overflow: hidden; width: 110px; height: 20px;"></iframe>
-        </div>
-      </div>
-      <div class="w-col w-col-3">
-        <div class="w-widget w-widget-facebook">
-          <iframe src="https://www.facebook.com/plugins/like.php?href={{quote('http://www.missale.net' + url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang), safe='')}}&amp;layout=standard&amp;action=like&amp;show_faces=false&amp;share=false" scrolling="no" frameborder="0" allowtransparency="true" style="border: none; overflow: hidden; width: 225px; height: 35px;"></iframe>
-        </div>
-      </div>
-      <div class="w-col w-col-3">
-          <a href="//www.pinterest.com/pin/create/button/?url={{quote('http://www.missale.net' + url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang), safe='')}}&media={{quote(the_illustration['illustration'].url)}}&description={{quote(the_mass['i18n'].string.encode('utf8') + ' | ' + data['date'].date.strftime('%Y').encode('utf8') + ' | ' + translate('catholic-mass-readings', lang).string.encode('utf8') + ' | ' + the_illustration['illustration'].caption.encode('utf8') + ' | ' + the_illustration['verse'].local_ref.encode('utf8') + ' | ' + the_illustration['verse'].string.encode('utf8'))}}" data-pin-do="buttonPin" data-pin-config="beside" data-pin-color="white"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_white_20.png" /></a>
-          <script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js"></script>
-      </div>
+<div class="w-container">
+<div class="w-row social">
+  <div class="w-col w-col-3">
+    <div class="w-widget w-widget-gplus">
+      <div class="g-plusone" data-href="{{url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang)}}" data-size="standard" data-annotation="bubble" data-width="120" data-recommendations="false" id="___plusone_0" style="width: 106px; height: 24px; text-indent: 0px; margin: 0px; padding: 0px; background-color: transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; background-position: initial initial; background-repeat: initial initial;"></div>
     </div>
   </div>
+  <div class="w-col w-col-3">
+    <div class="w-widget w-widget-twitter">
+      <iframe src="https://platform.twitter.com/widgets/tweet_button.html#url={{quote('http://www.missale.net' + url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang), safe='')}}&amp;text=&amp;count=horizontal&amp;size=m&amp;dnt=true" scrolling="no" frameborder="0" allowtransparency="true"
+      style="border: none; overflow: hidden; width: 110px; height: 20px;"></iframe>
+    </div>
+  </div>
+  <div class="w-col w-col-3">
+    <div class="w-widget w-widget-facebook">
+      <iframe src="https://www.facebook.com/plugins/like.php?href={{quote('http://www.missale.net' + url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang), safe='')}}&amp;layout=standard&amp;action=like&amp;show_faces=false&amp;share=false" scrolling="no" frameborder="0" allowtransparency="true" style="border: none; overflow: hidden; width: 225px; height: 35px;"></iframe>
+    </div>
+  </div>
+  <div class="w-col w-col-3">
+      <a href="//www.pinterest.com/pin/create/button/?url={{quote('http://www.missale.net' + url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang), safe='')}}&media={{quote(the_illustration['illustration'].url)}}&description={{quote(the_mass['i18n'].string.encode('utf8') + ' | ' + data['date'].date.strftime('%Y').encode('utf8') + ' | ' + translate('catholic-mass-readings', lang).string.encode('utf8') + ' | ' + the_illustration['illustration'].caption.encode('utf8') + ' | ' + the_illustration['verse'].local_ref.encode('utf8') + ' | ' + the_illustration['verse'].string.encode('utf8'))}}" data-pin-do="buttonPin" data-pin-config="beside" data-pin-color="white"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_white_20.png" /></a>
+      <script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js"></script>
+  </div>
+</div>
+</div>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/scripts/webflow.js"></script>
 <script>
@@ -169,10 +170,8 @@
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
   ga('create', 'UA-37368530-1', 'missale.net');
   ga('send', 'pageview');
-
 </script>
 </body>
 </html>

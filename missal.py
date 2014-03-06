@@ -95,11 +95,24 @@ class QueryIllustrationsHandler(webapp2.RequestHandler):
 
 class PrintHandler(webapp2.RequestHandler):
     def get(self, lang='en'):
+        datastore_pagecount_mgr = datastore_index.Pagecount()
+        pagecount = datastore_pagecount_mgr.sync_table()  # no lookup table!
+        selected_pagecount = []
+        for i in pagecount:
+            edition = i['edition']
+            e = edition.split('-')
+            edition_language = e[-1]
+            if edition_language == lang:
+                i['language'] = edition_language
+                i['edition_only'] = '-'.join(e[0:-1])
+                selected_pagecount.append(i)
         template = jinja_environment.get_template('print.html')
         content = template.render(
             lang=lang,
+            pagecount=selected_pagecount,
             languages=datastore_index.LANGUAGES['of'],  # TODO language lists for of and eo *may* deviate
             translate=model.I18n.translate,
+            locales=datastore_index.LOCALES,
             quote=urllib.quote
         )
         self.response.out.write(content)

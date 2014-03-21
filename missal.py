@@ -118,6 +118,32 @@ class PrintHandler(webapp2.RequestHandler):
         self.response.out.write(content)
         return
 
+class PrintBookHandler(webapp2.RequestHandler):
+    def get(self, lang='en', edition_only=''):
+        datastore_pagecount_mgr = datastore_index.Pagecount()
+        pagecount = datastore_pagecount_mgr.sync_table()  # no lookup table!
+        for i in pagecount:
+            e = i['edition'].split('-')
+            e_lang = e[-1]
+            e_only = '-'.join(e[0:-1])
+            if e_lang == lang and e_only == edition_only:
+                i['language'] = lang
+                i['edition_only'] = edition_only
+                selected_pagecount = i
+                break
+        template = jinja_environment.get_template('book.html')
+        content = template.render(
+            lang=lang,
+            e=selected_pagecount,
+            languages=datastore_index.LANGUAGES['of'],  # TODO language lists for of and eo *may* deviate
+            translate=model.I18n.translate,
+            locales=datastore_index.LOCALES,
+            quote=urllib.quote
+        )
+        self.response.out.write(content)
+        return
+
+
 
 def fixed_date(coordinates):
     if re.match('Z', coordinates):

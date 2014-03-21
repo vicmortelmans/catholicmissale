@@ -11,6 +11,7 @@ routes = [
     webapp2.Route(r'/<lang:en|nl|fr>', handler='day.DayHandler'),
     webapp2.Route(r'/', handler='day.DayHandler'),
     webapp2.Route(r'/print/<lang:en|nl|fr>', handler='missal.PrintHandler'),
+    webapp2.Route(r'/print/<lang:en|nl|fr>/<edition_only:.*>', handler='missal.PrintBookHandler'),
     webapp2.Route(r'/day/with', handler='day.LegacyHandler'),
     webapp2.Route(r'/rss/feed', handler='rss.RSSHandler'),
     webapp2.Route(r'/calendar/<form:of|eo>', handler='liturgy_calendar.CalendarHandler'),

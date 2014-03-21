@@ -44,54 +44,111 @@
         </div>
         <div class="w-row">
             <div class="w-col w-col-3">
-                <p class="filtertext">{{translate("web-man-order-vs-reading", lang).string}}</p>
-            </div>
-            <div class="w-col w-col-3">
+                <h1>{{translate("web-man-forms-heading", lang).string}}</h1>
                 <p class="filtertext">{{translate("web-man-forms", lang).string}}</p>
             </div>
             <div class="w-col w-col-3">
+                <h1>{{translate("web-man-order-vs-reading-heading", lang).string}}</h1>
+                <p class="filtertext">{{translate("web-man-order-vs-reading", lang).string}}</p>
+            </div>
+            <div class="w-col w-col-3">
+                <h1>{{translate("web-man-calendar-heading", lang).string}}</h1>
                 <p class="filtertext">{{translate("web-man-calendar", lang).string}}</p>
             </div>
             <div class="w-col w-col-3">
+                <h1>{{translate("web-man-cycles-heading", lang).string}}</h1>
                 <p class="filtertext">{{translate("web-man-cycles", lang).string}}</p>
             </div>
         </div>
     </div>
 </div>
-<div class="w-container book-overview">
-    <div class="book-block" id="filterset">
-        <div class="w-form">
-            <form name="email-form" data-name="Email Form">
-                <select class="w-select filter" name="dropdown" id="filter-switch">
-                    <option value="all-books">{{translate("all-books", lang).string}}</option>
-                    <option value="select-a-book">{{translate("select-a-book", lang).string}}</option>
-                </select>
-                <select class="w-select filter" name="dropdown" id="filter-scope">
-                    <option value="lectionary">{{translate("readings-from-the-bible", lang).string}}</option>
-                    <option value="ordomissae">{{translate("fixed-prayers-of-the-mass", lang).string}}</option>
-                    <option value="both">{{translate("complete-missal", lang).string}}</option>
-                </select>
-                <select class="w-select filter" name="dropdown" id="filter-form">
-                    <option value="of">{{translate("ordinary-form", lang).string}}</option>
-                    <option value="eo">{{translate("extraordinary-form", lang).string}}</option>
-                    <option value="both-forms">{{translate("both-forms", lang).string}}</option>
-                </select>
-                <select class="w-select filter" name="dropdown" id="filter-season">
-                    <option value="all">{{translate("whole-year", lang).string}}</option>
-                    <option value="nativ">{{translate("christmas-season", lang).string}}</option>
-                    <option value="pascha">{{translate("easter-season", lang).string}}</option>
-                    <option value="annum">{{translate("ordinary-time", lang).string}}</option>
-                    <option value="fst">{{translate("feasts", lang).string}}</option>
-                </select>
-                <select class="w-select filter" name="dropdown" id="filter-cycle">
-                    <option value="abc">{{translate("year-abc", lang).string}}</option>
-                    <option value="a">{{translate("year-a", lang).string}}</option>
-                    <option value="b">{{translate("year-b", lang).string}}</option>
-                    <option value="c">{{translate("year-c", lang).string}}</option>
-                </select>
-            </form>
+<div class="footer-section">
+    <div class="w-container filterset">
+        <div class="w-row">
+            <div class="w-col w-col-3">
+                <div class="w-form">
+                    <form name="email-form" data-name="Email Form">
+                        <input class="w-button button filter form disabled" type="button" value="{{translate("web-man-forms-heading", lang).string}}" data-wait="Please wait..."></input>
+                        <div class="checkbox-and-label form disabled">
+                            <input id="of" class="checkbox" type="checkbox" value="of"/>
+                            <label for="of">{{translate("ordinary-form", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label form disabled">
+                            <input id="eo" class="checkbox" type="checkbox" value="eo"/>
+                            <label for="eo">{{translate("extraordinary-form", lang).string}}</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="w-col w-col-3">
+                <div class="w-form">
+                    <form name="email-form" data-name="Email Form">
+                        <input class="w-button button filter scope disabled" type="button" value="{{translate("web-man-order-vs-reading-heading", lang).string}}" data-wait="Please wait..."></input>
+                        <div class="checkbox-and-label scope disabled">
+                            <input id="lectionary" class="checkbox" type="checkbox" value="lectionary"/>
+                            <label for="lectionary">{{translate("readings-from-the-bible", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label scope disabled">
+                            <input id="ordomissae" class="checkbox" type="checkbox" value="ordomissae"/>
+                            <label for="ordomissae">{{translate("fixed-prayers-of-the-mass", lang).string}}</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="w-col w-col-3">
+                <div class="w-form">
+                    <form name="email-form" data-name="Email Form">
+                        <input class="w-button button filter season disabled" type="button" value="{{translate("web-man-calendar-heading", lang).string}}" data-wait="Please wait..."></input>
+                        <div class="checkbox-and-label season disabled">
+                            <input id="all" class="checkbox" type="checkbox" value="all"/>
+                            <label for="all">{{translate("whole-year", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label season disabled">
+                            <input id="nativ" class="checkbox" type="checkbox" value="nativ"/>
+                            <label for="nativ">{{translate("christmas-season", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label season disabled">
+                            <input id="pascha" class="checkbox" type="checkbox" value="pascha"/>
+                            <label for="pascha">{{translate("easter-season", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label season disabled">
+                            <input id="annum" class="checkbox" type="checkbox" value="annum"/>
+                            <label for="annum">{{translate("ordinary-time", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label season disabled">
+                            <input id="feasts" class="checkbox" type="checkbox" value="feasts"/>
+                            <label for="feasts">{{translate("feasts", lang).string}}</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="w-col w-col-3">
+                <div class="w-form">
+                    <form name="email-form" data-name="Email Form">
+                        <input class="w-button button filter cycle disabled" type="button" value="{{translate("web-man-cycles-heading", lang).string}}" data-wait="Please wait..."></input>
+                        <div class="checkbox-and-label cycle disabled">
+                            <input id="abc" class="checkbox" type="checkbox" value="abc"/>
+                            <label for="abc">{{translate("year-abc", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label cycle disabled">
+                            <input id="a" class="checkbox" type="checkbox" value="a"/>
+                            <label for="a">{{translate("year-a", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label cycle disabled">
+                            <input id="b" class="checkbox" type="checkbox" value="b"/>
+                            <label for="b">{{translate("year-b", lang).string}}</label>
+                        </div>
+                        <div class="checkbox-and-label cycle disabled">
+                            <input id="c" class="checkbox" type="checkbox" value="c"/>
+                            <label for="c">{{translate("year-c", lang).string}}</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+<div class="w-container book-overview">
     {% for e in pagecount %}
     <div class="book-block" id="{{e['edition_only']}}">
         <a target="_blank" href="https://googledrive.com/host/0B-659FdpCliwamhTYnRRb2tISFE/configuration_{{e['edition']}}.pdf">
@@ -99,25 +156,10 @@
         </a>
         <div class="book-description-and-buttons">
             <p class="book-description">{{translate(e['edition_only'],lang).string}} ({{e['pagecount']}} {{translate('pages',lang).string}})</p>
-            <div class="w-form">
-                <form class="w-clearfix" name="email-form" data-name="Email Form">
-                    <!--a href="https://googledrive.com/host/0B-659FdpCliwamhTYnRRb2tISFE/configuration_{{e['edition']}}.pdf">
-                        <input class="w-button button" type="submit" value="Download"></input>
-                    </a-->
-                    <a title="Peecho" href="http://www.peecho.com"
-                       class="peecho-print-button"
-                       data-filetype="pdf"
-                       data-width="148.0"
-                       data-height="210.0"
-                       data-pages="{{e['pagecount']}}"
-                       data-src="https://googledrive.com/host/0B-659FdpCliwamhTYnRRb2tISFE/configuration_{{e['edition']}}.pdf"
-                       data-text="{{translate('print', lang).string}}"
-                       data-locale="{{locales[lang]}}"
-                       data-thumbnail="https://googledrive.com/host/0B-659FdpCliwbUFoeXFoWjlvUnM/configuration_{{e['edition']}}.pdf.png"
-                       data-title="{{translate(e['edition_only'],lang).string}}">Peecho</a>
-                </form>
-            </div>
         </div>
+        <a target="_blank" href="{{lang}}/{{e['edition_only']}}">
+            <input class="w-button button" type="button" value="{{translate('print-your-own-missal',lang).string}}" data-wait="Please wait..."></input>
+        </a>
     </div>
     {% endfor %}
 </div>
@@ -165,76 +207,174 @@
 <script type="text/javascript" src="/scripts/webflow.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('.filter').on('change', filter);
+        $('.button.filter').on('click', function(){
+            if ($(this).hasClass('disabled')) {
+                $(this).removeClass('disabled');
+                $(this).siblings('div').removeClass('disabled');
+                if (! $(this).parent().find('input:checked').length) {
+                    $(this).parent().find('input:checkbox').first().prop('checked', true).trigger('change');
+                }
+            } else {
+                $(this).addClass('disabled');
+                $(this).siblings('div').addClass('disabled');
+            }
+            filter();
+        });
+        $('.form input').on('change', filter);
+        $('.scope input').on('change', filter);
+        $('.season input').on('change', function(){
+            if (this.checked) {
+                if (this.id == 'all') {
+                    $(this).parent().siblings('div').find('input').each(function(){
+                        this.checked = true;
+                    });
+                }
+                else {
+                    $(this).parent().siblings('div').find('input').each(function(){
+                        this.checked = false;
+                    });
+                }
+            } else {
+                if ( this.id != 'all' && ! $(this).parent().siblings('div').find('input:not(:checked)').length) {
+                    this.checked = true;
+                    $(this).parent().siblings('div').find('input').each(function(){
+                        this.checked = false;
+                    })
+                } else {
+                    $(this).parent().siblings('div').find('input').each(function(){
+                        this.checked = false;
+                    })
+                }
+            }
+            filter();
+        });
+        $('.cycle input').on('change', function(){
+            if (this.checked) {
+                if (this.id == 'abc') {
+                    $(this).parent().siblings('div').find('input').each(function(){
+                        this.checked = true;
+                    });
+                }
+                else {
+                    $(this).parent().siblings('div').find('input').each(function(){
+                        this.checked = false;
+                    });
+                }
+            } else {
+                if ( this.id != 'abc' && ! $(this).parent().siblings('div').find('input:not(:checked)').length) {
+                    this.checked = true;
+                    $(this).parent().siblings('div').find('input').each(function(){
+                        this.checked = false;
+                    })
+                } else {
+                    $(this).parent().siblings('div').find('input').each(function(){
+                        this.checked = false;
+                    })
+                }
+            }
+            filter();
+        });
         filter();
     });
     function filter() {
         $('.book-block').each(function() {
-            var filter_switch = $('#filter-switch').val();
-            var scope = $('#filter-scope').val();
-            var form = $('#filter-form').val();
-            if (form == 'of' && scope == 'lectionary' && filter_switch == 'select-a-book') {
-                $('#filter-cycle').prop('disabled',false);
-            } else {
-                $('#filter-cycle').prop('disabled',true);
-                $('#filter-cycle').val('abc');
-            }
-            if (form != 'both-forms' && scope == 'lectionary' && filter_switch == 'select-a-book') {
-                $('#filter-season').prop('disabled',false);
-            } else {
-                $('#filter-season').prop('disabled',true);
-                $('#filter-season').val('all')
-            }
-            if (filter_switch == 'select-a-book') {
-                $('#filter-scope').prop('disabled',false);
-                $('#filter-form').prop('disabled',false);
-            } else {
-                $('#filter-scope').prop('disabled',true);
-                $('#filter-form').prop('disabled',true);
-            }
-            var season = $('#filter-season').val();
-            if (season != 'all') {
-                $('#filter-cycle option[value = "all"]').attr('disabled','disabled');
-            } else {
-                $('#filter-cycle option[value = "all"]').removeAttr('disabled');
-            }
-            var cycle = $('#filter-cycle').val();
             var edition = this.id;
-            var match_filter_switch = false;
-            if (edition == 'filterset' || filter_switch == 'all-books') match_filter_switch = true;
-            var match_scope = false;
-            if (scope == 'lectionary' && edition.match(/^lectio-19/)) match_scope = true
-            else if (scope == 'ordomissae' && edition.match(/^ordo-19/)) match_scope = true
-            else if (scope == 'both' && edition.match(/^ordo-lectio-19/)) match_scope = true;
-            var match_form = false;
-            if (form == 'eo' && edition.match(/1962$|1962-[^1]/)) match_form = true
-            else if (form == 'of' && edition.match(/[^2]-1969/)) match_form = true
-            else if (form == 'both-forms' && edition.match(/1962-1969/)) match_form = true;
-            var match_season = false;
-            if (season.match(/nativ|pascha|annum|fst/) && edition.match(season)) match_season = true
-            else if (season == 'all' && !edition.match(/nativ|pascha|annum|fst/)) match_season = true;
-            if (scope == 'ordomissae') match_season = true;
-            var match_cycle = false;
-            if (cycle == 'a' && edition.match(/-a$|-a-/)) match_cycle = true
-            else if (cycle == 'b' && edition.match(/-b$|-b-/)) match_cycle = true
-            else if (cycle == 'c' && edition.match(/-c$|-c-/)) match_cycle = true
-            else if (cycle == 'abc' && !edition.match(/-[abc]$|-[abc]-/)) match_cycle = true
-            if (scope == 'ordomissae') match_cycle = true;
-            if (form == 'eo') match_cycle = true;
-            if (season == 'fst') match_cycle = true;
-            var match = match_filter_switch || (match_scope && match_form && match_season && match_cycle);
-            if (match) $(this).show()
+            var form_switch = ! $('input.form').hasClass('disabled');
+            var scope_switch = ! $('input.scope').hasClass('disabled');
+            var season_switch = ! $('input.season').hasClass('disabled');
+            var cycle_switch = ! $('input.cycle').hasClass('disabled');
+            var visible = true;
+            if (scope_switch) {
+                var scope_lectionary = $('#lectionary').is(':checked');
+                var scope_ordomissae = $('#ordomissae').is(':checked');
+                if (edition.match(/ordo-lectio-/) && (! scope_ordomissae || ! scope_lectionary)) {
+                    visible = false;
+                }
+                else if (edition.match(/ordo-/) && ! edition.match(/lectio-/) && (! scope_ordomissae || scope_lectionary)) {
+                    visible = false;
+                }
+                else if (edition.match(/lectio-/) && ! edition.match(/ordo-/) && (! scope_lectionary || scope_ordomissae)) {
+                    visible = false;
+                }
+            }
+            if (form_switch) {
+                var form_of = $('#of').is(':checked');
+                var form_eo = $('#eo').is(':checked');
+                if (edition.match(/-1962-1969/) && (! form_of || ! form_eo)) {
+                    visible = false;
+                }
+                else if (edition.match(/-1969/) && ! edition.match(/-1962/) && (! form_of || form_eo)) {
+                    visible = false;
+                }
+                else if (edition.match(/-1962/) && ! edition.match(/-1969/) && (! form_eo || form_of)) {
+                    visible = false;
+                }
+            }
+            if (season_switch) {
+                var season_all = $('#all').is(':checked');
+                var season_nativ = $('#nativ').is(':checked');
+                var season_pascha = $('#pascha').is(':checked');
+                var season_annum = $('#annum').is(':checked');
+                var season_feasts = $('#feasts').is(':checked');
+                if (edition.match(/-nativ|-pascha|-annum|-fst/) && season_all) {
+                    visible = false;
+                }
+                else if (edition.match(/-nativ/) && ! season_nativ) {
+                    visible = false;
+                }
+                else if (edition.match(/-pascha/) && ! season_pascha) {
+                    visible = false;
+                }
+                else if (edition.match(/-annum/) && ! season_annum) {
+                    visible = false;
+                }
+                else if (edition.match(/-fst/) && ! season_feasts) {
+                    visible = false;
+                }
+                else if (! edition.match(/-nativ/) && season_nativ && ! season_all) {
+                    visible = false;
+                }
+                else if (! edition.match(/-pascha/) && season_pascha && ! season_all) {
+                    visible = false;
+                }
+                else if (! edition.match(/-annum/) && season_annum && ! season_all) {
+                    visible = false;
+                }
+                else if (! edition.match(/-fst/) && season_feasts && ! season_all) {
+                    visible = false;
+                }
+            }
+            if (cycle_switch) {
+                var cycle_abc = $('#abc').is(':checked');
+                var cycle_a = $('#a').is(':checked');
+                var cycle_b = $('#b').is(':checked');
+                var cycle_c = $('#c').is(':checked');
+                if (edition.match(/-a($|-)|-b|-c/) && cycle_abc) {
+                    visible = false;
+                }
+                else if (edition.match(/-a($|-)/) && ! cycle_a) {
+                    visible = false;
+                }
+                else if (edition.match(/-b/) && ! cycle_b) {
+                    visible = false;
+                }
+                else if (edition.match(/-c/) && ! cycle_c) {
+                    visible = false;
+                }
+                else if (! edition.match(/-a($|-)/) && cycle_a && ! cycle_abc) {
+                    visible = false;
+                }
+                else if (! edition.match(/-b/) && cycle_b && ! cycle_abc) {
+                    visible = false;
+                }
+                else if (! edition.match(/-c/) && cycle_c && ! cycle_abc) {
+                    visible = false;
+                }
+            }
+            if (visible) $(this).show()
             else $(this).hide();
         })
     };
-</script>
-<script type="text/javascript">
-(function() {
-var p=document.createElement("script");p.type="text/javascript";p.async=true;
-var h=("https:"==document.location.protocol?"https://":"http://");
-p.src=h+"d3aln0nj58oevo.cloudfront.net/button/script/13483307155250.js";
-var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(p,s);
-}).call(this);
 </script>
 <!-- smartlook includes -->
 <script type="text/javascript">

@@ -8,7 +8,7 @@ from google.appengine.ext import ndb
 
 
 LANGUAGES = {'of': ['en', 'fr', 'nl'], 'eo': ['en', 'fr', 'nl']}   # configured here for time being
-LOCALES = {'en': 'en_US', 'fr': 'fr_FR', 'nl': 'nl_NL'}
+LOCALES = {'en': 'en_EN', 'fr': 'fr_FR', 'nl': 'nl_NL'}
 ALL_LANGUAGES = list(set(LANGUAGES['of'] + LANGUAGES['eo']))   # configured here for time being
 if google_credentials.DEV:
     YEARS = [2014]  # configured here for time being

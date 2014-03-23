@@ -38,12 +38,12 @@
     </div>
 </header>
 <div class="w-container book-overview">
-    <div class="book-block" id="{{e['edition_only']}}">
+    <div class="book-block" id="{{e['edition_only']}}" itemscope itemtype="http://schema.org/Book">
         <a target="_blank" href="https://googledrive.com/host/0B-659FdpCliwamhTYnRRb2tISFE/configuration_{{e['edition']}}.pdf">
             <img class="book-cover" src="https://googledrive.com/host/0B-659FdpCliwbUFoeXFoWjlvUnM/configuration_{{e['edition']}}.pdf.png" alt="{{translate(e['edition_only'],lang).string}}">
         </a>
         <div class="book-description-and-buttons">
-            <p class="book-description">{{translate(e['edition_only'],lang).string}} ({{e['pagecount']}} {{translate('pages',lang).string}})</p>
+            <p class="book-description" itemprop="description">{{translate(e['edition_only'],lang).string}} ({{e['pagecount']}} {{translate('pages',lang).string}})</p>
             <div class="w-form">
                 <form class="w-clearfix" name="email-form" data-name="Email Form">
                     <a title="Peecho" href="http://www.peecho.com"
@@ -60,6 +60,7 @@
                 </form>
             </div>
         </div>
+        <meta itemprop="name" content="{{translate('missal',lang).string}}"/>
     </div>
 </div>
 <footer class="footer-section">
@@ -111,6 +112,27 @@ var h=("https:"==document.location.protocol?"https://":"http://");
 p.src=h+"d3aln0nj58oevo.cloudfront.net/button/script/13483307155250.js";
 var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(p,s);
 }).call(this);
+</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37368530-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<script type="text/javascript">
+    $(function(){
+        _gaq.push(['_trackEvent', 'book', 'view', '{{e['edition']}}']);
+        $('img.book-cover').on('click', function() {
+            _gaq.push(['_trackEvent', 'book', 'download', '{{e['edition']}}']);
+        })
+        $('a.peecho-print-button').on('click', function() {
+            _gaq.push(['_trackEvent', 'book', 'peecho', '{{e['edition']}}']);
+        })
+    });
 </script>
 </body>
 </html>

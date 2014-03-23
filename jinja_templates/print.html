@@ -150,16 +150,17 @@
 </div>
 <div class="w-container book-overview">
     {% for e in pagecount %}
-    <div class="book-block" id="{{e['edition_only']}}">
+    <div class="book-block" id="{{e['edition_only']}}" itemscope itemtype="http://schema.org/Book">
         <a target="_blank" href="https://googledrive.com/host/0B-659FdpCliwamhTYnRRb2tISFE/configuration_{{e['edition']}}.pdf">
             <img class="book-cover" src="https://googledrive.com/host/0B-659FdpCliwbUFoeXFoWjlvUnM/configuration_{{e['edition']}}.pdf.png" alt="{{translate(e['edition_only'],lang).string}}">
         </a>
         <div class="book-description-and-buttons">
-            <p class="book-description">{{translate(e['edition_only'],lang).string}} ({{e['pagecount']}} {{translate('pages',lang).string}})</p>
+            <p class="book-description" itemprop="description">{{translate(e['edition_only'],lang).string}} ({{e['pagecount']}} {{translate('pages',lang).string}})</p>
         </div>
-        <a target="_blank" href="{{lang}}/{{e['edition_only']}}">
+        <a target="_blank" href="{{lang}}/{{e['edition_only']}}" itemprop="url">
             <input class="w-button button" type="button" value="{{translate('print-your-own-missal',lang).string}}" data-wait="Please wait..."></input>
         </a>
+        <meta itemprop="name" content="{{translate('missal',lang).string}}"/>
     </div>
     {% endfor %}
 </div>
@@ -387,5 +388,23 @@
      document.write(unescape("%3Cscript src='http://static.issuu.com/smartlook/ISSUU.smartlook.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
 <!-- end smartlook includes -->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37368530-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<script type="text/javascript">
+    $(function(){
+        _gaq.push(['_trackEvent', 'catalog', 'view']);
+        $('img.book-cover').on('click', function() {
+            _gaq.push(['_trackEvent', 'catalog', 'smartlook', $(this).closest('div').attr('id')]);
+        })
+    });
+</script>
 </body>
 </html>

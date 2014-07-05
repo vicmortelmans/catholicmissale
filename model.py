@@ -156,6 +156,9 @@ class Date(ndb.Model):
     form = ndb.TextProperty()  # 'of' or 'eo'
     mass = ndb.TextProperty()  # 'A011'
     coinciding = ndb.TextProperty()
+    rank = ndb.IntegerProperty(indexed=False)
+    season = ndb.TextProperty(indexed=False)
+    color = ndb.TextProperty(indexed=False)
     date = ndb.DateProperty(indexed=False)
     year = ndb.IntegerProperty(indexed=False)  # liturgical year !!
     cycle = ndb.TextProperty()

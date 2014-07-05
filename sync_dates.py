@@ -458,6 +458,9 @@ class SyncDatesHandler(webapp2.RequestHandler):
                     preceding = calendar.days[d].preceding_liturgical_day
                     if preceding:
                         date['mass'] = remove_dash_suffix(preceding.coordinates)
+                        date['rank'] = preceding.attributes['rankvalue']
+                        date['season'] = preceding.attributes['season']
+                        date['color'] = preceding.attributes['color']
                     coincide = calendar.days[d].coinciding_liturgical_day
                     if coincide:
                         date['coinciding'] = remove_dash_suffix(coincide.coordinates)

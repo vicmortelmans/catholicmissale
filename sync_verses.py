@@ -40,7 +40,7 @@ class SyncVersesHandler(webapp2.RequestHandler):
         missing_verses_chunks = lib.chunks(missing_verses, 25)
         for missing_verses_chunk in missing_verses_chunks:
             for verse in missing_verses_chunk[:]:  # taking copy of list, as items may be deleted while iterating
-                yql = 'use "https://raw.github.com/vicmortelmans/yql-tables/master/bible/bible.bible.xml" as bible.bible; '\
+                yql = 'use "https://raw.githubusercontent.com/vicmortelmans/yql-tables/master/bible/bible.bible.xml" as bible.bible; '\
                     'select * from bible.bible where language="{lang}" and bibleref="{bibleref}";'\
                     .format(lang=verse['lang'], bibleref=verse['ref'])
                 url = 'http://query.yahooapis.com/v1/public/yql?q={yql}&format=json&callback='\

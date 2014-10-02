@@ -81,7 +81,7 @@ class QueryIllustrationsHandler(webapp2.RequestHandler):
         template = jinja_environment.get_template('illustrations.xml')
         content = template.render(
             lang=lang,
-            references=references.replace('+',' ').split('|'),
+            references=references.replace('+', ' ').split('|'),
             biblerefs=biblerefs,  # list of dicts
             lookup_illustrations=lookup_illustrations,  # dict by passageReference of lists of dicts
             verses=verses,  # list of dicts

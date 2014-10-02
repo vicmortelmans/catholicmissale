@@ -134,9 +134,9 @@ def import_from_spreadsheet(d):
     return d
 
 
-class ListSpreadsheetHandler(webapp2.RequestHandler):
+class ListIllustrationsSpreadsheetHandler(webapp2.RequestHandler):
     def get(self):
-        illustrations = Illustrations().table
+        illustrations = Illustrations().sync_table()
         template = jinja_environment.get_template('list-illustrations.html')
         self.response.out.write(template.render(illustrations=illustrations))        
 

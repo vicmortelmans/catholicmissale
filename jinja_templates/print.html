@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">df
     <meta charset="utf-8">
     <title>{{translate("print-your-own-missal", lang).string}}</title>
     <meta name="description" content="{{translate('readings-from-the-gospel-for-the-catholic-mass-according-to-the-liturgy-calendar-', lang).string}}">
@@ -207,87 +208,252 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="/scripts/webflow.js"></script>
 <script type="text/javascript">
+    var ignoreHashChange = false;
+    function form_button_clicked(button) {
+        if ($(button).hasClass('disabled')) {
+            $(button).siblings('div').addClass('disabled');
+        } else {
+            $(button).siblings('div').removeClass('disabled');
+            if (! $(button).parent().find('input:checked').length) {
+                $(button).parent().find('input:checkbox').first().prop('checked', true);
+            }
+        }
+    }
+    function form_season_changed(input) {
+        if (input.checked) {
+            if (input.id == 'all') {
+                // user has checked the 'all' box
+                $(input).parent().siblings('div').find('input').each(function(){
+                    this.checked = true;
+                });
+            }
+            else {
+                // user has checked another box, that was originally unchecked
+                $(input).parent().siblings('div').find('input').each(function(){
+                    this.checked = false;
+                });
+            }
+        } else {
+            if ( input.id == 'all' ) {
+                // user has unchecked the 'all box'
+                $(input).parent().siblings('div').find('input').each(function(){
+                    this.checked = false;
+                    // TODO none selected now... is that OK?
+                })
+            } else {
+                if ($('input#all')[0].checked) {
+                    // user has unchecked another box, while originally all were checked
+                    // so let's assume that he actually wants only this box to be checked
+                    $(input).parent().siblings('div').find('input').each(function(){
+                        this.checked = false;
+                    });
+                    input.checked = true;
+                } else {
+                    // user has unchecked another box, while it was the only one checked
+                    null;
+                    // TODO none selected now... is that OK?
+                }
+            }
+        }
+    }
+    function form_cycle_changed(input) {
+        if (input.checked) {
+            if (input.id == 'abc') {
+                $(input).parent().siblings('div').find('input').each(function(){
+                    this.checked = true;
+                });
+            }
+            else {
+                $(input).parent().siblings('div').find('input').each(function(){
+                    this.checked = false;
+                });
+            }
+        } else {
+            if ( input.id != 'abc' && ! $(input).parent().siblings('div').find('input:not(:checked)').length) {
+                input.checked = true;
+                $(input).parent().siblings('div').find('input').each(function(){
+                    this.checked = false;
+                })
+            } else {
+                $(input).parent().siblings('div').find('input').each(function(){
+                    this.checked = false;
+                })
+            }
+        }
+    }
     $(document).ready(function() {
         $('.button.filter').on('click', function(){
             if ($(this).hasClass('disabled')) {
                 $(this).removeClass('disabled');
-                $(this).siblings('div').removeClass('disabled');
-                if (! $(this).parent().find('input:checked').length) {
-                    $(this).parent().find('input:checkbox').first().prop('checked', true).trigger('change');
-                }
             } else {
                 $(this).addClass('disabled');
-                $(this).siblings('div').addClass('disabled');
             }
+            form_button_clicked(this);
             filter();
+            update_hash();
         });
-        $('.form input').on('change', filter);
-        $('.scope input').on('change', filter);
-        $('.season input').on('change', function(){
-            if (this.checked) {
-                if (this.id == 'all') {
-                    $(this).parent().siblings('div').find('input').each(function(){
-                        this.checked = true;
-                    });
-                }
-                else {
-                    $(this).parent().siblings('div').find('input').each(function(){
-                        this.checked = false;
-                    });
-                }
-            } else {
-                if ( this.id != 'all' && ! $(this).parent().siblings('div').find('input:not(:checked)').length) {
-                    this.checked = true;
-                    $(this).parent().siblings('div').find('input').each(function(){
-                        this.checked = false;
-                    })
-                } else {
-                    $(this).parent().siblings('div').find('input').each(function(){
-                        this.checked = false;
-                    })
-                }
-            }
+        $('.form input').on('change', function(){
             filter();
+            update_hash();
+        });
+        $('.scope input').on('change', function(){
+            filter();
+            update_hash();
+        });
+        $('.season input').on('change', function(){
+            form_season_changed(this);
+            filter();
+            update_hash();
         });
         $('.cycle input').on('change', function(){
-            if (this.checked) {
-                if (this.id == 'abc') {
-                    $(this).parent().siblings('div').find('input').each(function(){
-                        this.checked = true;
-                    });
-                }
-                else {
-                    $(this).parent().siblings('div').find('input').each(function(){
-                        this.checked = false;
-                    });
-                }
-            } else {
-                if ( this.id != 'abc' && ! $(this).parent().siblings('div').find('input:not(:checked)').length) {
-                    this.checked = true;
-                    $(this).parent().siblings('div').find('input').each(function(){
-                        this.checked = false;
-                    })
-                } else {
-                    $(this).parent().siblings('div').find('input').each(function(){
-                        this.checked = false;
-                    })
-                }
-            }
+            form_cycle_changed(this);
             filter();
+            update_hash();
         });
+        $(window).on('hashchange', function() {
+            read_hash();
+        });
+        read_hash();
         filter();
     });
+    function read_hash() {
+        if (ignoreHashChange) {
+            ignoreHashChange = false;
+        } else {
+            // read the hash string to set the required filter settings
+            var hash = window.location.hash;
+            if (hash.indexOf('form') > -1) {
+                $('input.filter.form').removeClass('disabled');
+                form_button_clicked($('input.filter.form')[0]);
+                if (hash.indexOf('form-of') > -1) $('input#of').prop('checked', true)
+                else $('input#of').prop('checked', false);
+                if (hash.indexOf('form-eo') > -1) $('input#eo').prop('checked', true)
+                else $('input#eo').prop('checked', false);
+            } else {
+                $('input.filter.form').addClass('disabled');
+                form_button_clicked($('input.filter.form')[0]);
+            }
+            if (hash.indexOf('scope') > -1) {
+                $('input.filter.scope').removeClass('disabled');
+                form_button_clicked($('input.filter.scope')[0]);
+                if (hash.indexOf('scope-lectionary') > -1) $('input#lectionary').prop('checked', true)
+                else $('input#lectionary').prop('checked', false);
+                if (hash.indexOf('scope-ordomissae') > -1) $('input#ordomissae').prop('checked', true)
+                else $('input#ordomissae').prop('checked', false);
+            } else {
+                $('input.filter.scope').addClass('disabled');
+                form_button_clicked($('input.filter.scope')[0]);
+            }
+            if (hash.indexOf('season') > -1) {
+                $('input.filter.season').removeClass('disabled');
+                form_button_clicked($('input.filter.season')[0]);
+                if (hash.indexOf('season-nativ') > -1) $('input#nativ').prop('checked', true)
+                else $('input#nativ').prop('checked', false);
+                if (hash.indexOf('season-pascha') > -1) $('input#pascha').prop('checked', true)
+                else $('input#pascha').prop('checked', false);
+                if (hash.indexOf('season-annum') > -1) $('input#annum').prop('checked', true)
+                else $('input#annum').prop('checked', false);
+                if (hash.indexOf('season-feasts') > -1) $('input#feasts').prop('checked', true)
+                else $('input#feasts').prop('checked', false);
+                if (hash.indexOf('season-all') > -1) $('input#all').prop('checked', true)
+                else $('input#all').prop('checked', false);
+            } else {
+                $('input.filter.season').addClass('disabled');
+                form_button_clicked($('input.filter.season')[0]);
+            }
+            if (hash.indexOf('cycle') > -1) {
+                $('input.filter.cycle').removeClass('disabled');
+                form_button_clicked($('input.filter.cycle')[0]);
+                if (hash.indexOf('cycle-abc') > -1) $('input#abc').prop('checked', true)
+                else $('input#abc').prop('checked', false);
+                if (hash.indexOf('cycle--a') > -1) $('input#a').prop('checked', true)
+                else $('input#a').prop('checked', false);
+                if (hash.indexOf('cycle--b') > -1) $('input#b').prop('checked', true)
+                else $('input#b').prop('checked', false);
+                if (hash.indexOf('cycle--c') > -1) $('input#c').prop('checked', true)
+                else $('input#c').prop('checked', false);
+            } else {
+                $('input.filter.cycle').addClass('disabled');
+                form_button_clicked($('input.filter.cycle')[0]);
+            }
+            filter();
+        }
+    }
+    function update_hash() {
+        // read the filter settings and generate a hash string
+        var hash = [];
+        var form_switch = ! $('input.form').hasClass('disabled');
+        var scope_switch = ! $('input.scope').hasClass('disabled');
+        var season_switch = ! $('input.season').hasClass('disabled');
+        var cycle_switch = ! $('input.cycle').hasClass('disabled');
+        if (scope_switch) {
+            var scope_lectionary = $('#lectionary').is(':checked');
+            var scope_ordomissae = $('#ordomissae').is(':checked');
+            if (scope_lectionary) hash.push('scope-lectionary');
+            if (scope_ordomissae) hash.push('scope-ordomissae');
+        }
+        if (form_switch) {
+            var form_of = $('#of').is(':checked');
+            var form_eo = $('#eo').is(':checked');
+            if (form_of) hash.push('form-of');
+            if (form_eo) hash.push('form-eo');
+        }
+        if (season_switch) {
+            var season_all = $('#all').is(':checked');
+            var season_nativ = $('#nativ').is(':checked');
+            var season_pascha = $('#pascha').is(':checked');
+            var season_annum = $('#annum').is(':checked');
+            var season_feasts = $('#feasts').is(':checked');
+            if (season_nativ) hash.push('season-nativ');
+            if (season_pascha) hash.push('season-pascha');
+            if (season_annum) hash.push('season-annum');
+            if (season_feasts) hash.push('season-feasts');
+            if (season_all) hash.push('season-all');
+        }
+        if (cycle_switch) {
+            var cycle_abc = $('#abc').is(':checked');
+            var cycle_a = $('#a').is(':checked');
+            var cycle_b = $('#b').is(':checked');
+            var cycle_c = $('#c').is(':checked');
+            if (cycle_abc) hash.push('cycle-abc');
+            if (cycle_a) hash.push('cycle--a');
+            if (cycle_b) hash.push('cycle--b');
+            if (cycle_c) hash.push('cycle--c');
+        }
+        ignoreHashChange = true;
+        window.location.hash = "filter:" + hash.join(',');
+    }
     function filter() {
+        var form_switch = ! $('input.form').hasClass('disabled');
+        var scope_switch = ! $('input.scope').hasClass('disabled');
+        var season_switch = ! $('input.season').hasClass('disabled');
+        var cycle_switch = ! $('input.cycle').hasClass('disabled');
+        if (scope_switch) {
+            var scope_lectionary = $('#lectionary').is(':checked');
+            var scope_ordomissae = $('#ordomissae').is(':checked');
+        }
+        if (form_switch) {
+            var form_of = $('#of').is(':checked');
+            var form_eo = $('#eo').is(':checked');
+        }
+        if (season_switch) {
+            var season_all = $('#all').is(':checked');
+            var season_nativ = $('#nativ').is(':checked');
+            var season_pascha = $('#pascha').is(':checked');
+            var season_annum = $('#annum').is(':checked');
+            var season_feasts = $('#feasts').is(':checked');
+        }
+        if (cycle_switch) {
+            var cycle_abc = $('#abc').is(':checked');
+            var cycle_a = $('#a').is(':checked');
+            var cycle_b = $('#b').is(':checked');
+            var cycle_c = $('#c').is(':checked');
+        }
+        // check for each book if it matches the filter criteria
         $('.book-block').each(function() {
             var edition = this.id;
-            var form_switch = ! $('input.form').hasClass('disabled');
-            var scope_switch = ! $('input.scope').hasClass('disabled');
-            var season_switch = ! $('input.season').hasClass('disabled');
-            var cycle_switch = ! $('input.cycle').hasClass('disabled');
             var visible = true;
             if (scope_switch) {
-                var scope_lectionary = $('#lectionary').is(':checked');
-                var scope_ordomissae = $('#ordomissae').is(':checked');
                 if (edition.match(/ordo-lectio-/) && (! scope_ordomissae || ! scope_lectionary)) {
                     visible = false;
                 }
@@ -299,8 +465,6 @@
                 }
             }
             if (form_switch) {
-                var form_of = $('#of').is(':checked');
-                var form_eo = $('#eo').is(':checked');
                 if (edition.match(/-1962-1969/) && (! form_of || ! form_eo)) {
                     visible = false;
                 }
@@ -312,11 +476,6 @@
                 }
             }
             if (season_switch) {
-                var season_all = $('#all').is(':checked');
-                var season_nativ = $('#nativ').is(':checked');
-                var season_pascha = $('#pascha').is(':checked');
-                var season_annum = $('#annum').is(':checked');
-                var season_feasts = $('#feasts').is(':checked');
                 if (edition.match(/-nativ|-pascha|-annum|-fst/) && season_all) {
                     visible = false;
                 }
@@ -346,10 +505,6 @@
                 }
             }
             if (cycle_switch) {
-                var cycle_abc = $('#abc').is(':checked');
-                var cycle_a = $('#a').is(':checked');
-                var cycle_b = $('#b').is(':checked');
-                var cycle_c = $('#c').is(':checked');
                 if (edition.match(/-a($|-)|-b|-c/) && cycle_abc) {
                     visible = false;
                 }
@@ -374,7 +529,7 @@
             }
             if (visible) $(this).show()
             else $(this).hide();
-        })
+        });
     };
 </script>
 <!-- smartlook includes -->

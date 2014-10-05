@@ -152,13 +152,13 @@
 <div class="w-container book-overview">
     {% for e in pagecount %}
     <div class="book-block" id="{{e['edition_only']}}" itemscope itemtype="http://schema.org/Book">
-        <a target="_blank" href="https://googledrive.com/host/0B-659FdpCliwamhTYnRRb2tISFE/configuration_{{e['edition']}}.pdf">
+        <a href="https://googledrive.com/host/0B-659FdpCliwdW5CUVlBRW9YSVU/configuration_{{e['edition']}}.compressed.pdf">
             <img class="book-cover" src="https://googledrive.com/host/0B-659FdpCliwbUFoeXFoWjlvUnM/configuration_{{e['edition']}}.pdf.png" alt="{{translate(e['edition_only'],lang).string}}">
         </a>
         <div class="book-description-and-buttons">
             <p class="book-description" itemprop="description">{{translate(e['edition_only'],lang).string}} ({{e['pagecount']}} {{translate('pages',lang).string}})</p>
         </div>
-        <a target="_blank" href="{{lang}}/{{e['edition_only']}}" itemprop="url">
+        <a href="{{lang}}/{{e['edition_only']}}" itemprop="url">
             <input class="w-button button" type="button" value="{{translate('print-your-own-missal',lang).string}}" data-wait="Please wait..."></input>
         </a>
         <meta itemprop="name" content="{{translate('missal',lang).string}}"/>

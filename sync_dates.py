@@ -103,9 +103,10 @@ class Calendar:
             if day.transferable_liturgical_day:
                 next_date = date + timedelta(1)
                 while True:
-                    candidate_liturgical_day = self.days[next_date].preceding_liturgical_day
-                    if day.transferable_liturgical_day.precedes(candidate_liturgical_day):
-                        break
+                    if self.days[next_date].preceding_liturgical_day:
+                        candidate_liturgical_day = self.days[next_date].preceding_liturgical_day
+                        if day.transferable_liturgical_day.precedes(candidate_liturgical_day):
+                            break
                     next_date = next_date + timedelta(1)
                 self.link(day.transferable_liturgical_day, self.days[next_date])
                 logging.info("Transferred " + day.transferable_liturgical_day.coordinates + " to fall on " + next_date.strftime('%x') + " instead of " + date.strftime('%x'))

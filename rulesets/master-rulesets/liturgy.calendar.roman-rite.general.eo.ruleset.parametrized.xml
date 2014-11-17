@@ -416,7 +416,7 @@
             <set>After Epiphany before Advent</set>
             <coordinates>F$nr_c1</coordinates>
             <rank nr="9">Sunday II class</rank>
-            <precedence>15</precedence>
+            <precedence>17</precedence><!-- gets overruled by Y*** with precedence 16 -->
             <color>green</color>
             <daterules>
                 <weeks-after nr="$nr_i">
@@ -461,7 +461,7 @@
             <set>After Epiphany before Advent</set>
             <coordinates>F$nr_c$day_c</coordinates>
             <rank nr="18">Ferias IV class</rank>
-            <precedence>28</precedence>
+            <precedence>29</precedence><!-- gets overruled by Y*** with precedencd 28 -->
             <color>green</color>
             <daterules>
                 <weekday-after day="$day_s">
@@ -1283,9 +1283,8 @@
             <season>Season per annum</season>
             <set>Ordinary after Easter</set>
             <coordinates>Y$nr_c1</coordinates>
-            <precedence>1</precedence><!-- to give precedence to Last Sunday-->
+            <precedence>16</precedence><!-- was 15, to give precedence to Last Sunday-->
             <rank nr="9">Sunday II class</rank>
-            <precedence>15</precedence>
             <color>green</color>
             <daterules>
                 <weeks-after nr="$nr_i">
@@ -1320,6 +1319,7 @@
                     <day_s>Saturday</day_s><day_c>7</day_c>
                 </parametergroup>
             </parameters>
+            <parametergroup><nr_s>First</nr_s><nr_i>1</nr_i><nr_c>01</nr_c></parametergroup>
             <parametergroup><nr_s>Second</nr_s><nr_i>2</nr_i><nr_c>02</nr_c></parametergroup>
             <parametergroup><nr_s>Third</nr_s><nr_i>3</nr_i><nr_c>03</nr_c></parametergroup>
             <parametergroup><nr_s>Fourth</nr_s><nr_i>4</nr_i><nr_c>04</nr_c></parametergroup>

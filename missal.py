@@ -14,6 +14,10 @@ logging.basicConfig(level=logging.INFO)
 
 class MissalHandler(webapp2.RequestHandler):
     def get(self, lang='en'):
+        """
+        @param lang: language
+        @return: returns an XML file containing all masses
+        """
         # query the cache
         cache = model.Missal_cache.get_or_insert(lang)
         if cache.date == datetime.date.today():
@@ -64,11 +68,13 @@ class MissalHandler(webapp2.RequestHandler):
 
 class QueryIllustrationsHandler(webapp2.RequestHandler):
     def get(self, lang='en', references=''):
-        # get the datastore
+        # get the biblerefs datastore in a lookup table
         datastore_biblerefs_mgr = datastore_index.Biblerefs()
         biblerefs = datastore_biblerefs_mgr.sync_lookup_table()
+        # get the illustrations datastore in a table
         datastore_illustrations_mgr = datastore_index.Illustrations()
         illustrations = datastore_illustrations_mgr.sync_table()  # no lookup table!
+        # get the verses datastore in a lookup table
         datastore_verses_mgr = datastore_index.Verses()
         verses = datastore_verses_mgr.sync_lookup_table()
         # create a dict for looking up illustrations by passageReference

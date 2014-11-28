@@ -92,6 +92,10 @@ class BibleRef(ndb.Model):
 
     @classmethod
     def query_by_containedReferences(cls, reference):
+        """
+        @param reference: a (submitted!) bible reference
+        @return: return all bible references (ranges) that contain the input reference
+        """
         return cls.query(cls.containedReferences == reference).fetch()
 
     @classmethod

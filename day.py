@@ -148,10 +148,16 @@ def get_all_data(date, lang, iden=''):
                         if reading['bibleref']:
                             # query for bibleref
                             bibleref = model.BibleRef.query_by_reference(reading['bibleref'])
+                            containedReferences = bibleref.containedReferences
+                            if containedReferences:
+                                logging.log(logging.INFO, "Contained references for %s: %s" % (reading['bibleref'], ','.join(containedReferences)))
+                            containingReferences = [b.reference for b in model.BibleRef.query_by_containedReferences(reading['bibleref'])]
+                            if containingReferences:
+                                logging.log(logging.INFO, "References containing %s: %s" % (reading['bibleref'], ','.join(containingReferences)))
                             reading['illustrations'] = []
                             # a bibleref contains itself !
-                            for contained_bibleref in bibleref.containedReferences + [bibleref.reference]:
-                                # query for illustrations
+                            for contained_bibleref in containedReferences + [bibleref.reference] + containingReferences:
+                                # query for illustrations by searching for the bibleref itself and all contained and containing biblerefs
                                 matching_illustrations = model.Illustration.query_by_passageReference(contained_bibleref)
                                 for matching_illustration in matching_illustrations:
                                     illustration = {}

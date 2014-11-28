@@ -220,6 +220,18 @@ class Date(ndb.Model):
             return "No matching date < " + date.strftime('%Y-%m-%d') + " for form = " + form
         return cls._query_by_form_and_date(form, date, q, l)
 
+    @classmethod
+    def query_by_form_and_latest_date(cls, form, date):
+        def q(form, date):
+            id = form + '.' + date.strftime('%Y-%m-%d')
+            if form == 'of':
+                return cls.query(cls.id <= id).filter(cls.id > 'eo').order(-cls.id).fetch(14)
+            else:
+                return cls.query(cls.id <= id).order(-cls.id).fetch(14)
+        def l(form, date):
+            return "No matching date <= " + date.strftime('%Y-%m-%d') + " for form = " + form
+        return cls._query_by_form_and_date(form, date, q, l)
+
 
 class RSS_cache(ndb.Model):  # the key is lang.form
     date = ndb.DateProperty()

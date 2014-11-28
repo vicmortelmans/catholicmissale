@@ -33,13 +33,24 @@ class LegacyHandler(webapp2.RequestHandler):
 
 
 class DayHandler(webapp2.RequestHandler):
-    def get(self, form='of', date_string='today', lang='en', iden=None):
+    def get(self, form='of', date_string='today', lang='en', iden=None, pre=False):
         if date_string == 'today':
             date = datetime.date.today()
         else:
             date = datetime.datetime.strptime(date_string, '%Y-%m-%d').date()
         # query for a matching date
-        matching_date = model.Date.query_by_form_and_earliest_date(form, date)
+        if pre:
+            matching_date = model.Date.query_by_form_and_latest_date(form, date)
+        else:
+            matching_date = model.Date.query_by_form_and_earliest_date(form, date)
+        if not matching_date:
+            logging.log(logging.CRITICAL, "No matching date %s %s for %s form." % (
+                "before" if pre else "after",
+                date,
+                "ordinary" if form == "of" else "extraordinary"
+            ))
+            self.response.out.write("Deze pagina is nog niet beschikbaar.")
+            return
         data = get_all_data(matching_date, lang, iden)
         if not data:
             logging.log(logging.CRITICAL,
@@ -73,6 +84,12 @@ class DayHandler(webapp2.RequestHandler):
         )
         # return the web-page content
         self.response.out.write(content)
+        return
+
+
+class DayHandlerPre(DayHandler):
+    def get(self, form='of', date_string='today', lang='en', iden=None, pre=True):
+        DayHandler.get(self, form=form, date_string=date_string, lang=lang, iden=iden, pre=pre)
         return
 
 
@@ -157,6 +174,8 @@ def get_all_data(date, lang, iden=''):
         # query for verse
         matching_verse = model.Verse.translate(data['the_illustration']['illustration'].passageReference, lang)
         data['the_illustration']['verse'] = matching_verse
+        if not matching_verse:
+            logging.log(logging.ERROR, "No matching verse for %s in %s" % (data['the_illustration']['illustration'].passageReference, lang))
         return data
     else:
         return None

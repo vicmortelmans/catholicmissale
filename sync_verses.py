@@ -81,10 +81,10 @@ class SyncVersesHandler(webapp2.RequestHandler):
                         verse['local_ref'] = content['query']['results']['passage']['bibleref']
                 except YQLException as e:
                     missing_verses_chunk.remove(verse)  # will be picked up again in the next run
-                    logging.log(logging.ERROR, "Dropping verse with ref=" + verse['ref'] + " because " + e.value)
+                    logging.log(logging.ERROR, "Dropping verse in " + verse['lang'] + " with ref=" + verse['ref'] + " because " + e.value)
                 except httplib.HTTPException as e:
                     missing_verses_chunk.remove(verse)  # will be picked up again in the next run
-                    logging.log(logging.ERROR, "Dropping verse with ref=" + verse['ref'] + " because " + e.message)
+                    logging.log(logging.ERROR, "Dropping verse in " + verse['lang'] + " with ref=" + verse['ref'] + " because " + e.message)
 
             # copy the missing verses into the datastore
             datastore_verses_mgr.bulkload_table(missing_verses_chunk)

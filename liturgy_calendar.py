@@ -89,6 +89,7 @@ class ICalendarHandler(webapp2.RedirectHandler):
         cache = model.Calendar_cache.get_or_insert(ical_key)
         if cache.content:
             content = zlib.decompress(cache.content).decode('unicode_escape')
+            logging.info("Got ical calendar %s from cache." % ical_key)
         else:
             pickle_key = 'pickle' + form
             # this service will NOT refresh the data, but rely only on the cache !
@@ -96,6 +97,7 @@ class ICalendarHandler(webapp2.RedirectHandler):
             if not pickle_cache.content:
                 logging.error("First sync-i18n-of, sync-i18n-eo and sync-date is needed!")
                 raise webapp2.abort(404)
+            logging.info("Got pickled calendar %s from cache." % ical_key)
             pickle_content = pickle_cache.content
             days = pickle.loads(pickle_content)
             if scope == 'sundays-and-feasts':
@@ -120,9 +122,11 @@ class ICalendarHandler(webapp2.RedirectHandler):
                 name=name,
                 days=days,  # list of dicts
             ).replace('\n', '\r\n')
+            logging.info("Generated ical calendar %s." % ical_key)
             # update cache
             cache.content = zlib.compress(content.encode('unicode_escape'))
             cache.put()        # return the web-page content
+            logging.info("Stored ical calendar %s in cache." % ical_key)
         self.response.headers['Content-Type'] = "text/calendar; charset=UTF-8; method=PUBLISH"
         self.response.out.write(content)
         return

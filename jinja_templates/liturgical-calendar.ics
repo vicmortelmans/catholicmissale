@@ -2,6 +2,8 @@ BEGIN:VCALENDAR
 VERSION:2.0
 NAME:{{ name }}
 X-WR-CALNAME:{{ name }}
+REFRESH-INTERVAL;VALUE=DURATION:PT7D
+X-PUBLISHED-TTL:PT7D
 PRODID:-//www.missale.net//{{ name }}//{{ lang.upper() }}{% for day in days %}{% if (scope == 'sundays-and-feasts' and day['rank'] <= 9) or (scope == 'weekdays' and day['rank'] > 9) %}{% set url = 'http://www.missale.net/%s/%s/%s' % (form, day['date'].strftime('%Y-%m-%d'), lang) %}{% set title = day[lang].replace(',', '\,') %}
 BEGIN:VEVENT
 DTSTART;VALUE=DATE:{{ day['date'].strftime('%Y%m%d') }}

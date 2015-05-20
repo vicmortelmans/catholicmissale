@@ -157,6 +157,12 @@ Webflow.init = function () {
     });
     // Trigger resize
     api.resize.up();
+    // VIC added some lines here to make <input> within <a> working on IE as a button
+    if ("ActiveXObject" in window) {
+        $('a input.button').click(function() {
+            window.location = $(this).closest('a').attr('href');
+        });
+    }
   });
   
   /*!

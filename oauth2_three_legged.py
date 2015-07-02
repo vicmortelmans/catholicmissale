@@ -17,7 +17,7 @@ class CredentialsModel(db.Model):
 
 class Oauth2_service():
 
-    def __init__(self, api_client, version, scope):
+    def __init__(self, version, scope, api_client=None):
         request = webapp2.get_request()
         flow = OAuth2WebServerFlow(client_id=google_credentials.CLIENT_ID,
                                    client_secret=google_credentials.CLIENT_SECRET,
@@ -26,15 +26,18 @@ class Oauth2_service():
         user = users.get_current_user()
         cred = None
         if user:
-            cred = CredentialsModel.get_by_key_name(user.user_id())
+            cred = CredentialsModel.get_by_key_name(user.user_id() + scope)
         else:
             login_url = users.create_login_url(request.url)
             webapp2.redirect(login_url, abort=True)
         if cred:
             credentials = cred.credentials
-            http = httplib2.Http()
-            http = credentials.authorize(http)
-            self.service = build(api_client, version, http=http)
+            if api_client:
+                http = httplib2.Http()
+                http = credentials.authorize(http)
+                self.service = build(api_client, version, http=http)
+            else:
+                self.credentials = credentials
         else:
             state = {'original_url': request.url, 'scope': scope}
             state_string = pickle.dumps(state)
@@ -57,6 +60,6 @@ class OauthHandler(webapp2.RequestHandler):
                                    redirect_uri=request.path_url)
         credentials = flow.step2_exchange(code)
         user = users.get_current_user()
-        storage = StorageByKeyName(CredentialsModel, user.user_id(), 'credentials')
+        storage = StorageByKeyName(CredentialsModel, user.user_id() + scope, 'credentials')
         storage.put(credentials)
         return webapp2.redirect(original_url)

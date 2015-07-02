@@ -29,7 +29,7 @@ class Folder():
     def __init__(self, google_drive_folder_id):
         """google_drive_folder_id is the id of the folder (can be read from the url)."""
         self._google_drive_folder_id = google_drive_folder_id
-        self._drive_service = Oauth2_service(API_CLIENT, VERSION, OAUTH_SCOPE).service
+        self._drive_service = Oauth2_service(VERSION, OAUTH_SCOPE, API_CLIENT).service
         self.table_only_ids = []
         #self.sync_table()
 

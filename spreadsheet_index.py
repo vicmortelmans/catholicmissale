@@ -2,10 +2,16 @@ import webapp2
 from jinja_templates import jinja_environment
 from gdata.spreadsheets.client import SpreadsheetsClient
 from gdata.spreadsheets.data import ListEntry
+from gdata.gauth import OAuth2TokenFromCredentials
+from oauth2_three_legged import Oauth2_service
 import google_credentials
 import httplib
 import time
 import logging
+
+API_CLIENT = 'drive'
+VERSION = '3.0'
+OAUTH_SCOPE = 'https://spreadsheets.google.com/feeds'
 
 logging.basicConfig(level=logging.INFO)
 
@@ -150,12 +156,15 @@ class Spreadsheet_index():
         """google_spreadsheet_key is the key of the spreadsheet (can be read from the url)."""
         self._google_spreadsheet_key = google_spreadsheet_key
         self._google_worksheet_id = google_worksheet_id
+        self._credentials = Oauth2_service(VERSION, OAUTH_SCOPE).credentials
         self._client = SpreadsheetsClient()
-        self._client.client_login(
-            google_credentials.USERNAME,
-            google_credentials.PASSWORD,
-            'catholicmissale'
-        )
+        self._client.auth_token = OAuth2TokenFromCredentials(self._credentials)
+        #self._client.client_login(
+        #    google_credentials.USERNAME,
+        #    google_credentials.PASSWORD,
+        #    'catholicmissale'
+        #)
+
         self.table = []
         # self.sync_table() must be done explicitly!
 

@@ -32,6 +32,7 @@ def submit(reference, verses=False):
         )
     for attempt in range(5):
         try:
+            logging.info("Submitting bibleref " + reference + " ;REST call to " + url + " (" + query + ")")
             result = json.loads(urllib2.urlopen(url).read())['query']['results']  # TODO handle wrong results
             if not ('biblerefs' in result and 'bibleref' in result['biblerefs']):
                 raise Exception('Empty results from YQL Bibleref open table for %s [%s]' % (reference, url))

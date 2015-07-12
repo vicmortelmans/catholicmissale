@@ -7,14 +7,18 @@ import datastore_index
 import re
 import time
 from lib import slugify
+from main import decorator
+
 
 GOOGLE_DRIVE_HOST_PREFIX = "https://googledrive.com/host/" + drive_index.google_drive_missale_images_folder_id
 
 
 class SyncIllustrationHandler(webapp2.RequestHandler):
+
+    @decorator.oauth_required
     def get(self):
         # get the contents of the index spreadsheet
-        index_illustrations_mgr = spreadsheet_index.Illustrations()
+        index_illustrations_mgr = spreadsheet_index.Illustrations(oauth_decorator=decorator)
         self.index_illustrations = index_illustrations_mgr.sync_table()
 
         # see if there have been image URLs submitted to the spreadsheet index for downloading
@@ -23,7 +27,7 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
         self.find_images_for_download(images_for_download)
 
         # download the images and collect the id's in a dict by url of dicts containing 'id'
-        drive_illustration_mgr = drive_index.Illustrations()
+        drive_illustration_mgr = drive_index.Illustrations(oauth_decorator=decorator)
         downloaded_images = drive_illustration_mgr.download_images(images_for_download)
 
         # update the spreadsheet index entries with the new id's

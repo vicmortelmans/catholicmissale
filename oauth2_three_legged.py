@@ -1,8 +1,11 @@
+""""
+# THIS FILE HAS BECOME OBSOLETE BY USING THE AOUTH DECORATOR
 from oauth2client.client import OAuth2WebServerFlow
 import google_credentials
 from google.appengine.api import users
 from oauth2client.appengine import CredentialsProperty
 from oauth2client.appengine import StorageByKeyName
+from gdata.gauth import OAuth2TokenFromCredentials
 from apiclient.discovery import build
 from google.appengine.ext import db
 import webapp2
@@ -34,10 +37,12 @@ class Oauth2_service():
             credentials = cred.credentials
             if api_client:
                 http = httplib2.Http()
-                http = credentials.authorize(http)
+                http = credentials.authorize(http)  # this takes care of refreshing the token if needed
                 self.service = build(api_client, version, http=http)
             else:
-                self.credentials = credentials
+                token = OAuth2TokenFromCredentials(credentials)  # this turns the google-api-python-client credentials
+                # into a gdata token... wonder if it handles refresh...
+                self.token = token
         else:
             state = {'original_url': request.url, 'scope': scope}
             state_string = pickle.dumps(state)
@@ -63,3 +68,4 @@ class OauthHandler(webapp2.RequestHandler):
         storage = StorageByKeyName(CredentialsModel, user.user_id() + scope, 'credentials')
         storage.put(credentials)
         return webapp2.redirect(original_url)
+"""

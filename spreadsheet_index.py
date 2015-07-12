@@ -3,13 +3,11 @@ from jinja_templates import jinja_environment
 from gdata.spreadsheets.client import SpreadsheetsClient
 from gdata.spreadsheets.data import ListEntry
 from gdata.gauth import OAuth2TokenFromCredentials
-from oauth2_three_legged import Oauth2_service
 import google_credentials
 import httplib
 import time
 import logging
 
-API_CLIENT = 'drive'
 VERSION = '3.0'
 OAUTH_SCOPE = 'https://spreadsheets.google.com/feeds'
 
@@ -152,19 +150,13 @@ class Spreadsheet_index():
        Each dict is a row of the spreadsheet.
        Repeated properties are represented as a list.
        The list is then available as the table attribute."""
-    def __init__(self, google_spreadsheet_key,google_worksheet_id):
+    def __init__(self, google_spreadsheet_key, google_worksheet_id, oauth_decorator=None):
         """google_spreadsheet_key is the key of the spreadsheet (can be read from the url)."""
         self._google_spreadsheet_key = google_spreadsheet_key
         self._google_worksheet_id = google_worksheet_id
-        self._credentials = Oauth2_service(VERSION, OAUTH_SCOPE).credentials
         self._client = SpreadsheetsClient()
-        self._client.auth_token = OAuth2TokenFromCredentials(self._credentials)
-        #self._client.client_login(
-        #    google_credentials.USERNAME,
-        #    google_credentials.PASSWORD,
-        #    'catholicmissale'
-        #)
-
+        self._token = OAuth2TokenFromCredentials(oauth_decorator.credentials)
+        self._token.authorize(self._client)
         self.table = []
         # self.sync_table() must be done explicitly!
 
@@ -272,11 +264,12 @@ class Spreadsheet_index():
 class Illustrations(Spreadsheet_index):
     """Read the published google spreadsheet containing illustration metadata
     into a list of dicts"""
-    def __init__(self):
+    def __init__(self, **kwargs):
         Spreadsheet_index.__init__(
             self,
             google_spreadsheet_missale_illustrations_key,
-            google_spreadsheet_first_worksheet_id
+            google_spreadsheet_first_worksheet_id,
+            **kwargs
         )
 
     def update_fields(self, updates):
@@ -293,11 +286,12 @@ class Illustrations(Spreadsheet_index):
 
 
 class Masses(Spreadsheet_index):
-    def __init__(self):
+    def __init__(self, **kwargs):
         Spreadsheet_index.__init__(
             self,
             google_spreadsheet_missale_masses_key,
-            google_spreadsheet_missale_masses_worksheet_id
+            google_spreadsheet_missale_masses_worksheet_id,
+            **kwargs
         )
 
     def update_fields(self, updates):
@@ -305,37 +299,40 @@ class Masses(Spreadsheet_index):
 
 
 class I18nTerminology(Spreadsheet_index):
-    def __init__(self):
+    def __init__(self, **kwargs):
         Spreadsheet_index.__init__(
             self,
             google_spreadsheet_missale_i18n_teminology_key,
-            google_spreadsheet_missale_i18n_teminology_worksheet_id
+            google_spreadsheet_missale_i18n_teminology_worksheet_id,
+            **kwargs
         )
 
 
 class I18nOf(Spreadsheet_index):
-    def __init__(self):
+    def __init__(self, **kwargs):
         Spreadsheet_index.__init__(
             self,
             google_spreadsheet_missale_i18n_of_key,
-            google_spreadsheet_missale_i18n_of_worksheet_id
+            google_spreadsheet_missale_i18n_of_worksheet_id,
+            **kwargs
         )
 
 
 class I18nEo(Spreadsheet_index):
-    def __init__(self):
+    def __init__(self, **kwargs):
         Spreadsheet_index.__init__(
             self,
             google_spreadsheet_missale_i18n_eo_key,
-            google_spreadsheet_missale_i18n_eo_worksheet_id
+            google_spreadsheet_missale_i18n_eo_worksheet_id,
+            **kwargs
         )
 
 
 class Pagecount(Spreadsheet_index):
-    def __init__(self):
+    def __init__(self, **kwargs):
         Spreadsheet_index.__init__(
             self,
             google_spreadsheet_pagecount_key,
-            google_spreadsheet_pagecount_worksheet_id
+            google_spreadsheet_pagecount_worksheet_id,
+            **kwargs
         )
-

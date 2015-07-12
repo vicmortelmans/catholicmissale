@@ -2,12 +2,15 @@ import webapp2
 from jinja_templates import jinja_environment
 import spreadsheet_index
 import datastore_index
+from main import decorator
 
 
 class SyncMassesHandler(webapp2.RequestHandler):
+
+    @decorator.oauth_required
     def get(self):
         # get the contents of the index spreadsheet
-        index_masses_mgr = spreadsheet_index.Masses()
+        index_masses_mgr = spreadsheet_index.Masses(oauth_decorator=decorator)
         self.index_masses = index_masses_mgr.sync_table()
 
         # get the contents of the datastore

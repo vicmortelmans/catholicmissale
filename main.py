@@ -1,4 +1,10 @@
 import webapp2
+from oauth2client.appengine import OAuth2Decorator
+import google_credentials
+
+decorator = OAuth2Decorator(client_id=google_credentials.CLIENT_ID,
+                            client_secret=google_credentials.CLIENT_SECRET,
+                            scope='https://spreadsheets.google.com/feeds https://www.googleapis.com/auth/drive')
 
 routes = [
     webapp2.Route(r'/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl|fr>/<iden:[-a-z0-9.]+>', handler='day.DayHandler'),
@@ -36,7 +42,8 @@ routes = [
     webapp2.Route(r'/flush-biblerefs', handler='bibleref.FlushBiblerefsHandler'),
     webapp2.Route(r'/flush-dates', handler='datastore_index.FlushDatesHandler'),
     webapp2.Route(r'/flush-pagecount', handler='datastore_index.FlushPagecountHandler'),
-    webapp2.Route(r'/oauth2callback', handler='oauth2_three_legged.OauthHandler')
+    webapp2.Route(decorator.callback_path, handler=decorator.callback_handler())
+#    webapp2.Route(r'/oauth2callback', handler='oauth2_three_legged.OauthHandler')
 ]
 
 app = webapp2.WSGIApplication(routes, debug=True)

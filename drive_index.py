@@ -1,4 +1,3 @@
-from oauth2_three_legged import Oauth2_service
 import logging
 import re
 from google.appengine.api.urlfetch_errors import DownloadError
@@ -8,13 +7,14 @@ import io
 from apiclient.http import MediaIoBaseUpload
 from lib import slugify
 import google_credentials
+from apiclient.discovery import build
 
 
 logging.basicConfig(level=logging.INFO)
 
 API_CLIENT = 'drive'
 VERSION = 'v2'
-OAUTH_SCOPE = 'https://www.googleapis.com/auth/drive'
+#OAUTH_SCOPE = 'https://www.googleapis.com/auth/drive'  # now defined in main.py
 
 if google_credentials.DEV:
     google_drive_missale_images_folder_id = '0B-659FdpCliwQ1RldHZ6XzlJUEk'
@@ -26,10 +26,10 @@ class Folder():
     """Read a Google Drive folder into a list of dicts.
        Each dict is a file in the folder and contains fields for id and filename ('title').
        The list is then available as the table attribute."""       
-    def __init__(self, google_drive_folder_id):
+    def __init__(self, google_drive_folder_id, oauth_decorator=None):
         """google_drive_folder_id is the id of the folder (can be read from the url)."""
         self._google_drive_folder_id = google_drive_folder_id
-        self._drive_service = Oauth2_service(VERSION, OAUTH_SCOPE, API_CLIENT).service
+        self._drive_service = build(API_CLIENT, VERSION, http=oauth_decorator.http())
         self.table_only_ids = []
         #self.sync_table()
 
@@ -92,8 +92,12 @@ class Folder():
 class Illustrations(Folder):
     """Read the Google Drive folder containing illustrations
     into a list of dicts"""
-    def __init__(self):
-        Folder.__init__(self, google_drive_missale_images_folder_id)
+    def __init__(self, **kwargs):
+        Folder.__init__(
+            self,
+            google_drive_missale_images_folder_id,
+            **kwargs
+        )
 
     def download_images(self, images_for_download):
         """

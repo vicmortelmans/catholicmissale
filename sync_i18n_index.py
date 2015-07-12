@@ -1,12 +1,15 @@
 import webapp2
 import spreadsheet_index
 import datastore_index
+from main import decorator
 
 
 class SyncI18nTerminologyHandler(webapp2.RequestHandler):
+
+    @decorator.oauth_required
     def get(self):
         # get the contents of the index spreadsheet
-        index_i18n_mgr = spreadsheet_index.I18nTerminology()
+        index_i18n_mgr = spreadsheet_index.I18nTerminology(oauth_decorator=decorator)
         self.index_i18n = index_i18n_mgr.sync_table()
 
         # decompose each row into a set of rows, per language
@@ -23,9 +26,11 @@ class SyncI18nTerminologyHandler(webapp2.RequestHandler):
 
 
 class SyncI18nOfHandler(webapp2.RequestHandler):
+
+    @decorator.oauth_required
     def get(self):
         # get the contents of the index spreadsheet
-        index_i18n_mgr = spreadsheet_index.I18nOf()
+        index_i18n_mgr = spreadsheet_index.I18nOf(oauth_decorator=decorator)
         self.index_i18n = index_i18n_mgr.sync_table()
 
         # decompose each row into a set of rows, per language
@@ -42,9 +47,11 @@ class SyncI18nOfHandler(webapp2.RequestHandler):
 
 
 class SyncI18nEoHandler(webapp2.RequestHandler):
+
+    @decorator.oauth_required
     def get(self):
         # get the contents of the index spreadsheet
-        index_i18n_mgr = spreadsheet_index.I18nEo()
+        index_i18n_mgr = spreadsheet_index.I18nEo(oauth_decorator=decorator)
         self.index_i18n = index_i18n_mgr.sync_table()
 
         # decompose each row into a set of rows, per language

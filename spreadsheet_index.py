@@ -155,6 +155,11 @@ class Spreadsheet_index():
         self._google_spreadsheet_key = google_spreadsheet_key
         self._google_worksheet_id = google_worksheet_id
         self._client = SpreadsheetsClient()
+        # somewhere read that following line help solving "ParseError: no element found: line 1, column 0" error,
+        # in atom/core.py in atom/core.py line 520, but no
+        self._client.additional_headers = {
+            'Authorization': 'Bearer %s' % oauth_decorator.credentials.access_token,
+        }
         self._token = OAuth2TokenFromCredentials(oauth_decorator.credentials)
         self._token.authorize(self._client)
         self.table = []
@@ -198,7 +203,7 @@ class Spreadsheet_index():
         # update the spreadsheet
         for entry in self._rows:
             id = entry.get_value(id_name)
-            if id in updates:
+            if id and id in updates:
                 entry.from_dict(export_for_spreadsheet(updates[id]))
                 for attempt in range(5):
                     try:

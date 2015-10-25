@@ -92,9 +92,10 @@ class Model_index():
         @param key_name:
         @return:
         Bulkloading will add new entities, update existing entities, but NOT delete obsolete entities!
+        Rows with empty id field are ignored
         """
         entities = []
-        for row in table:
+        for row in (row for row in table if row[key_name]):
             id = row[key_name]
             # find an entity with ndb key = id
             # if you can't find one, create a new entity with ndb key = id
@@ -113,6 +114,7 @@ class Model_index():
                 entities.append(entity)
                 logging.info('In datastore going to be added/updated row with key= ' + str(id))
         ndb.put_multi(entities)
+        logging.info('In datastore added/updated rows')
         self.sync_table()
 
     def delete_entities(self, obsolete_entities, key_name):
@@ -122,6 +124,7 @@ class Model_index():
             entity_keys.append(entity.key)
             logging.info('In datastore going to be deleted row with key= ' + str(id))
         ndb.delete_multi(entity_keys)
+        logging.info('In datastore deleted rows')
         if obsolete_entities:
             self.sync_table()
 

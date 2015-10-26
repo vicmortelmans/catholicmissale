@@ -64,10 +64,10 @@
 <div class="w-container container" itemscope="" itemtype="http://schema.org/ImageObject">
     <article class="w-row row">
         <div class="w-col w-col-6 centered">
-            <img class="main-image" src="{{the_illustration_mirrorred_url}}" width="500" alt="{{the_illustration['illustration'].caption}}" itemprop="contentURL">
+            <img class="main-image" src="{{the_illustration['illustration'].url}}" width="500" alt="{{the_illustration['illustration'].caption}}" itemprop="contentURL">
             <div class="metadata-text caption">
                 <span itemprop="caption">{{the_illustration['illustration'].caption}}</span>
-                <span class="google"><a href="http://images.google.com/searchbyimage?gbv=2&site=search&image_url={{quote(the_illustration_mirrorred_url)}}&sa=X&ei=H6RaTtb5JcTeiALlmPi2CQ&ved=0CDsQ9Q8" target="_blank" title="Google Images">google</a></span>
+                <span class="google"><a href="http://images.google.com/searchbyimage?gbv=2&site=search&image_url={{quote(the_illustration['illustration'].url)}}&sa=X&ei=H6RaTtb5JcTeiALlmPi2CQ&ved=0CDsQ9Q8" target="_blank" title="Google Images">google</a></span>
             </div>
             <meta itemprop="name" content="{{the_illustration['illustration'].title}}"/>
             <meta itemprop="author" content="{{the_illustration['illustration'].artist}}"/>
@@ -163,7 +163,7 @@
     </div>
   </div>
   <div class="w-col w-col-2">
-      <a href="//www.pinterest.com/pin/create/button/?url={{quote('http://www.missale.net' + url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang), safe='')}}&media={{quote(the_illustration_mirrorred_url)}}&description={{quote(the_mass['i18n'].string.encode('utf8') + ' | ' + data['date'].date.strftime('%Y').encode('utf8') + ' | ' + translate('catholic-mass-readings', lang).string.encode('utf8') + ' | ' + the_illustration['illustration'].caption.encode('utf8') + ' | ' + the_illustration['verse'].local_ref.encode('utf8') + ' | ' + the_illustration['verse'].string.encode('utf8'))}}" data-pin-do="buttonPin" data-pin-config="beside" data-pin-color="white"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_white_20.png" /></a>
+      <a href="//www.pinterest.com/pin/create/button/?url={{quote('http://www.missale.net' + url(date=data['date'], form=data['form'], illustration=the_illustration, lang=lang), safe='')}}&media={{quote(the_illustration['illustration'].url)}}&description={{quote(the_mass['i18n'].string.encode('utf8') + ' | ' + data['date'].date.strftime('%Y').encode('utf8') + ' | ' + translate('catholic-mass-readings', lang).string.encode('utf8') + ' | ' + the_illustration['illustration'].caption.encode('utf8') + ' | ' + the_illustration['verse'].local_ref.encode('utf8') + ' | ' + the_illustration['verse'].string.encode('utf8'))}}" data-pin-do="buttonPin" data-pin-config="beside" data-pin-color="white"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_white_20.png" /></a>
       <script type="text/javascript" async src="//assets.pinterest.com/js/pinit.js"></script>
   </div>
   <div class="w-col w-col-3" style="text-align:right;">

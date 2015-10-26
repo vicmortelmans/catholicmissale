@@ -64,8 +64,6 @@ class DayHandler(webapp2.RequestHandler):
         # query for previous and next dates
         next_date = model.Date.query_by_form_and_earliest_date(form, matching_date.date + datetime.timedelta(1))
         previous_date = model.Date.query_by_form_and_later_date(form, matching_date.date)
-        # facebook doesn't want images from Google, so I'v mirrorred them
-        the_illustration_mirrorred_url = data['the_illustration']['illustration'].url.replace('https://','http://mirror.missale.net/')
         template = jinja_environment.get_template('day2.html')
         content = template.render(
             lang=lang,
@@ -75,7 +73,6 @@ class DayHandler(webapp2.RequestHandler):
             the_mass=data['the_mass'],
             the_reading=data['the_reading'],
             the_illustration=data['the_illustration'],
-            the_illustration_mirrorred_url=the_illustration_mirrorred_url,
             the_other_illustrations=data['the_other_illustrations'],
             languages=datastore_index.LANGUAGES[data['the_mass']['form']],
             translate=model.I18n.translate,

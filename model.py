@@ -68,6 +68,15 @@ class Mass(ndb.Model):
             logging.log(logging.ERROR, "No matching mass for form.coordinates(.cycle) = " + id)
         return r
 
+    @classmethod
+    def query_by_bibleref(cls, bibleref):
+        # return a list !
+        r = []
+        r.append(cls.query(cls.gospel == bibleref).fetch(ALL))
+        r.append(cls.query(cls.lecture == bibleref).fetch(ALL))
+        r.append(cls.query(cls.epistle == bibleref).fetch(ALL))
+        return r
+
     # beware! Date is implementing it's own proprietory Mass queries !!
 
 

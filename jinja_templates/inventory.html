@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Missale</title>
+    <meta name="description" content="Images Inventory - browse all images">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="canonical" href="http://www.missale.net/inventory">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/webflow.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/missale.webflow.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/missale-print.css" media="print">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: {
+                families: ["Lato:100,300,400,700,900", "Open Sans:300,400,600,700,800"]
+            }
+        });
+    </script>
+    <script>
+        if (/mobile/i.test(navigator.userAgent)) document.documentElement.className += ' w-mobile';
+    </script>
+    <link rel="shortcut icon" type="image/x-icon" href="https://y7v4p6k4.ssl.hwcdn.net/52d934e8cf2c57b94e0010e6/52ded4900184670214000004_favicon.png">
+    <!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+    <link rel="apple-touch-icon" href="https://y7v4p6k4.ssl.hwcdn.net/52d934e8cf2c57b94e0010e6/52ded4b499bd27b767000001_webclip.png">
+    <meta name="google-site-verification" content="LPLr98PKcDGB4mcbWAAtCdSnrGUX1MmdLraUFss3hk4" />
+</head>
+<body>
+<header class="header-section">
+    <div class="w-container">
+        <div class="w-row">
+            <div class="w-col w-col-6 w-hidden-small w-hidden-tiny header-image">
+                <div class="logo">MISSALE.NET</div>
+                <div class="subtitle">Images Inventory</div>
+            </div>
+            <div class="w-col w-col-6 title">
+                <h1 itemprop="name">Browse all images</h1>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="w-container container" itemscope="" itemtype="http://schema.org/ImageObject">
+    <article class="w-row row">
+        <table id="inventory" class="display">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th></th>
+                    <th>Bible reference</th>
+                    <th>Masses</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in illustrations %}
+                <tr>
+                    <td>
+                        <a href="{{i['url']}}" target="_blank" title="{{i['caption']}}">
+                            <div class="thumbnail-box" style="background-image: url('{{i['url']}}=s68-c'); background-size: cover; background-repeat: no-repeat;"></div>
+                        </a>
+                    </td>
+                    <td>
+                        {{i['caption']}}
+                    </td>
+                    <td data-order="{{i['bibleref-begin']}}">{{i['book']}}:{{i['chapter']}}</td>
+                    <td>
+                    {% for m in i['masses'] %}
+                        <div>{{m['name']}}</div>
+                    {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+</div>
+<div class="w-container">
+<div class="w-row social">
+  <div class="w-col w-col-2">
+    <div class="w-widget w-widget-gplus">
+      <div class="g-plusone" data-href="http://www.missale.net/inventory/{{other_lang}}" data-size="standard" data-annotation="bubble" data-width="120" data-recommendations="false" id="___plusone_0" style="width: 106px; height: 24px; text-indent: 0px; margin: 0px; padding: 0px; background-color: transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; background-position: initial initial; background-repeat: initial initial;"></div>
+    </div>
+  </div>
+  <div class="w-col w-col-3" style="text-align:right;">
+      <a href="mailto:info@missale.net" style="text-decoration:none;color:#333;"/><i>info@missale.net</i></a>
+  </div>
+</div>
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37368530-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<script type="text/javascript" src="/scripts/webflow.js"></script>
+<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#inventory').DataTable({
+            'order':  [2, 'asc'],
+            'columns': [
+                {'orderable': false, searchable: false},  // 0 image thumbnail
+                {'orderable': false, searchable: true},  // 1 image caption
+                {'orderable': false, searchable: true},  // 2 bible reference
+                {'orderable': false, searchable: true}  // 3 masses
+            ],
+        });
+    });
+</script>
+</body>
+</html>

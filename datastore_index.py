@@ -55,7 +55,7 @@ class FlushPagecountHandler(webapp2.RequestHandler):
 
 
 class Model_index():
-    """Read a published google spreadsheet into a list of dicts.
+    """Read the datastore into a list of dicts.
        Each dict is an entity in the datastore.
        Repeated properties are represented as a list.
        The list is then available as the table attribute."""
@@ -138,6 +138,9 @@ class Illustrations(Model_index):
     def sync_lookup_table(self):
         return Model_index.sync_lookup_table(self, 'id')
 
+    def sync_lookup_table_by_bibleref(self):
+        return Model_index.sync_lookup_table(self, 'id')
+
     def bulkload_table(self, table):
         d = {}
         for row in table:
@@ -159,9 +162,26 @@ class Illustrations(Model_index):
 class Masses(Model_index):
     def __init__(self):
         Model_index.__init__(self, model.Mass)
+        self.lookup_table_by_reading = {}  # dict by id of dicts
 
     def sync_lookup_table(self):
         return Model_index.sync_lookup_table(self, 'id')
+
+    def sync_lookup_table_by_reading(self):
+        self.lookup_table_by_reading.clear()  # lookup_table = {} would break the references!
+        query = self._Model.query()
+        for mass in query:
+            for reading_name in ['gospel', 'lecture', 'epistle']:
+                reading_list = getattr(mass, reading_name)
+                for reading in reading_list if isinstance(reading_list, list) else [reading_list]:
+                    # convert object to dict
+                    data = {}
+                    for a in mass._values:
+                        data[a] = getattr(mass, a)  # repeated properties are represented as a list
+                    if reading not in self.lookup_table_by_reading:
+                        self.lookup_table_by_reading[reading] = []
+                    self.lookup_table_by_reading[reading].append(data)
+        return self.lookup_table_by_reading
 
     def bulkload_table(self, table):
         """

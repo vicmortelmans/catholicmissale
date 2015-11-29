@@ -152,8 +152,8 @@
 <div class="w-container book-overview">
     {% for e in pagecount %}
     <div class="book-block" id="{{e['edition_only']}}" itemscope itemtype="http://schema.org/Book">
-        <a href="https://googledrive.com/host/0B-659FdpCliwdW5CUVlBRW9YSVU/configuration_{{e['edition']}}.compressed.pdf">
-            <img class="book-cover" src="https://googledrive.com/host/0B-659FdpCliwbUFoeXFoWjlvUnM/configuration_{{e['edition']}}.pdf.png" alt="{{translate(e['edition_only'],lang).string}}">
+        <a href="https://storage.googleapis.com/9-compressed-pdfs/configuration_{{e['edition']}}.compressed.pdf">
+            <img class="book-cover" src="https://storage.googleapis.com/7-cover-pages/configuration_{{e['edition']}}.pdf.png" alt="{{translate(e['edition_only'],lang).string}}">
         </a>
         <div class="book-description-and-buttons">
             <p class="book-description" itemprop="description">{{translate(e['edition_only'],lang).string}} ({{e['pagecount']}} {{translate('pages',lang).string}})</p>
@@ -536,7 +536,7 @@
 <script type="text/javascript">
      var issuuConfig = {
        guid: '9150d001-52fd-4711-ad40-36b0b9db52f4',
-       domain: '*.googledrive.com'
+       domain: '*.googleapis.com'
      };
 </script>
 <script type="text/javascript">

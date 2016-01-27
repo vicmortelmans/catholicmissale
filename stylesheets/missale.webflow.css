@@ -11,6 +11,9 @@ label {
   display: inline;
   color: white;
 }
+#inventory_wrapper label {
+  color: black;
+}
 .button.filter {
   display: block;
   float: none;

@@ -12,6 +12,13 @@ indexes:
 
 - kind: Date
   properties:
+  - name: cycle
+  - name: form
+  - name: mass
+  - name: date
+
+- kind: Date
+  properties:
   - name: form
   - name: date
 
@@ -20,3 +27,9 @@ indexes:
   - name: form
   - name: date
     direction: desc
+
+- kind: Date
+  properties:
+  - name: form
+  - name: mass
+  - name: date

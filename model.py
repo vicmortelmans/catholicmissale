@@ -1,5 +1,7 @@
 from google.appengine.ext import ndb
 import logging
+import datetime
+import google_credentials
 
 logging.basicConfig(level=logging.INFO)
 
@@ -166,15 +168,15 @@ class Verse(ndb.Model):
 
 class Date(ndb.Model):
     id = ndb.StringProperty(required=True)  # form.date
-    form = ndb.TextProperty()  # 'of' or 'eo'
-    mass = ndb.TextProperty()  # 'A011'
+    form = ndb.StringProperty()  # 'of' or 'eo'
+    mass = ndb.StringProperty()  # 'A011'
     coinciding = ndb.TextProperty()
     rank = ndb.IntegerProperty(indexed=False)
     season = ndb.TextProperty(indexed=False)
     color = ndb.TextProperty(indexed=False)
-    date = ndb.DateProperty(indexed=False)
+    date = ndb.DateProperty()
     year = ndb.IntegerProperty(indexed=False)  # liturgical year !!
-    cycle = ndb.TextProperty()
+    cycle = ndb.StringProperty()
 
     @classmethod
     def flush(cls):
@@ -245,6 +247,27 @@ class Date(ndb.Model):
             return "No matching date <= " + date.strftime('%Y-%m-%d') + " for form = " + form
         return cls._query_by_form_and_date(form, date, q, l)
 
+    @classmethod
+    def query_by_mass(cls, form, coordinates, cycle):
+        """
+        :param mass: e.g. 'A101'
+        :param form: e.g. 'eo'
+        :return: the first occurrence date of the mass in each form
+        """
+        if google_credentials.DEV:
+            date = datetime.datetime(2014, 11, 28)  # for debugging
+        else:
+            date = datetime.date.today()
+        if coordinates.startswith("Z1225") or coordinates.startswith("SOS"):
+            date = cls.query(cls.mass == coordinates.split('+')[0]).filter(cls.form == form).filter(cls.date > date).order(cls.date).fetch(1)
+        else:
+            if form == 'of':
+                date = cls.query(cls.mass == coordinates).filter(cls.cycle == cycle).filter(cls.form == form).filter(cls.date > date).order(cls.date).fetch(1)
+            else:
+                date = cls.query(cls.mass == coordinates).filter(cls.form == form).filter(cls.date > date).order(cls.date).fetch(1)
+        result = date[0].date.strftime('%Y-%m-%d') if date else ''
+        return result
+
 
 class RSS_cache(ndb.Model):  # the key is lang.form
     date = ndb.DateProperty()
@@ -257,6 +280,11 @@ class Calendar_cache(ndb.Model):  # the key is form
 
 
 class Missal_cache(ndb.Model):  # the key is lang
+    date = ndb.DateProperty()
+    content = ndb.BlobProperty()
+
+
+class Inventory_cache(ndb.Model):  # the key is lang
     date = ndb.DateProperty()
     content = ndb.BlobProperty()
 

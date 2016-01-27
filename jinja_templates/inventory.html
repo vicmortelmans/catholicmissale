@@ -33,10 +33,10 @@
         <div class="w-row">
             <div class="w-col w-col-6 w-hidden-small w-hidden-tiny header-image">
                 <div class="logo">MISSALE.NET</div>
-                <div class="subtitle">Images Inventory</div>
+                <div class="subtitle">{{translate("readings-from-the-bible-for-the-roman-catholic-liturgy", lang).string}}</div>
             </div>
             <div class="w-col w-col-6 title">
-                <h1 itemprop="name">Browse all images</h1>
+                <h1 itemprop="name">{{translate("search-missal-illustrations", lang).string}}</h1>
             </div>
         </div>
     </div>
@@ -46,10 +46,11 @@
         <table id="inventory" class="display">
             <thead>
                 <tr>
-                    <th>Image</th>
+                    <th>{{translate("illustrations", lang).string}}</th>
                     <th></th>
-                    <th>Bible reference</th>
-                    <th>Masses</th>
+                    <th>{{translate("bible-references", lang).string}}</th>
+                    <th>{{translate("ordinary-form", lang).string}}</th>
+                    <th>{{translate("extraordinary-form", lang).string}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,11 +64,24 @@
                     <td>
                         {{i['caption']}}
                     </td>
-                    <td data-order="{{i['bibleref-begin']}}">{{i['book']}}:{{i['chapter']}}</td>
+                    <td data-sort="{{padded_book_index(i['book'])}}{{i['bibleref-begin']}}">{{translate_bibleref(i['passageReference'],lang).local_ref}}</td>
                     <td>
-                    {% for m in i['masses'] %}
-                        <div>{{m['name']}}</div>
-                    {% endfor %}
+                        <ul>
+                            {% for m in i['masses'] %}
+                            {% if m['form'] == 'of' %}
+                            <li>{% if m['first_occurrence'] %}<a href="/of/{{m['first_occurrence']}}/{{lang}}/{{i['filename']}}" target="_blank">{% endif %}{{m['i18n'].string}}{% if m['first_occurrence'] %}</a>{% endif %}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {% for m in i['masses'] %}
+                            {% if m['form'] == 'eo' %}
+                            <li>{% if m['first_occurrence'] %}<a href="/eo/{{m['first_occurrence']}}/{{lang}}/{{i['filename']}}" target="_blank">{% endif %}{{m['i18n'].string}}{% if m['first_occurrence'] %}</a>{% endif %}</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
                     </td>
                 </tr>
                 {% endfor %}
@@ -75,16 +89,47 @@
         </table>
     </article>
 </div>
+<footer class="footer-section">
+    <div class="w-container button-container">
+        <div class="w-form">
+            <form class="w-clearfix" name="email-form" data-name="Email Form">
+                {% for other_lang in languages %}
+                {% if other_lang != lang %}
+                <a href="http://www.missale.net/inventory/{{other_lang}}">
+                    <input class="w-button button language" type="button" value="{{translate(other_lang, lang).string}}" data-wait="Please wait..."></input>
+                </a>
+                {% endif %}
+                {% endfor %}
+                <a href="http://www.missale.net/{{lang}}">
+                    <input class="w-button button" type="button" value="Missale" data-wait="Please wait..."></input>
+                </a>
+            </form>
+        </div>
+        <p class="filtertext">{{translate("intro-project", lang).string}}</p>
+        <p class="filtertext">info@missale.net</p>
+    </div>
+</footer>
 <div class="w-container">
 <div class="w-row social">
-  <div class="w-col w-col-2">
-    <div class="w-widget w-widget-gplus">
-      <div class="g-plusone" data-href="http://www.missale.net/inventory/{{other_lang}}" data-size="standard" data-annotation="bubble" data-width="120" data-recommendations="false" id="___plusone_0" style="width: 106px; height: 24px; text-indent: 0px; margin: 0px; padding: 0px; background-color: transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; background-position: initial initial; background-repeat: initial initial;"></div>
+    <div class="w-col w-col-3">
+        <div class="w-widget w-widget-gplus">
+            <div class="g-plusone" data-href="http://www.missale.net/inventory/{{lang}}" data-size="standard" data-annotation="bubble" data-width="120" data-recommendations="false" id="___plusone_0" style="width: 106px; height: 24px; text-indent: 0px; margin: 0px; padding: 0px; background-color: transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; background-position: initial initial; background-repeat: initial initial;"></div>
+        </div>
     </div>
-  </div>
-  <div class="w-col w-col-3" style="text-align:right;">
-      <a href="mailto:info@missale.net" style="text-decoration:none;color:#333;"/><i>info@missale.net</i></a>
-  </div>
+    <div class="w-col w-col-3">
+        <div class="w-widget w-widget-twitter">
+            <iframe src="https://platform.twitter.com/widgets/tweet_button.html#url={{quote('http://www.missale.net/inventory/' + lang, safe='')}}&amp;text=&amp;count=horizontal&amp;size=m&amp;dnt=true" scrolling="no" frameborder="0" allowtransparency="true"
+                    style="border: none; overflow: hidden; width: 110px; height: 20px;"></iframe>
+        </div>
+    </div>
+    <div class="w-col w-col-3">
+        <div class="w-widget w-widget-facebook">
+            <iframe src="https://www.facebook.com/plugins/like.php?href={{quote('http://www.missale.net/inventory/' + lang, safe='')}}&amp;layout=standard&amp;action=like&amp;show_faces=false&amp;share=false" scrolling="no" frameborder="0" allowtransparency="true" style="border: none; overflow: hidden; width: 225px; height: 35px;"></iframe>
+        </div>
+    </div>
+    <div class="w-col w-col-3" style="text-align:right;">
+        <a href="mailto:info@missale.net" style="text-decoration:none;color:#333;"/><i>info@missale.net</i></a>
+    </div>
 </div>
 </div>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -104,13 +149,60 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $('#inventory').DataTable({
-            'order':  [2, 'asc'],
+            'pageLength': 50,
+            'order':  [[2, 'asc']],
             'columns': [
                 {'orderable': false, searchable: false},  // 0 image thumbnail
                 {'orderable': false, searchable: true},  // 1 image caption
-                {'orderable': false, searchable: true},  // 2 bible reference
-                {'orderable': false, searchable: true}  // 3 masses
+                {'orderable': true, searchable: true},  // 2 bible reference
+                {'orderable': false, searchable: true},  // 3 masses of
+                {'orderable': false, searchable: true}  // 4 masses eo
             ],
+            {% if lang == 'nl' %}
+            'language':  {
+                "sProcessing": "Bezig...",
+                "sLengthMenu": "_MENU_ resultaten weergeven",
+                "sZeroRecords": "Geen resultaten gevonden",
+                "sInfo": "_START_ tot _END_ van _TOTAL_ resultaten",
+                "sInfoEmpty": "Geen resultaten om weer te geven",
+                "sInfoFiltered": " (gefilterd uit _MAX_ resultaten)",
+                "sInfoPostFix": "",
+                "sSearch": "Zoeken:",
+                "sEmptyTable": "Geen resultaten aanwezig in de tabel",
+                "sInfoThousands": ".",
+                "sLoadingRecords": "Een moment geduld aub - bezig met laden...",
+                "oPaginate": {
+                    "sFirst": "Eerste",
+                    "sLast": "Laatste",
+                    "sNext": "Volgende",
+                    "sPrevious": "Vorige"
+                }
+            }
+            {% endif %}
+            {% if lang == 'fr' %}
+                'language': {
+                    "sProcessing":     "Traitement en cours...",
+                    "sSearch":         "Rechercher&nbsp;:",
+                    "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
+                    "sInfo":           "Affichage de l'&eacute;l&eacute;ment _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    "sInfoEmpty":      "Affichage de l'&eacute;l&eacute;ment 0 &agrave; 0 sur 0 &eacute;l&eacute;ment",
+                    "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    "sInfoPostFix":    "",
+                    "sLoadingRecords": "Chargement en cours...",
+                    "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
+                    "oPaginate": {
+                        "sFirst":      "Premier",
+                        "sPrevious":   "Pr&eacute;c&eacute;dent",
+                        "sNext":       "Suivant",
+                        "sLast":       "Dernier"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+                        "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
+                    }
+                }
+                {% endif %}
         });
     });
 </script>

@@ -129,6 +129,9 @@
                 <a href="/print/{{lang}}">
                     <input class="w-button button" type="button" value="{{translate('print-your-own-missal', lang).string}}" data-wait="Please wait..."></input>
                 </a>
+                <a href="/inventory/{{lang}}">
+                    <input class="w-button button" type="button" value="{{translate('search', lang).string}}" data-wait="Please wait..."></input>
+                </a>
                 {% if data['form'] == 'of' %}
                 <a href="{{url(date=data['date'], form='eo', lang=lang)}}">
                     <input class="w-button button" type="button" value="{{translate("extraordinary-form", lang).string}}" data-wait="Please wait..."></input>

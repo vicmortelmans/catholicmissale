@@ -153,6 +153,10 @@ p {
   font-weight: 800;
   text-align: center;
 }
+.logo a {
+  text-decoration: inherit;
+  color: inherit;
+}
 .centered {
   margin-top: 6px;
   text-align: center;

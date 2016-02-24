@@ -17,7 +17,7 @@ class InventoryHandler(webapp2.RequestHandler):
         key = lang
         # query the cache
         cache = model.Inventory_cache.get_or_insert(key)
-        if cache.date == datetime.date.today() and not refresh:
+        if cache.content and not refresh:
             content = zlib.decompress(cache.content).decode('unicode_escape')
         else:
             datastore_masses_mgr = datastore_index.Masses()

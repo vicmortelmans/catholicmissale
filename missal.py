@@ -67,52 +67,49 @@ class MissalHandler(webapp2.RequestHandler):
         return
 
 class QueryIllustrationsHandler(webapp2.RequestHandler):
-    # TODO this service is work in progress
     def get(self, lang='en', references=''):
-        """
-            # get the biblerefs datastore in a lookup table
-            datastore_biblerefs_mgr = datastore_index.Biblerefs()
-            biblerefs = datastore_biblerefs_mgr.sync_lookup_table()
-            # get the illustrations datastore in a table
-            datastore_illustrations_mgr = datastore_index.Illustrations()
-            illustrations = datastore_illustrations_mgr.sync_table()  # no lookup table!
-            # get the verses datastore in a lookup table
-            datastore_verses_mgr = datastore_index.Verses()
-            verses = datastore_verses_mgr.sync_lookup_table()
-            # create a dict for looking up illustrations by passageReference
-            lookup_illustrations = {}  # dict by passageReference of lists of illustrations
-            for i in illustrations:
-                passageReference = i['passageReference']
-                if passageReference not in lookup_illustrations:
-                    lookup_illustrations[passageReference] = []
-                lookup_illustrations[passageReference].append(i)
-            # expand references to canonical references, contained references and containing references
-            expandedRefString = references.replace('+', ' ').split('|')
-            for refString in expandedRefStrings:
-                canonicalRefString = bibleref.submit(refString)
-                reference = model.BibleRef.query_by_reference(canonicalRefString)
-                containedRefStrings = bibleref.containedReferences
-                if containedReferences:
-                    logging.log(logging.INFO, "Contained references for %s: %s" % (reading['bibleref'], ','.join(containedReferences)))
-                containingReferences = [b.reference for b in model.BibleRef.query_by_containedReferences(reading['bibleref'])]
-                if containingReferences:
-                    logging.log(logging.INFO, "References containing %s: %s" % (reading['bibleref'], ','.join(containingReferences)))
-                expandedReferences += containedReferences
-                expandedReferences += containingReferences
-            # output
-            template = jinja_environment.get_template('illustrations.xml')
-            content = template.render(
-                lang=lang,
-                references=references.replace('+', ' ').split('|'),
-                biblerefs=biblerefs,  # list of dicts
-                lookup_illustrations=lookup_illustrations,  # dict by passageReference of lists of dicts
-                verses=verses,  # list of dicts
-                readable_date=lib.readable_date,
-                xstr=lambda s: s or ""
-            )
-            self.response.headers['Content-Type'] = "application/xml"
-            self.response.out.write(content)
-        """
+        # get the biblerefs datastore in a lookup table
+        datastore_biblerefs_mgr = datastore_index.Biblerefs()
+        biblerefs = datastore_biblerefs_mgr.sync_lookup_table()
+        # get the illustrations datastore in a table
+        datastore_illustrations_mgr = datastore_index.Illustrations()
+        illustrations = datastore_illustrations_mgr.sync_table()  # no lookup table!
+        # get the verses datastore in a lookup table
+        datastore_verses_mgr = datastore_index.Verses()
+        verses = datastore_verses_mgr.sync_lookup_table()
+        # create a dict for looking up illustrations by passageReference
+        lookup_illustrations = {}  # dict by passageReference of lists of illustrations
+        for i in illustrations:
+            passageReference = i['passageReference']
+            if passageReference not in lookup_illustrations:
+                lookup_illustrations[passageReference] = []
+            lookup_illustrations[passageReference].append(i)
+        # expand references to canonical references, contained references and containing references
+        expandedReferences = references.replace('+', ' ').split('|')
+        for refString in expandedReferences[:]:
+            canonicalRefString = bibleref.submit(refString) or refString
+            reference = model.BibleRef.query_by_reference(canonicalRefString)
+            containedReferences = reference.containedReferences
+            if containedReferences:
+                logging.log(logging.INFO, "Contained references for %s: %s" % (canonicalRefString, ','.join(containedReferences)))
+            containingReferences = [b.reference for b in model.BibleRef.query_by_containedReferences(canonicalRefString)]
+            if containingReferences:
+                logging.log(logging.INFO, "References containing %s: %s" % (canonicalRefString, ','.join(containingReferences)))
+            expandedReferences += containedReferences
+            expandedReferences += containingReferences
+        # output
+        template = jinja_environment.get_template('illustrations.xml')
+        content = template.render(
+            lang=lang,
+            references=references.replace('+', ' ').split('|'),
+            biblerefs=biblerefs,  # list of dicts
+            lookup_illustrations=lookup_illustrations,  # dict by passageReference of lists of dicts
+            verses=verses,  # list of dicts
+            readable_date=lib.readable_date,
+            xstr=lambda s: s or ""
+        )
+        self.response.headers['Content-Type'] = "application/xml"
+        self.response.out.write(content)
         return
 
 class PrintHandler(webapp2.RequestHandler):

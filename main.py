@@ -7,7 +7,7 @@ decorator = OAuth2Decorator(client_id=google_credentials.CLIENT_ID,
                             scope='https://spreadsheets.google.com/feeds https://www.googleapis.com/auth/drive')
 
 routes = [
-    webapp2.Route(r'/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl|fr>/<iden:[-a-z0-9.]+>', handler='day.DayHandler'),
+    webapp2.Route(r'/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl|fr>/<iden:[-a-zA-Z0-9.]+>', handler='day.DayHandler'),
     webapp2.Route(r'/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl|fr>', handler='day.DayHandler'),
     webapp2.Route(r'/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>', handler='day.DayHandler'),
     webapp2.Route(r'/<form:of|eo>/<lang:en|nl|fr>', handler='day.DayHandler'),

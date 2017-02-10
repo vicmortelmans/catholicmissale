@@ -6,6 +6,7 @@ import urllib
 from jinja_templates import jinja_environment
 import datastore_index
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO)
 
@@ -90,6 +91,41 @@ class DayHandler(webapp2.RequestHandler):
 class DayHandlerPre(DayHandler):
     def get(self, form='of', date_string='today', lang='en', iden=None, pre=True):
         DayHandler.get(self, form=form, date_string=date_string, lang=lang, iden=iden, pre=pre)
+        return
+
+
+class JsonHandler(webapp2.RequestHandler):
+    def get(self, form='of', date_string='today', lang='en', reading_type='gospel'):
+        if date_string == 'today':
+            date = datetime.date.today()
+        else:
+            date = datetime.datetime.strptime(date_string, '%Y-%m-%d').date()
+        # query for a matching date
+        matching_date = model.Date.query_by_form_and_earliest_date(form, date)
+        if not matching_date:
+            logging.log(logging.CRITICAL, "No matching date %s %s for %s form." % (
+                "after",
+                date,
+                "ordinary" if form == "of" else "extraordinary"
+            ))
+            self.response.out.write("Deze pagina is nog niet beschikbaar.")
+            return
+        mass = get_mass(matching_date, lang)
+        if not mass:
+            logging.log(logging.CRITICAL, "No matching mass at all")
+            self.response.out.write("Deze pagina is nog niet beschikbaar.")
+            return
+        biblerefs = getattr(mass['mass'], reading_type) if hasattr(mass['mass'], reading_type) else []
+        response = json.dumps({
+            "date": matching_date.date.strftime('%Y-%m-%d'),
+            "spokendate": lib.readable_date(matching_date.date, lang),
+            "day": mass['i18n'].string,
+            "readingtype": reading_type,
+            "bibleref": biblerefs[0] if biblerefs else ''
+        })
+        logging.info(response)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(response)
         return
 
 
@@ -185,6 +221,51 @@ def get_all_data(date, lang, iden=''):
         return data
     else:
         return None
+
+
+def get_mass(date, lang):
+    form = date.form
+    data = {}
+    data['form'] = form
+    data['date'] = date  # date is my own Date object!!
+    data['masses'] = [{
+                          'form': form,
+                          'coordinates': date.mass,
+                          'cycle': date.cycle
+                      }]
+    if date.coinciding:
+        data['masses'].append({
+            'form': form,
+            'coordinates': date.coinciding,
+            'cycle': date.cycle,
+            'coinciding': True
+        })
+    for mass in data['masses']:
+        # query for mass
+        # I know, it's messy to solve data inconsistencies here
+        # There's more in model.py ...
+        if mass['coordinates'] == 'Z1225' or mass['coordinates'] == 'SOS':
+            matching_masses = [
+                model.Mass.query_by_form_coordinates_and_cycle(
+                    mass['form'],
+                    mass['coordinates'] + iterator,
+                    cycle=mass['cycle']
+                )
+                for iterator in ['+1', '+2', '+3']
+            ]
+        else:
+            matching_masses = [
+                model.Mass.query_by_form_coordinates_and_cycle(
+                    mass['form'],
+                    mass['coordinates'],
+                    cycle=mass['cycle']
+                )
+            ]
+    matching_mass = matching_masses[0]
+    mass['mass'] = matching_mass
+    matching_i18n = model.I18n.translate_liturgical_day(mass['form'], mass['coordinates'], lang)
+    mass['i18n'] = matching_i18n
+    return mass
 
 
 def url(date=None, lang=None, illustration=None, form=None):

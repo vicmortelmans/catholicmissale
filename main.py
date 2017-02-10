@@ -17,6 +17,7 @@ routes = [
     webapp2.Route(r'/<lang:en|nl|fr>', handler='day.DayHandler'),
     webapp2.Route(r'/', handler='day.DayHandler'),
     webapp2.Route(r'/pre/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl|fr>', handler='day.DayHandlerPre'),
+    webapp2.Route(r'/json/<form:of|eo>/<date_string:\d{4}-\d{2}-\d{2}>/<lang:en|nl|fr>/<reading_type:gospel|lecture|epistle>', handler='day.JsonHandler'),
     webapp2.Route(r'/print/<lang:en|nl|fr>', handler='missal.PrintHandler'),
     webapp2.Route(r'/print/<lang:en|nl|fr>/<edition_only:.*>', handler='missal.PrintBookHandler'),
     webapp2.Route(r'/day/with', handler='day.LegacyHandler'),

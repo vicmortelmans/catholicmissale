@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import webapp2
 from jinja_templates import jinja_environment
-import drive_index
 import spreadsheet_index
 import datastore_index
 import gcs_index
@@ -12,8 +11,6 @@ from main import decorator as GlobalOAuth2Decorator
 import logging
 
 logging.basicConfig(level=logging.INFO)
-
-GOOGLE_DRIVE_HOST_PREFIX = "https://googledrive.com/host/" + drive_index.google_drive_missale_images_folder_id
 
 
 class SyncIllustrationHandler(webapp2.RequestHandler):
@@ -27,9 +24,9 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
         self.index_illustrations = index_illustrations_mgr.sync_table()
 
         # see if there have been image URLs submitted to the spreadsheet index for downloading
-        # (they can be recognized because they don't have a drive ID yet)
+        # (they can be recognized because they don't have an ID yet)
         # this can also be image rows that have been edited (ID is deleted automatically)
-        # or image rows that have the ID removed manually, for migration from Drive to GCS
+        # or image rows that have the ID removed manually
         # READ memory-spreadsheet
         # WRITE variable
         images_for_download = {}  # dict by url (!) of dicts containing 'url', 'caption', 'sync', etc... (but no id)
@@ -40,7 +37,6 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
         # READ variable
         # WRITE Drive, GCS
         # WRITE variable
-        drive_illustration_mgr = drive_index.Illustrations(oauth_decorator=GlobalOAuth2Decorator)
         gcs_illustration_mgr = gcs_index.Illustrations(oauth_decorator=GlobalOAuth2Decorator)
         downloaded_images = gcs_illustration_mgr.download_images(images_for_download)
         logging.info("Images downloaded: {}".format(len(downloaded_images)))
@@ -51,11 +47,6 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
         # WRITE spreadsheet
         index_illustrations_mgr.update_fields_by_url(downloaded_images)
 
-        # get the contents of the drive folder (no metadata yet)
-        # READ drive
-        # WRITE memory-drive
-        self.drive_illustrations_ids = drive_illustration_mgr.sync_table_only_ids()
-
         # get the contents of the GCS folder (no metadata yet)
         # READ gcs
         # WRITE memory-gcs
@@ -63,8 +54,8 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
 
         # uploading images to the GCS folder will not be supported
 
-        # find obsolete spreadsheet index entries (no id or no drive image or no gcs image with same id)
-        # READ memory-spreadsheet, memory-drive, memory-gcs
+        # find obsolete spreadsheet index entries (no id or no gcs image with same id)
+        # READ memory-spreadsheet, memory-gcs
         # WRITE variable
         obsolete_index_rows = {}  # dict by id of dicts containing 'wasted'
         self.find_obsolete_index_rows(obsolete_index_rows)
@@ -90,7 +81,7 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
         # load the datastore
         self.datastore_illustrations = datastore_illustrations_mgr.sync_table()
 
-        # find obsolete datastore entities  not in index or (no drive file and no GCS file with same id or wasted)
+        # find obsolete datastore entities  not in index or (no GCS file with same id or wasted)
         obsolete_entities = {}
         self.find_obsolete_entities(obsolete_entities)
         logging.info("Obsolete datastore entities found: {}".format(len(obsolete_entities)))
@@ -128,21 +119,19 @@ class SyncIllustrationHandler(webapp2.RequestHandler):
                 logging.debug("find_images_for_download() found %s [%s]" % (caption, i['url']))
 
     def find_obsolete_index_rows(self, d):
-        drive_ids = [i['id'] for i in self.drive_illustrations_ids]
         gcs_ids = [i['id'] for i in self.gcs_illustrations_ids]
         for i in self.index_illustrations:
             id = i['id']
-            if not id or (id not in drive_ids and id not in gcs_ids):
+            if not id or (id not in gcs_ids):
                 d[id] = {'wasted': "True"}
                 logging.debug("find_obsolete_index_rows() found {}".format(id))
 
     def find_obsolete_entities(self, d):
-        drive_ids = [i['id'] for i in self.drive_illustrations_ids]
         gcs_ids = [i['id'] for i in self.gcs_illustrations_ids]
         index_ids = [i['id'] for i in self.index_illustrations]
         for i in self.datastore_illustrations:
             id = i['id']
-            if id not in index_ids or (id not in drive_ids and id not in gcs_ids) or ('wasted' in i and i['wasted']):
+            if id not in index_ids or id not in gcs_ids or ('wasted' in i and i['wasted']):
                 d[id] = {}
                 logging.debug("find_obsolete_entities() found {}".format(id))
 

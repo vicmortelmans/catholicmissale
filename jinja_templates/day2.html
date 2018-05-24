@@ -111,7 +111,8 @@
                 {% endif %}
                 {% endfor %}
                 {% if lang == 'nl' %}
-                <a href="https://www.debijbel.nl/bijbel/NBV/{{quote(the_illustration['verse'].local_ref)}}" target="_blank">
+                {% set hash = re.sub("(.*) (.*):.*", "\g<1>-\g<2>", the_illustration['verse'].local_ref) %}
+                <a href="https://storage.googleapis.com/geloven-leren/books/canisius.html#{{hash}}" target="_blank">
                     <input class="w-button button" type="button" value="Bijbel" data-wait="Please wait..."></input>
                 </a>
                 {% endif %}

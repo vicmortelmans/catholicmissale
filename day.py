@@ -7,6 +7,7 @@ from jinja_templates import jinja_environment
 import datastore_index
 import logging
 import json
+import re
 
 logging.basicConfig(level=logging.INFO)
 
@@ -81,7 +82,8 @@ class DayHandler(webapp2.RequestHandler):
             url=url,
             slugify=lib.slugify,
             readable_date=lib.readable_date,
-            subscription_form=subscription_form[form][lang]
+            subscription_form=subscription_form[form][lang],
+            re=re
         )
         # return the web-page content
         self.response.out.write(content)

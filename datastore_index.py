@@ -11,9 +11,9 @@ LANGUAGES = {'of': ['en', 'fr', 'nl'], 'eo': ['en', 'fr', 'nl']}   # configured 
 LOCALES = {'en': 'en_EN', 'fr': 'fr_FR', 'nl': 'nl_NL'}
 ALL_LANGUAGES = list(set(LANGUAGES['of'] + LANGUAGES['eo']))   # configured here for time being
 if google_credentials.DEV:
-    YEARS = [2015]  # configured here for time being
+    YEARS = [2018]  # configured here for time being
 else:
-    YEARS = [2015, 2016, 2017, 2018, 2019, 2020, 2021]  # configured here for time being
+    YEARS = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]  # configured here for time being
 
 logging.basicConfig(level=logging.INFO)
 

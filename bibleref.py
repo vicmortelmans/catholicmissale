@@ -21,32 +21,27 @@ def submit(reference, verses=False):
     if referenceFound:
         return None
     # the reference is not found in the datastore; try to find its standard format
-    query = u"use 'http://github.com/vicmortelmans/yql-tables/raw/master/bible/bibleref.xml' as bible.bibleref;" + \
-            u"select * from bible.bibleref where bibleref='{reference}' and language='en'"\
+    url = "http://catecheserooster.appspot.com/yql/bibleref?bibleref={reference}&language=en&tolerance=true"\
         .format(
-            reference=reference
-        )
-    url = "http://query.yahooapis.com/v1/public/yql?q={query}&format=json"\
-        .format(
-            query=urllib.quote(query.encode('utf8'))
+            reference=urllib.quote(reference.encode('utf8'))
         )
     for attempt in range(5):
         try:
-            logging.info("Submitting bibleref " + reference + " ;REST call to " + url + " (" + query + ")")
-            result = json.loads(urllib2.urlopen(url).read())['query']['results']  # TODO handle wrong results
-            if not ('biblerefs' in result and 'bibleref' in result['biblerefs']):
-                raise Exception('Empty results from YQL Bibleref open table for %s [%s]' % (reference, url))
+            logging.info("Submitting bibleref " + reference + " ;REST call to " + url)
+            result = json.loads(urllib2.urlopen(url).read())  # TODO handle wrong results
+            if not (result):
+                raise Exception('Empty results from Bibleref API for %s [%s]' % (reference, url))
         except Exception as error:  # catch any error
-            logging.warning('On YQL Bibleref open table for %s, an http error occurred: %s [%s]' % (reference, error, url))
+            logging.warning('On Bibleref API for %s, an http error occurred: %s [%s]' % (reference, error, url))
             time.sleep(0.5)
             continue
         else:
             break
     else:
         # we failed all the attempts - deal with the consequences.
-        logging.error('On YQL Bibleref open table for %s, too many errors occurred [%s]' % (reference, url))
+        logging.error('On Bibleref API for %s, too many errors occurred [%s]' % (reference, url))
         return None  # better luck next time
-    biblerefs = result['biblerefs']['bibleref']
+    biblerefs = result
     if type(biblerefs) is not list:  # happens if there's only one element
         biblerefs = [biblerefs]
     begin = biblerefs[0]

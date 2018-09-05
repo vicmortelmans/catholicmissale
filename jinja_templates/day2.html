@@ -110,12 +110,9 @@
                 </a>
                 {% endif %}
                 {% endfor %}
-                {% if lang == 'nl' %}
-                {% set hash = re.sub("(.*) (.*):.*", "\g<1>-\g<2>", the_illustration['verse'].local_ref) %}
-                <a href="https://storage.googleapis.com/geloven-leren/books/canisius.html#{{hash}}" target="_blank">
-                    <input class="w-button button" type="button" value="Bijbel" data-wait="Please wait..."></input>
+                <a href="{{lectionary_url}}" target="_blank">
+                    <input class="w-button button" type="button" value="{{translate('lectionarium', lang).string.capitalize()}}" data-wait="Please wait..."></input>
                 </a>
-                {% endif %}
                 <a href="{{url(lang=lang, form=data['form'])}}">
                     <input class="w-button button" type="button" value="{{translate('today', lang).string}}" data-wait="Please wait..."></input>
                 </a>
@@ -135,11 +132,11 @@
                 </a>
                 {% if data['form'] == 'of' %}
                 <a href="{{url(date=data['date'], form='eo', lang=lang)}}">
-                    <input class="w-button button" type="button" value="{{translate("extraordinary-form", lang).string}}" data-wait="Please wait..."></input>
+                    <input class="w-button button" type="button" value="{{translate('extraordinary-form', lang).string}}" data-wait="Please wait..."></input>
                 </a>
                 {% else %}
                 <a href="{{url(date=data['date'], form='of', lang=lang)}}">
-                    <input class="w-button button" type="button" value="{{translate("ordinary-form", lang).string}}" data-wait="Please wait..."></input>
+                    <input class="w-button button" type="button" value="{{translate('ordinary-form', lang).string}}" data-wait="Please wait..."></input>
                 </a>
                 {% endif %}
             </form>

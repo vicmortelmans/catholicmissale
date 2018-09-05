@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="." default="all" name="rulesets">
- <property name="saxon-pe.location.ant" value="C:\Program Files\Saxon\saxon9pe.jar"/>
+ <property name="saxon-pe.location.ant" value="/home/vic/Programs/jar/saxon9pe.jar"/>
  <target name="all" depends="build"/>
  <target name="build">
   <xslt style="liturgy.calendar.build-ruleset.xslt" basedir="master-rulesets" destdir="expanded-rulesets">

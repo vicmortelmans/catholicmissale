@@ -1,6 +1,6 @@
 import webapp2
 import datastore_index
-import httplib2
+import urllib2
 import httplib
 import urllib
 import json
@@ -40,45 +40,26 @@ class SyncVersesHandler(webapp2.RequestHandler):
         missing_verses_chunks = lib.chunks(missing_verses, 25)
         for missing_verses_chunk in missing_verses_chunks:
             for verse in missing_verses_chunk[:]:  # taking copy of list, as items may be deleted while iterating
-                yql = 'use "https://raw.githubusercontent.com/vicmortelmans/yql-tables/master/bible/bible.bible.xml" as bible.bible; '\
-                    'select * from bible.bible where language="{lang}" and bibleref="{bibleref}";'\
-                    .format(lang=verse['lang'], bibleref=verse['ref'])
-                url = 'http://query.yahooapis.com/v1/public/yql?q={yql}&format=json&callback='\
-                    .format(yql=urllib.quote(yql))
-                logging.info("REST call to " + url + " (" + yql + ")")
+                url = "http://catecheserooster.appspot.com/yql/bible?bibleref={reference}&language={language}&tolerance=true" \
+                    .format(
+                        language=verse['lang'],
+                        reference=urllib.quote(verse['ref'].encode('utf8'))
+                    )
+                logging.info("REST call to " + url)
                 try:
-                    resp, content = httplib2.Http(timeout=120).request(url)
-                    if resp.status != 200:
-                        raise YQLException("Http response " + str(resp.status))
-                    content = json.loads(content)
-                    if 'error' in content:
-                        raise YQLException("YQL error " + content['error']['description'])
-                    try:
-                        content['query']
-                    except TypeError:
-                        raise YQLException("YQL unknown error, no query.")
-                    try:
-                        content['query']['results']
-                    except TypeError:
-                        raise YQLException("YQL unknown error, no results.")
-                    try:
-                        content['query']['results']['passage']
-                    except TypeError:
-                        raise YQLException("YQL unknown error, no passage.")
-                    try:
-                        content['query']['results']['passage']['content']
-                    except TypeError:
-                        raise YQLException("YQL unknown error, no passage content.")
-                    passage = content['query']['results']['passage']['content']
+                    content = json.loads(urllib2.urlopen(url).read())
+                    if not content:
+                        raise YQLException("Http response ")
+                    passage = content['passage']
                     if len(passage) == 0 or passage == '.':
-                        raise YQLException("YQL unknown error, empty passage.")
+                        raise YQLException("Bible API unknown error, empty passage.")
                     verse['string'] = passage
-                    if not 'bibleref' in content['query']['results']['passage']:
+                    if not 'bibleref' in content:
                         raise YQLException("YQL unknown error, no local bibleref.")
                     if len(passage) == 0 or passage == '.':
                         verse['local_ref'] = verse['ref']
                     else:
-                        verse['local_ref'] = content['query']['results']['passage']['bibleref']
+                        verse['local_ref'] = content['bibleref']
                 except YQLException as e:
                     missing_verses_chunk.remove(verse)  # will be picked up again in the next run
                     logging.log(logging.ERROR, "Dropping verse in " + verse['lang'] + " with ref=" + verse['ref'] + " because " + e.value)

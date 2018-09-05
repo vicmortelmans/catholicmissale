@@ -81,7 +81,6 @@
       <coordinates>A012</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Monday">
@@ -100,7 +99,6 @@
       <coordinates>A013</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Tuesday">
@@ -119,7 +117,6 @@
       <coordinates>A014</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Wednesday">
@@ -138,7 +135,6 @@
       <coordinates>A015</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Thursday">
@@ -157,7 +153,6 @@
       <coordinates>A016</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Friday">
@@ -176,7 +171,6 @@
       <coordinates>A017</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Saturday">
@@ -195,7 +189,6 @@
       <coordinates>A022</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Monday">
@@ -214,7 +207,6 @@
       <coordinates>A023</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Tuesday">
@@ -233,7 +225,6 @@
       <coordinates>A024</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Wednesday">
@@ -252,7 +243,6 @@
       <coordinates>A025</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Thursday">
@@ -271,7 +261,6 @@
       <coordinates>A026</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Friday">
@@ -290,7 +279,6 @@
       <coordinates>A027</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Saturday">
@@ -309,7 +297,6 @@
       <coordinates>A032</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Monday">
@@ -328,7 +315,6 @@
       <coordinates>A033</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Tuesday">
@@ -347,7 +333,6 @@
       <coordinates>A034</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Wednesday">
@@ -366,7 +351,6 @@
       <coordinates>A035</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Thursday">
@@ -385,7 +369,6 @@
       <coordinates>A036</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Friday">
@@ -404,125 +387,10 @@
       <coordinates>A037</coordinates>
       <rank nr="13">Weekday of Advent</rank>
       <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
       <color>violet</color>
       <daterules>
 				     <weekday-after day="Saturday">
 					       <weeks-before nr="1">
-						         <weekday-before day="Sunday">
-							           <date day="25" month="12" year-1="yes"/>
-						         </weekday-before>
-					       </weeks-before>
-				     </weekday-after>
-			   </daterules>
-   </liturgicalday>
-   <liturgicalday>
-      <name>Monday in the Fourth Week of Advent</name>
-      <season>Advent</season>
-      <set>Advent</set>
-      <coordinates>A042</coordinates>
-      <rank nr="13">Weekday of Advent</rank>
-      <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
-      <color>violet</color>
-      <daterules>
-				     <weekday-after day="Monday">
-					       <weeks-before nr="0">
-						         <weekday-before day="Sunday">
-							           <date day="25" month="12" year-1="yes"/>
-						         </weekday-before>
-					       </weeks-before>
-				     </weekday-after>
-			   </daterules>
-   </liturgicalday>
-   <liturgicalday>
-      <name>Tuesday in the Fourth Week of Advent</name>
-      <season>Advent</season>
-      <set>Advent</set>
-      <coordinates>A043</coordinates>
-      <rank nr="13">Weekday of Advent</rank>
-      <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
-      <color>violet</color>
-      <daterules>
-				     <weekday-after day="Tuesday">
-					       <weeks-before nr="0">
-						         <weekday-before day="Sunday">
-							           <date day="25" month="12" year-1="yes"/>
-						         </weekday-before>
-					       </weeks-before>
-				     </weekday-after>
-			   </daterules>
-   </liturgicalday>
-   <liturgicalday>
-      <name>Wednesday in the Fourth Week of Advent</name>
-      <season>Advent</season>
-      <set>Advent</set>
-      <coordinates>A044</coordinates>
-      <rank nr="13">Weekday of Advent</rank>
-      <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
-      <color>violet</color>
-      <daterules>
-				     <weekday-after day="Wednesday">
-					       <weeks-before nr="0">
-						         <weekday-before day="Sunday">
-							           <date day="25" month="12" year-1="yes"/>
-						         </weekday-before>
-					       </weeks-before>
-				     </weekday-after>
-			   </daterules>
-   </liturgicalday>
-   <liturgicalday>
-      <name>Thursday in the Fourth Week of Advent</name>
-      <season>Advent</season>
-      <set>Advent</set>
-      <coordinates>A045</coordinates>
-      <rank nr="13">Weekday of Advent</rank>
-      <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
-      <color>violet</color>
-      <daterules>
-				     <weekday-after day="Thursday">
-					       <weeks-before nr="0">
-						         <weekday-before day="Sunday">
-							           <date day="25" month="12" year-1="yes"/>
-						         </weekday-before>
-					       </weeks-before>
-				     </weekday-after>
-			   </daterules>
-   </liturgicalday>
-   <liturgicalday>
-      <name>Friday in the Fourth Week of Advent</name>
-      <season>Advent</season>
-      <set>Advent</set>
-      <coordinates>A046</coordinates>
-      <rank nr="13">Weekday of Advent</rank>
-      <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
-      <color>violet</color>
-      <daterules>
-				     <weekday-after day="Friday">
-					       <weeks-before nr="0">
-						         <weekday-before day="Sunday">
-							           <date day="25" month="12" year-1="yes"/>
-						         </weekday-before>
-					       </weeks-before>
-				     </weekday-after>
-			   </daterules>
-   </liturgicalday>
-   <liturgicalday>
-      <name>Saturday in the Fourth Week of Advent</name>
-      <season>Advent</season>
-      <set>Advent</set>
-      <coordinates>A047</coordinates>
-      <rank nr="13">Weekday of Advent</rank>
-      <precedence>10</precedence>
-      <coincideswith>Z1224</coincideswith>
-      <color>violet</color>
-      <daterules>
-				     <weekday-after day="Saturday">
-					       <weeks-before nr="0">
 						         <weekday-before day="Sunday">
 							           <date day="25" month="12" year-1="yes"/>
 						         </weekday-before>
@@ -811,7 +679,7 @@
 						         <test-day day="Sunday">
 							           <date day="25" month="12" year-1="yes"/>
 							           <!-- Christmas -->
-						</test-day>
+						         </test-day>
 					       </test>
 					       <then>
 						         <date day="30" month="12" year-1="yes"/>
@@ -820,7 +688,7 @@
 						         <weekday-after day="Sunday">
 							           <date day="25" month="12" year-1="yes"/>
 							           <!-- Christmas -->
-						</weekday-after>
+						         </weekday-after>
 					       </else>
 				     </if>
 			   </daterules>
@@ -2432,7 +2300,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="1">
+				     <weeks-after nr="1">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -2453,7 +2321,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="2">
+				     <weeks-after nr="2">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -2474,7 +2342,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="3">
+				     <weeks-after nr="3">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -2495,7 +2363,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="4">
+				     <weeks-after nr="4">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -2516,7 +2384,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="5">
+				     <weeks-after nr="5">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -2537,7 +2405,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="6">
+				     <weeks-after nr="6">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -2558,7 +2426,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="7">
+				     <weeks-after nr="7">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -2579,7 +2447,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="8">
+				     <weeks-after nr="8">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -2600,7 +2468,7 @@
 					of the Lord. Either way, the point is the same. The next Sunday is still reckoned
 					"The Second Sunday in Ordinary Time," because it is the Sunday of the second
 					week in Ordinary Time. -->
-				<weeks-after nr="9">
+				     <weeks-after nr="9">
 					       <weekday-after day="Sunday">
 						         <date day="6" month="1"/>
 					       </weekday-after>
@@ -7324,6 +7192,118 @@
 			   </daterules>
    </liturgicalday>
    <liturgicalday>
+      <name>December 17th</name>
+      <season>Advent</season>
+      <set>Fixed dates</set>
+      <coordinates>D1217</coordinates>
+      <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+      <vigil>false</vigil>
+      <precedence>9</precedence>
+      <color>violet</color>
+      <coincideswith>Z1224</coincideswith>
+      <daterules>
+                <date day="17" month="12" year-1="yes"/>
+            </daterules>
+   </liturgicalday>
+   <liturgicalday>
+      <name>December 18th</name>
+      <season>Advent</season>
+      <set>Fixed dates</set>
+      <coordinates>D1218</coordinates>
+      <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+      <vigil>false</vigil>
+      <precedence>9</precedence>
+      <color>violet</color>
+      <coincideswith>Z1224</coincideswith>
+      <daterules>
+                <date day="18" month="12" year-1="yes"/>
+            </daterules>
+   </liturgicalday>
+   <liturgicalday>
+      <name>December 19th</name>
+      <season>Advent</season>
+      <set>Fixed dates</set>
+      <coordinates>D1219</coordinates>
+      <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+      <vigil>false</vigil>
+      <precedence>9</precedence>
+      <color>violet</color>
+      <coincideswith>Z1224</coincideswith>
+      <daterules>
+                <date day="19" month="12" year-1="yes"/>
+            </daterules>
+   </liturgicalday>
+   <liturgicalday>
+      <name>December 20th</name>
+      <season>Advent</season>
+      <set>Fixed dates</set>
+      <coordinates>D1220</coordinates>
+      <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+      <vigil>false</vigil>
+      <precedence>9</precedence>
+      <color>violet</color>
+      <coincideswith>Z1224</coincideswith>
+      <daterules>
+                <date day="20" month="12" year-1="yes"/>
+            </daterules>
+   </liturgicalday>
+   <liturgicalday>
+      <name>December 21st</name>
+      <season>Advent</season>
+      <set>Fixed dates</set>
+      <coordinates>D1221</coordinates>
+      <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+      <vigil>false</vigil>
+      <precedence>9</precedence>
+      <color>violet</color>
+      <coincideswith>Z1224</coincideswith>
+      <daterules>
+                <date day="21" month="12" year-1="yes"/>
+            </daterules>
+   </liturgicalday>
+   <liturgicalday>
+      <name>December 22nd</name>
+      <season>Advent</season>
+      <set>Fixed dates</set>
+      <coordinates>D1222</coordinates>
+      <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+      <vigil>false</vigil>
+      <precedence>9</precedence>
+      <color>violet</color>
+      <coincideswith>Z1224</coincideswith>
+      <daterules>
+                <date day="22" month="12" year-1="yes"/>
+            </daterules>
+   </liturgicalday>
+   <liturgicalday>
+      <name>December 23rd</name>
+      <season>Advent</season>
+      <set>Fixed dates</set>
+      <coordinates>D1223</coordinates>
+      <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+      <vigil>false</vigil>
+      <precedence>9</precedence>
+      <color>violet</color>
+      <coincideswith>Z1224</coincideswith>
+      <daterules>
+                <date day="23" month="12" year-1="yes"/>
+            </daterules>
+   </liturgicalday>
+   <liturgicalday>
+      <name>December 24th</name>
+      <season>Advent</season>
+      <set>Fixed dates</set>
+      <coordinates>D1224</coordinates>
+      <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+      <vigil>false</vigil>
+      <precedence>9</precedence>
+      <color>violet</color>
+      <coincideswith>Z1224</coincideswith>
+      <daterules>
+                <date day="24" month="12" year-1="yes"/>
+            </daterules>
+   </liturgicalday>
+   <liturgicalday>
       <name>Vigil of Christmas</name>
       <alternativename/>
       <season>Christmas season</season>
@@ -7419,7 +7399,7 @@
 					       <then>
 						         <date day="24" month="3"/>
 						         <!-- Saturday before -->
-					</then>
+					       </then>
 					       <else>
 						         <if>
 							           <test>
@@ -7455,7 +7435,7 @@
 						         <between>
 							           <relative-to name="Saturday in the Fifth Week of Lent"/>
 							           <!-- day before Passion Sunday -->
-							<date day="19" month="3"/>
+							           <date day="19" month="3"/>
 							           <relative-to name="Monday in the Second Week of Easter"/>
 						         </between>
 					       </test>

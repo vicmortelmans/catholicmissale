@@ -67,6 +67,24 @@ class DayHandler(webapp2.RequestHandler):
         next_date = model.Date.query_by_form_and_earliest_date(form, matching_date.date + datetime.timedelta(1))
         previous_date = model.Date.query_by_form_and_later_date(form, matching_date.date)
         template = jinja_environment.get_template('day2.html')
+        # compose lectionary url
+        lectionary_url_readings = (
+            ("title", data["the_mass"]['i18n'].string.encode('utf-8')),
+            ("subtitle", lib.readable_date(data['date'].date, lang).encode('utf-8')),
+            ("language", lang)
+        )
+        if form == "of":
+            for bibleref in data['the_mass']['mass'].lecture:
+                lectionary_url_readings += ((model.I18n.translate("lecture", lang).string.capitalize().encode('utf-8'), bibleref),)
+            for bibleref in data['the_mass']['mass'].epistle:
+                lectionary_url_readings += ((model.I18n.translate("second-reading", lang).string.capitalize().encode('utf-8'), bibleref),)
+        else:
+            for bibleref in data['the_mass']['mass'].epistle:
+                lectionary_url_readings += ((model.I18n.translate("epistel", lang).string.capitalize().encode('utf-8'), bibleref),)
+        for bibleref in data['the_mass']['mass'].gospel:
+            lectionary_url_readings += ((model.I18n.translate("gospel", lang).string.capitalize().encode('utf-8'), bibleref),)
+        lectionary_url = "http://alledaags.gelovenleren.net/lectionarium?" + urllib.urlencode(lectionary_url_readings)
+        # compose the web-page content
         content = template.render(
             lang=lang,
             data=data,
@@ -83,6 +101,7 @@ class DayHandler(webapp2.RequestHandler):
             slugify=lib.slugify,
             readable_date=lib.readable_date,
             subscription_form=subscription_form[form][lang],
+            lectionary_url=lectionary_url,
             re=re
         )
         # return the web-page content

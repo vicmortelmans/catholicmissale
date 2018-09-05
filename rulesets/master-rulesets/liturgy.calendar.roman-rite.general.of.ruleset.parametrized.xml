@@ -93,11 +93,11 @@
 				<nr_i>1</nr_i>
 				<nr_c>03</nr_c>
 			</parametergroup>
-			<parametergroup>
+			<!--parametergroup>
 				<nr_s>Fourth</nr_s>
 				<nr_i>0</nr_i>
 				<nr_c>04</nr_c>
-			</parametergroup>
+			</parametergroup-->
 		</parameters>
 		<template>
 			<name>$day_s in the $nr_s Week of Advent</name>
@@ -106,7 +106,7 @@
 			<coordinates>A$nr_c$day_c</coordinates>
 			<rank nr="13">Weekday of Advent</rank>
 			<precedence>10</precedence>
-			<coincideswith>Z1224</coincideswith>
+			<!--coincideswith>Z1224</coincideswith-->
 			<color>violet</color>
 			<daterules>
 				<weekday-after day="$day_s">
@@ -1530,6 +1530,57 @@
 			</daterules>
 		</template>
 	</liturgicalday>
+
+    <liturgicalday>
+        <parameters>
+            <parametergroup>
+                <date_s>17th</date_s>
+                <date>17</date>
+            </parametergroup>
+            <parametergroup>
+                <date_s>18th</date_s>
+                <date>18</date>
+            </parametergroup>
+            <parametergroup>
+                <date_s>19th</date_s>
+                <date>19</date>
+            </parametergroup>
+            <parametergroup>
+                <date_s>20th</date_s>
+                <date>20</date>
+            </parametergroup>
+            <parametergroup>
+                <date_s>21st</date_s>
+                <date>21</date>
+            </parametergroup>
+            <parametergroup>
+                <date_s>22nd</date_s>
+                <date>22</date>
+            </parametergroup>
+            <parametergroup>
+                <date_s>23rd</date_s>
+                <date>23</date>
+            </parametergroup>
+            <parametergroup>
+                <date_s>24th</date_s>
+                <date>24</date>
+            </parametergroup>
+        </parameters>
+        <template>
+            <name>December $date_s</name>
+            <season>Advent</season>
+            <set>Fixed dates</set>
+            <coordinates>D12$date</coordinates>
+            <rank nr="13">Weekdays of Advent from 17 December to 24 December, inclusive</rank>
+            <vigil>false</vigil>
+            <precedence>9</precedence>
+            <color>violet</color>
+            <coincideswith>Z1224</coincideswith>
+            <daterules>
+                <date day="$date" month="12" year-1="yes"/>
+            </daterules>
+        </template>
+    </liturgicalday>
 
 	<liturgicalday>
 		<template>

@@ -1,0 +1,19 @@
+service: takes-long
+runtime: python27
+threadsafe: true
+
+instance_class: B1
+manual_scaling:
+  instances: 1
+
+handlers:
+- url: /.*
+  script: takes-long.app
+
+libraries:
+- name: webapp2
+  version: "2.5.1" 
+- name: jinja2
+  version: latest
+- name: pycrypto
+  version: latest

@@ -21,7 +21,7 @@ def submit(reference, verses=False):
     if referenceFound:
         return None
     # the reference is not found in the datastore; try to find its standard format
-    url = "http://catecheserooster.appspot.com/yql/bibleref?bibleref={reference}&language=en&tolerance=true"\
+    url = "https://catecheserooster.appspot.com/yql/bibleref?bibleref={reference}&language=en&tolerance=true"\
         .format(
             reference=urllib.quote(reference.encode('utf8'))
         )

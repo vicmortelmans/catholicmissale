@@ -9,10 +9,12 @@ manual_scaling:
 handlers:
 - url: /.*
   script: takes-long.app
+  secure: always
+  redirect_http_response_code: 301
 
 libraries:
 - name: webapp2
-  version: "2.5.1" 
+  version: "2.5.2" 
 - name: jinja2
   version: latest
 - name: pycrypto

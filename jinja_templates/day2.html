@@ -64,10 +64,10 @@
 <div class="w-container container" itemscope="" itemtype="http://schema.org/ImageObject">
     <article class="w-row row">
         <div class="w-col w-col-6 centered">
-            <img class="main-image" src="{{the_illustration['illustration'].url}}" width="500" alt="{{the_illustration['illustration'].caption}}" itemprop="contentURL">
+            <img class="main-image" src="{{the_illustration['illustration'].url.replace('http:','https:')}}" width="500" alt="{{the_illustration['illustration'].caption}}" itemprop="contentURL">
             <div class="metadata-text caption">
                 <span itemprop="caption">{{the_illustration['illustration'].caption}}</span>
-                <span class="google"><a href="http://images.google.com/searchbyimage?gbv=2&site=search&image_url={{quote(the_illustration['illustration'].url)}}&sa=X&ei=H6RaTtb5JcTeiALlmPi2CQ&ved=0CDsQ9Q8" target="_blank" title="Google Images">google</a></span>
+                <span class="google"><a href="http://images.google.com/searchbyimage?gbv=2&site=search&image_url={{quote(the_illustration['illustration'].url.replace('http:','https:'))}}&sa=X&ei=H6RaTtb5JcTeiALlmPi2CQ&ved=0CDsQ9Q8" target="_blank" title="Google Images">google</a></span>
             </div>
             <meta itemprop="name" content="{{the_illustration['illustration'].title}}"/>
             <meta itemprop="author" content="{{the_illustration['illustration'].artist}}"/>
@@ -94,7 +94,7 @@
     {% if the_other_illustrations %}
     {% for illustration in the_other_illustrations %}
     <a href="{{url(date=data['date'], form=data['form'], illustration=illustration, lang=lang)}}" title="{{illustration['illustration'].caption}}">
-        <div class="thumbnail-box" style="background-image: url('{{illustration['illustration'].url}}=s68-c'); background-size: cover; background-repeat: no-repeat;"></div>
+        <div class="thumbnail-box" style="background-image: url('{{illustration['illustration'].url.replace('http:','https:')}}=s68-c'); background-size: cover; background-repeat: no-repeat;"></div>
     </a>
     {% endfor %}
     {% endif %}

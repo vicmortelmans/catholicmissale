@@ -40,7 +40,7 @@ class SyncVersesHandler(webapp2.RequestHandler):
         missing_verses_chunks = lib.chunks(missing_verses, 25)
         for missing_verses_chunk in missing_verses_chunks:
             for verse in missing_verses_chunk[:]:  # taking copy of list, as items may be deleted while iterating
-                url = "http://catecheserooster.appspot.com/yql/bible?bibleref={reference}&language={language}&tolerance=true" \
+                url = "https://catecheserooster.appspot.com/yql/bible?bibleref={reference}&language={language}&tolerance=true" \
                     .format(
                         language=verse['lang'],
                         reference=urllib.quote(verse['ref'].encode('utf8'))

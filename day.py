@@ -13,14 +13,14 @@ logging.basicConfig(level=logging.INFO)
 
 subscription_form = {
     'of': {
-        'en': "http://eepurl.com/M8wpL",
-        'nl': "http://eepurl.com/M8wo9",
-        'fr': "http://eepurl.com/M8sGL"
+        'en': "https://eepurl.com/M8wpL",
+        'nl': "https://eepurl.com/M8wo9",
+        'fr': "https://eepurl.com/M8sGL"
     },
     'eo': {
-        'en': "http://eepurl.com/M8wn1",
-        'nl': "http://eepurl.com/M8wov",
-        'fr': "http://eepurl.com/M8s9D"
+        'en': "https://eepurl.com/M8wn1",
+        'nl': "https://eepurl.com/M8wov",
+        'fr': "https://eepurl.com/M8s9D"
     }
 }
 
@@ -83,7 +83,7 @@ class DayHandler(webapp2.RequestHandler):
                 lectionary_url_readings += ((model.I18n.translate("epistel", lang).string.capitalize().encode('utf-8'), bibleref),)
         for bibleref in data['the_mass']['mass'].gospel:
             lectionary_url_readings += ((model.I18n.translate("gospel", lang).string.capitalize().encode('utf-8'), bibleref),)
-        lectionary_url = "http://alledaags.gelovenleren.net/lectionarium?" + urllib.urlencode(lectionary_url_readings)
+        lectionary_url = "https://alledaags.gelovenleren.net/lectionarium?" + urllib.urlencode(lectionary_url_readings)
         # compose the web-page content
         content = template.render(
             lang=lang,

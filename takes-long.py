@@ -7,6 +7,7 @@ decorator = OAuth2Decorator(client_id=google_credentials.CLIENT_ID,
                             scope='https://spreadsheets.google.com/feeds https://www.googleapis.com/auth/drive')
 
 routes = [
+    webapp2.Route(r'/inventory/<lang:en|nl|fr>', handler='inventory.InventoryHandler'),
     webapp2.Route(r'/sync-illustrations', handler='sync_illustration_index.SyncIllustrationHandler'),
     webapp2.Route(r'/sync-masses', handler='sync_masses_index.SyncMassesHandler'),
     webapp2.Route(r'/sync-i18n-terminology', handler='sync_i18n_index.SyncI18nTerminologyHandler'),

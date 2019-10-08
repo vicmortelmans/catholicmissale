@@ -1,14 +1,14 @@
 service: takes-long
 runtime: python27
 threadsafe: true
-
 instance_class: B1
 manual_scaling:
   instances: 1
 
 handlers:
-- url: /.*
+- url: .*
   script: takes-long.app
+  login: admin
   secure: always
   redirect_http_response_code: 301
 

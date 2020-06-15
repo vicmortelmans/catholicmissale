@@ -1,7 +1,7 @@
 service: takes-long
 runtime: python27
 threadsafe: true
-instance_class: B1
+instance_class: B4
 manual_scaling:
   instances: 1
 
